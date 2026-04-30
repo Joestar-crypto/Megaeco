@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MegaETH Economics Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #19191A;
+    --surface: #1E1E20;
+    --text: #ECE8E8;
+    --muted: #DFD9D9;
+    --green: #90D79F;
+    --green-2: #6DD0A9;
+    --pink: #FF8AA8;
+    --pink-2: #F786C6;
+    --blue: #7EAAD4;
+    --blue-2: #70BAD2;
+    --peach: #F5AF94;
+    --border: rgba(144, 215, 159, 0.15);
+    --border-strong: rgba(144, 215, 159, 0.30);
+    --mono: 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 28px 80px;
+  }
+
+  /* HEADER */
+  header.top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .topnav {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 28px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .topnav a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .topnav a:hover { color: var(--green); }
+  .topnav a.active { color: var(--green); }
+  .topnav .br { color: var(--green-2); }
+  .topnav .spacer { flex: 1; }
+  .topnav .pill {
+    border: 1px solid var(--green-2);
+    color: var(--green);
+    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(90deg, rgba(144,215,159,0.10), rgba(109,208,169,0.04));
+    box-shadow: 0 0 16px rgba(144,215,159,0.18);
+  }
+
+  /* Made-by-Joestar credit pill */
+  .hero-overlay__credit {
+    margin-top: 0.7rem;
+    padding: 0.2rem 0.35rem 0.2rem 1rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #ffd84d;
+    background: rgba(5, 8, 20, 0.75);
+    border: 1px solid #ffd84d;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  .hero-overlay__credit:hover {
+    border-color: #ffed9e;
+    color: #ffed9e;
+    transform: translateY(-1px);
+  }
+  .hero-overlay__credit-label { letter-spacing: inherit; }
+  .hero-overlay__credit-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    margin-right: -0.3rem;
+    background: #ffd84d;
+  }
+  .hero-overlay__credit-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text);
+    font-family: var(--mono);
+  }
+  .logo .bolt { color: var(--green-2); margin-right: 6px; }
+  .logo .slash { color: var(--green-2); margin: 0 4px; }
+  .subtitle {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 8px;
+    opacity: 0.75;
+    font-family: var(--mono);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .hero {
+    margin: 18px 0 32px;
+    padding: 28px 0 36px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  .hero h1 {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 56px);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    line-height: 0.95;
+    color: var(--text);
+  }
+  .hero h1 .accent {
+    background: linear-gradient(90deg, var(--green) 0%, var(--green-2) 35%, var(--peach) 70%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: hueShift 6s ease-in-out infinite;
+  }
+  @keyframes hueShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .hero p {
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  /* MEGAFEES SVG banner (legacy, kept hidden) */
+  .megafees-banner { display: none; }
+
+  /* MEGAFEES native title — matches the dashboard DA (mono, brackets, green-2 accents) */
+  .mf-title {
+    margin: 8px 0 28px;
+    display: flex;
+    align-items: flex-end;
+    gap: 22px;
+    flex-wrap: wrap;
+    position: relative;
+    padding: 0 0 22px;
+  }
+  .mf-title::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(144,215,159,0.55) 8%,
+      rgba(245,175,148,0.45) 50%,
+      rgba(255,138,168,0.35) 92%,
+      transparent 100%);
+    box-shadow: 0 0 14px rgba(144,215,159,0.35);
+  }
+  .mf-mark {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--mono);
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-size: clamp(34px, 5.4vw, 64px);
+  }
+  .mf-bracket {
+    color: var(--green-2);
+    font-weight: 700;
+    font-size: 0.55em;
+    letter-spacing: 0.18em;
+    transform: translateY(-0.15em);
+    text-shadow: 0 0 14px rgba(109,208,169,0.55);
+  }
+  .mf-mega { color: var(--text); }
+  .mf-fees {
+    background: linear-gradient(90deg, var(--green) 0%, var(--green-2) 35%, var(--peach) 70%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: hueShift 6s ease-in-out infinite;
+    text-shadow: 0 0 38px rgba(144,215,159,0.18);
+  }
+  .mf-cursor {
+    display: inline-block;
+    width: 0.45ch;
+    color: var(--green-2);
+    animation: blink 1s steps(2, end) infinite;
+    text-shadow: 0 0 10px rgba(109,208,169,0.7);
+  }
+  .mf-meta {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-family: var(--mono);
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .mf-meta .row { display: inline-flex; align-items: center; gap: 8px; }
+  .mf-meta .sep { color: rgba(144,215,159,0.35); }
+  .mf-tag {
+    color: var(--green);
+    border: 1px solid rgba(144,215,159,0.45);
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    background: rgba(144,215,159,0.06);
+    box-shadow: 0 0 14px rgba(144,215,159,0.12);
+  }
+  .mf-live-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green-2);
+    box-shadow: 0 0 10px var(--green-2);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .timestamp {
+    font-family: var(--mono);
+    color: var(--muted);
+    font-size: 12px;
+    opacity: 0.8;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(144, 215, 159, 0.08);
+    border: 1px solid rgba(144, 215, 159, 0.4);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    box-shadow: 0 0 18px rgba(144, 215, 159, 0.25);
+  }
+  .dot {
+    width: 8px; height: 8px;
+    background: var(--green-2);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--green-2);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.85); }
+  }
+
+  /* KPI CARDS */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 22px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    min-height: 150px;
+  }
+  .card .kpi-value { margin-top: auto; }
+  .card:hover { border-color: var(--border-strong); }
+  .card.active {
+    background: rgba(144,215,159,0.04);
+  }
+  .card.active .accent-bar { opacity: 1; height: 3px; }
+  .card .arrow {
+    position: absolute;
+    bottom: 14px;
+    right: 16px;
+    color: var(--green-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 2;
+  }
+  .card:hover .arrow,
+  .card.active .arrow {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .card { padding-bottom: 36px; }
+  .kpi-label {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 14px;
+    opacity: 0.85;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.2;
+    min-height: 28px;
+  }
+  .kpi-label .token-logo,
+  .kpi-label .token-pair {
+    margin-right: 0;
+    flex-shrink: 0;
+    vertical-align: baseline;
+  }
+  .kpi-value {
+    font-family: var(--mono);
+    font-size: clamp(18px, 1.7vw, 26px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-sub {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 10px;
+    opacity: 0.75;
+    font-family: var(--mono);
+  }
+  .kpi-tvl   .kpi-value { color: var(--pink);  text-shadow: 0 0 14px rgba(255,138,168,0.3); }
+  .kpi-daily .kpi-value { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.3); }
+  .kpi-annual .kpi-value { color: var(--peach); text-shadow: 0 0 14px rgba(245,175,148,0.3); }
+  .kpi-cum   .kpi-value { color: var(--green-2); text-shadow: 0 0 14px rgba(109,208,169,0.3); }
+  .kpi-days  .kpi-value { color: var(--blue);  text-shadow: 0 0 14px rgba(126,170,212,0.3); }
+  .kpi-opium .kpi-value {
+    background: linear-gradient(90deg, #C586FF 0%, #FF8AA8 60%, #F5AF94 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 18px rgba(197,134,255,0.35);
+  }
+
+  .card {
+    border-radius: 0 !important;
+  }
+  .card .corner {
+    position: absolute;
+    width: 10px; height: 10px;
+    pointer-events: none;
+  }
+  .card .corner.tl { top: -1px; left: -1px; border-top: 1px solid; border-left: 1px solid; }
+  .card .corner.br { bottom: -1px; right: -1px; border-bottom: 1px solid; border-right: 1px solid; }
+  .kpi-tvl   .corner { color: var(--pink); }
+  .kpi-daily .corner { color: var(--green); }
+  .kpi-annual .corner { color: var(--peach); }
+  .kpi-cum   .corner { color: var(--green-2); }
+  .kpi-days  .corner { color: var(--blue); }
+  .kpi-opium .corner { color: #C586FF; }
+
+  .accent-bar {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    opacity: 0.85;
+    z-index: 2;
+  }
+  .kpi-tvl   .accent-bar { background: linear-gradient(90deg, var(--pink) 0%, var(--peach) 100%); box-shadow: 0 0 18px rgba(255,138,168,0.55); }
+  .kpi-daily .accent-bar { background: linear-gradient(90deg, var(--green) 0%, var(--green-2) 100%); box-shadow: 0 0 18px rgba(144,215,159,0.55); }
+  .kpi-annual .accent-bar { background: linear-gradient(90deg, var(--peach) 0%, var(--pink) 100%); box-shadow: 0 0 18px rgba(245,175,148,0.55); }
+  .kpi-cum   .accent-bar { background: linear-gradient(90deg, var(--green-2) 0%, var(--blue-2) 100%); box-shadow: 0 0 18px rgba(109,208,169,0.55); }
+  .kpi-days  .accent-bar { background: linear-gradient(90deg, var(--pink) 0%, #26A17B 100%); box-shadow: 0 0 18px rgba(126,170,212,0.55); }
+  .kpi-opium .accent-bar { background: linear-gradient(90deg, #C586FF 0%, var(--pink) 50%, var(--peach) 100%); box-shadow: 0 0 22px rgba(197,134,255,0.65); }
+
+  /* Per-card radial glow (subtle, brand-tinted) */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 80% at 100% 0%, var(--card-glow, rgba(144,215,159,0.10)) 0%, transparent 55%);
+    opacity: 0.55;
+    transition: opacity 0.2s ease;
+  }
+  .card:hover::after, .card.active::after { opacity: 1; }
+  .kpi-tvl    { --card-glow: rgba(255,138,168,0.16); }
+  .kpi-daily  { --card-glow: rgba(144,215,159,0.16); }
+  .kpi-annual { --card-glow: rgba(245,175,148,0.18); }
+  .kpi-cum    { --card-glow: rgba(109,208,169,0.16); }
+  .kpi-days   { --card-glow: rgba(126,170,212,0.16); }
+  .kpi-opium  { --card-glow: rgba(197,134,255,0.20); }
+  .card > * { position: relative; z-index: 1; }
+
+  /* TOKEN LOGOS */
+  .token-logo {
+    width: 14px; height: 14px;
+    vertical-align: -3px;
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 8px rgba(255,138,168,0.45);
+    background: #fff;
+  }
+  .token-logo.usdt0 { box-shadow: 0 0 8px rgba(38,161,123,0.55); }
+  .token-logo.dollar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--peach), var(--pink));
+    color: #19191A;
+    font-family: var(--mono);
+    font-weight: 900;
+    font-size: 10px;
+    line-height: 1;
+    text-align: center;
+    padding-bottom: 1px;
+    box-shadow: 0 0 10px rgba(245,175,148,0.65);
+  }
+  .token-logo.dollar.lg { font-size: 14px; }
+  .token-logo.dollar.xl { font-size: 18px; }
+  .token-logo.opium {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #C586FF, #FF8AA8 60%, #F5AF94);
+    color: #19191A;
+    font-family: var(--mono);
+    font-weight: 900;
+    font-size: 10px;
+    box-shadow: 0 0 12px rgba(197,134,255,0.65);
+  }
+  .token-logo.opium.lg { font-size: 14px; }
+  .token-logo.lg { width: 28px; height: 28px; vertical-align: middle; margin-right: 8px; }
+  .token-logo.xl { width: 36px; height: 36px; vertical-align: middle; margin-right: 10px; }
+  .token-pair { display: inline-flex; align-items: center; gap: 4px; }
+  .token-pair .token-logo { margin-right: 0; }
+  .token-pair .token-logo + .token-logo { margin-left: -6px; }
+
+  /* SECTION */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 24px 26px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .section::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 14px; height: 14px;
+    border-top: 1px solid var(--green-2);
+    border-left: 1px solid var(--green-2);
+  }
+  .section::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 14px; height: 14px;
+    border-bottom: 1px solid var(--green-2);
+    border-right: 1px solid var(--green-2);
+  }
+  .section h2 {
+    margin: 0 0 6px;
+    font-size: clamp(20px, 2.4vw, 30px);
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text);
+    font-family: var(--mono);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1;
+  }
+  .section h2 > .token-logo,
+  .section h2 > img.token-logo {
+    vertical-align: middle;
+    margin-right: 0;
+    flex-shrink: 0;
+  }
+  .section h2::before { content: '[ '; color: var(--green-2); margin-right: 2px; }
+  .section h2::after  { content: ' ]'; color: var(--green-2); margin-left: 2px; }
+  .section .desc {
+    color: var(--muted);
+    font-size: 11px;
+    opacity: 0.65;
+    margin-bottom: 20px;
+    letter-spacing: 0.04em;
+    font-family: var(--mono);
+    text-transform: uppercase;
+  }
+  .chart-wrap {
+    position: relative;
+    height: 420px;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--green);
+    border-bottom-color: var(--green-2);
+    text-shadow: 0 0 14px rgba(144,215,159,0.3);
+  }
+  .tab .br { color: var(--green-2); opacity: 0.6; }
+  .tab.active .br { opacity: 1; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* CHART HEADER (title + mode toggle) */
+  .chart-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .chart-header .title-block { flex: 1; min-width: 220px; }
+  .mode-toggle {
+    display: none;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: rgba(144,215,159,0.04);
+    box-shadow: inset 0 0 18px rgba(144,215,159,0.06), 0 0 22px rgba(144,215,159,0.08);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    margin-top: 4px;
+    position: relative;
+  }
+  .mode-toggle.show { display: inline-flex; }
+  .mode-toggle button {
+    background: transparent;
+    color: var(--muted);
+    border: 0;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+  .mode-toggle button .glyph {
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 2px;
+    opacity: 0.7;
+  }
+  .mode-toggle button .glyph i {
+    display: block;
+    width: 3px;
+    background: currentColor;
+    border-radius: 1px;
+  }
+  /* ABS: three rising bars */
+  .mode-toggle button[data-mode="abs"] .glyph i:nth-child(1) { height: 35%; }
+  .mode-toggle button[data-mode="abs"] .glyph i:nth-child(2) { height: 65%; }
+  .mode-toggle button[data-mode="abs"] .glyph i:nth-child(3) { height: 95%; }
+  /* STACKED: two-tone equal bars */
+  .mode-toggle button[data-mode="stk"] .glyph i {
+    height: 95%;
+    background: linear-gradient(to top, currentColor 50%, rgba(255,255,255,0.45) 50%);
+  }
+  /* PCT: full-height equal bars */
+  .mode-toggle button[data-mode="pct"] .glyph i { height: 95%; }
+  .mode-toggle button:hover { color: var(--text); background: rgba(144,215,159,0.06); }
+  .mode-toggle button:hover .glyph { opacity: 1; }
+  .mode-toggle button.active {
+    background: linear-gradient(135deg, rgba(144,215,159,0.22), rgba(109,208,169,0.10));
+    color: var(--green);
+    box-shadow: 0 0 0 1px rgba(144,215,159,0.5), 0 0 16px rgba(144,215,159,0.35);
+  }
+  .mode-toggle button.active .glyph { opacity: 1; }
+  .note {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(245, 175, 148, 0.06);
+    border-left: 2px solid var(--peach);
+    color: var(--peach);
+    font-size: 12px;
+    border-radius: 4px;
+    font-family: var(--mono);
+  }
+  .panel[data-panel="revenue"] .note { background: rgba(126,170,212,0.06); border-left-color: var(--blue); color: var(--blue); }
+  .panel[data-panel="cum"] .note     { background: rgba(144,215,159,0.06); border-left-color: var(--green); color: var(--green); }
+  .panel[data-panel="tvl"] .note     { background: rgba(255,138,168,0.06); border-left-color: var(--pink); color: var(--pink); }
+  .panel[data-panel="stables"] .note { background: rgba(38,161,123,0.06); border-left-color: #26A17B; color: #6DD0A9; }
+
+  /* OPIUM HORIZONTAL BARS */
+  .opium-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 8px 0 4px;
+    font-family: var(--mono);
+  }
+  .opium-row { display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-items: center; }
+  .opium-name {
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text);
+    text-align: right;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    font-weight: 600;
+  }
+  .chain-logo {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.18);
+    flex-shrink: 0;
+  }
+  .opium-row.is-base .opium-name { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.5); }
+  .opium-track {
+    position: relative;
+    height: 48px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .opium-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--c) 0%, rgba(0,0,0,0) 140%);
+    box-shadow: inset 0 0 28px rgba(255,255,255,0.08), 0 0 24px var(--glow, rgba(144,215,159,0.35));
+    width: 0%;
+    transition: width 0.9s cubic-bezier(.2,.8,.2,1);
+  }
+  .opium-meta {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    font-size: 13px;
+    color: var(--text);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .opium-val {
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    color: #fff;
+    text-shadow: 0 0 14px rgba(0,0,0,0.85), 0 0 22px var(--glow, rgba(144,215,159,0.45));
+    font-variant-numeric: tabular-nums;
+  }
+  .opium-val .unit { font-size: 11px; font-weight: 500; color: var(--muted); margin-left: 4px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .opium-mult {
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border: 1px solid var(--c, var(--border-strong));
+    background: rgba(0,0,0,0.55);
+    box-shadow: 0 0 14px var(--glow, rgba(255,255,255,0.18));
+    font-variant-numeric: tabular-nums;
+  }
+  .opium-row.is-base .opium-mult { color: var(--green); border-color: rgba(144,215,159,0.6); box-shadow: 0 0 14px rgba(144,215,159,0.4); }
+
+  /* TABLE */
+  .table-scroll { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  thead th {
+    text-align: right;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+  thead th:first-child { text-align: left; }
+  tbody td {
+    padding: 11px 14px;
+    text-align: right;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text);
+  }
+  tbody td:first-child {
+    text-align: left;
+    color: var(--muted);
+  }
+  tbody tr:hover { background: rgba(144,215,159,0.03); }
+  .col-eth { color: var(--blue); }
+  .col-usd { color: var(--blue-2); }
+  .col-usdm { color: var(--pink); }
+  .col-total { color: var(--green); font-weight: 700; text-shadow: 0 0 12px rgba(144,215,159,0.25); }
+  thead th .token-logo { box-shadow: 0 0 8px rgba(255,138,168,0.45); }
+
+  /* COLLAPSIBLE */
+  details.section summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  details.section summary::-webkit-details-marker { display: none; }
+  details.section summary h2 { margin: 0; }
+  .chev {
+    color: var(--green-2);
+    font-family: var(--mono);
+    transition: transform 0.2s ease;
+  }
+  details[open] .chev { transform: rotate(90deg); }
+  .explain {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .explain ul {
+    padding-left: 18px;
+    margin: 10px 0;
+  }
+  .explain li { margin: 6px 0; }
+  .formula {
+    margin-top: 18px;
+    padding: 16px 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--mono);
+    color: var(--green);
+    font-size: 14px;
+    text-align: center;
+    box-shadow: inset 0 0 30px rgba(144,215,159,0.06);
+  }
+  .formula .op { color: var(--muted); margin: 0 8px; }
+  .formula .num { color: var(--pink); }
+
+  /* FOOTER */  footer {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+    opacity: 0.85;
+    letter-spacing: 0.08em;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .footer-data {
+    flex: 1;
+    min-width: 280px;
+    opacity: 0.7;
+    text-align: left;
+  }
+
+  /* Loading */
+  .skeleton {
+    color: var(--muted);
+    opacity: 0.4;
+  }
+
+  /* Responsive */
+  @media (max-width: 1300px) {
+    .kpis { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 1000px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 20px 16px 60px; }
+    .kpis { grid-template-columns: 1fr; }
+    .logo { font-size: 22px; }
+    .kpi-value { font-size: 24px; }
+  }
+
+  /* LOADING OVERLAY */
+  #loadingOverlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(120% 80% at 50% 0%, rgba(144,215,159,0.08) 0%, var(--bg) 60%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 28px;
+    z-index: 9999;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+    font-family: var(--mono);
+  }
+  #loadingOverlay.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .load-logo {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .load-logo .bolt {
+    color: var(--green-2);
+    animation: bolt 1.4s ease-in-out infinite;
+    text-shadow: 0 0 18px rgba(109,208,169,0.7);
+  }
+  .load-logo .accent {
+    background: linear-gradient(90deg, var(--green) 0%, var(--green-2) 35%, var(--peach) 70%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: hueShift 4s ease-in-out infinite;
+  }
+  @keyframes bolt {
+    0%, 100% { opacity: 1; transform: translateX(0); }
+    50%      { opacity: 0.4; transform: translateX(-2px); }
+  }
+  .load-bar {
+    width: min(360px, 70vw);
+    height: 4px;
+    background: rgba(144,215,159,0.10);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+  }
+  .load-bar::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, var(--green-2), var(--peach), transparent);
+    box-shadow: 0 0 18px rgba(109,208,169,0.6);
+    animation: loadSlide 1.4s ease-in-out infinite;
+  }
+  @keyframes loadSlide {
+    0%   { left: -40%; }
+    100% { left: 100%; }
+  }
+  .load-status {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    text-align: center;
+  }
+  .load-status .blink {
+    color: var(--green-2);
+    animation: blink 1s steps(2, end) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .load-meta {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    max-width: 480px;
+    text-align: center;
+    line-height: 1.7;
+  }
+  .load-meta .br { color: var(--green-2); }
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY (MegaETH-themed) -->
+<div id="loadingOverlay">
+  <div class="load-logo">
+    <span class="bolt">/\</span>MEGA<span class="accent">ETH</span>
+  </div>
+  <div class="load-bar"></div>
+  <div class="load-status" id="loadStatus">Syncing real-time economics<span class="blink">_</span></div>
+  <div class="load-meta">
+    <span class="br">[</span> 100K TPS · 10MS BLOCKS · SETTLED ON ETHEREUM <span class="br">]</span>
+  </div>
+</div>
+<div class="wrap">
+
+  <!-- TOP NAV (compact) -->
+  <nav class="topnav">
+    <span class="spacer"></span>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero hero-banner">
+    <div class="mf-title">
+      <div class="mf-mark">
+        <span class="mf-bracket">[</span><span class="mf-mega">MEGA</span><span class="mf-fees">FEES</span><span class="mf-cursor">_</span><span class="mf-bracket">]</span>
+      </div>
+      <div class="mf-meta">
+        <span class="row"><span class="mf-tag"><span class="mf-live-dot"></span> LIVE</span></span>
+      </div>
+    </div>
+    <h1>The First <span class="accent">Real-Time</span><br/>Economics Dashboard.</h1>
+    <p>>>  USDM Yield + Network Fees · Live On-Chain Data · Updated Daily</p>
+  </section>
+
+  <!-- KPI CARDS (clickable → chart tabs) -->
+  <div class="kpis" id="kpiTabs">
+    <div class="card kpi-tvl active" data-tab="tvl" role="button" tabindex="0">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="accent-bar"></div>
+      <div class="arrow">[ VIEW → ]</div>
+      <div class="kpi-label"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />// USDm TVL</div>
+      <div class="kpi-value" id="kpi-tvl">$ —</div>
+      <div class="kpi-sub">CoinGecko · megausd mcap</div>
+    </div>
+    <div class="card kpi-daily" data-tab="revenue" role="button" tabindex="0">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="accent-bar"></div>
+      <div class="arrow">[ VIEW → ]</div>
+      <div class="kpi-label"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />// Daily Revenue</div>
+      <div class="kpi-value" id="kpi-daily">$ —</div>
+      <div class="kpi-sub">TVL × 4% APY ÷ 365</div>
+    </div>
+    <div class="card kpi-annual" data-tab="annual" role="button" tabindex="0">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="accent-bar"></div>
+      <div class="arrow">[ VIEW → ]</div>
+      <div class="kpi-label"><span class="token-logo dollar">$</span>// Annualized Revenue</div>
+      <div class="kpi-value" id="kpi-annual">$ —</div>
+      <div class="kpi-sub">7d run-rate × 365</div>
+    </div>
+    <div class="card kpi-cum" data-tab="cum" role="button" tabindex="0">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="accent-bar"></div>
+      <div class="arrow">[ VIEW → ]</div>
+      <div class="kpi-label">// Cumulative Revenue</div>
+      <div class="kpi-value" id="kpi-cum">$ —</div>
+      <div class="kpi-sub">since Feb 9, 2026</div>
+    </div>
+    <div class="card kpi-days" data-tab="stables" role="button" tabindex="0">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="accent-bar"></div>
+      <div class="arrow">[ VIEW → ]</div>
+      <div class="kpi-label"><span class="token-pair"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><img class="token-logo usdt0" src="https://coin-images.coingecko.com/coins/images/53705/large/usdt0.jpg?1737086183" alt="USDT0" /></span>// USDm vs Others</div>
+      <div class="kpi-value" id="kpi-days">—</div>
+      <div class="kpi-sub">USDm share of MegaETH stables</div>
+    </div>
+    <div class="card kpi-opium" data-tab="opium" role="button" tabindex="0">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="accent-bar"></div>
+      <div class="arrow">[ VIEW → ]</div>
+      <div class="kpi-label">// Forecast</div>
+      <div class="kpi-value" id="kpi-opium">$ —</div>
+      <div class="kpi-sub">if MegaETH had Ethereum's DeFi TVL</div>
+    </div>
+  </div>
+
+  <!-- CHART PANELS (driven by KPI card clicks above) -->
+  <section class="section">
+    <div class="chart-header">
+      <div class="title-block">
+        <h2 id="chartTitle"><img class="token-logo lg" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><span>USDM TVL</span></h2>
+        <div class="desc" id="chartDesc">Circulating USDm market cap (CoinGecko / megausd) since launch.</div>
+      </div>
+      <div class="mode-toggle" id="modeToggle" role="tablist" aria-label="Display mode">
+        <button type="button" data-mode="abs" class="active"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
+        <button type="button" data-mode="stk"><span class="glyph"><i></i><i></i><i></i></span>Stacked</button>
+        <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>Percentage</button>
+      </div>
+    </div>
+
+    <div class="panel" data-panel="revenue">
+      <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+      <div class="note" id="chartNote">Estimated (based on current TVL flat baseline)</div>
+    </div>
+    <div class="panel" data-panel="cum">
+      <div class="chart-wrap"><canvas id="cumChart"></canvas></div>
+    </div>
+    <div class="panel" data-panel="annual">
+      <div class="chart-wrap"><canvas id="annualChart"></canvas></div>
+      <div class="note" id="annualNote">Run-rate = (daily USDm yield + 7-day avg network fees) × 365.</div>
+    </div>
+    <div class="panel active" data-panel="tvl">
+      <div class="chart-wrap"><canvas id="tvlChart"></canvas></div>
+    </div>
+    <div class="panel" data-panel="stables">
+      <div class="chart-wrap"><canvas id="stablesChart"></canvas></div>
+      <div class="note" id="stablesNote">USDT0 is not exposed as a separate per-chain feed by CoinGecko or DefiLlama on MegaETH — the second line aggregates all non-USDm stables (dominated by USDT0).</div>
+    </div>
+    <div class="panel" data-panel="opium">
+      <div class="chart-wrap" style="height:auto;min-height:340px"><div id="opiumBars" class="opium-bars"></div></div>
+      <div class="note" id="opiumNote">Hypothetical run-rate = (chain DeFi TVL × 4% APY) + MegaETH 7d-avg network fees × 365.</div>
+    </div>
+  </section>
+
+  <!-- TX REVENUE TABLE -->
+  <section class="section">
+    <h2>Transaction Revenue Breakdown</h2>
+    <div class="desc">Daily aggregate of network fees and USDm yield.</div>
+    <div class="table-scroll">
+      <table id="txTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Est. Tx Fees (ETH)</th>
+            <th>Est. Tx Fees (USD)</th>
+            <th><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />USDm Revenue</th>
+            <th>Total Daily</th>
+          </tr>
+        </thead>
+        <tbody id="txBody">
+          <tr><td colspan="5" class="skeleton">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note" id="txNote">Connect to MegaETH RPC for live fee data — values shown are reasonable estimates.</div>
+  </section>
+
+  <!-- USDm EXPLAINER -->
+  <details class="section" open>
+    <summary>
+      <h2>How USDm Powers MegaETH</h2>
+      <span class="chev">▶</span>
+    </summary>
+    <div class="explain">
+      <ul>
+        <li><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><strong style="color:var(--pink)">USDm</strong> is MegaETH's native stablecoin, backed by Ethena's delta-neutral reserves.</li>
+        <li>Its reserve yield (<strong style="color:var(--green)">~4% APY</strong>) funds sequencer operations across the network.</li>
+        <li>This yield-funded model means gas costs approach <strong style="color:var(--blue)">zero</strong> for end users.</li>
+        <li>Every dollar held in USDm directly subsidizes MegaETH's economic security.</li>
+      </ul>
+      <div class="formula">
+        Daily Revenue <span class="op">=</span> TVL <span class="op">×</span> <span class="num">4%</span> <span class="op">÷</span> <span class="num">365</span>
+      </div>
+    </div>
+  </details>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-data">Data: CoinGecko (USDm market cap, ETH price) · DefiLlama (chain fees + stables) · growthepie (fees fallback + stables) · MegaETH Blockscout (live token supply, ETH price history, latest-day fee fallback)</div>
+      <a class="hero-overlay__credit" href="https://x.com/JoestarCrypto" target="_blank" rel="noreferrer noopener">
+        <span class="hero-overlay__credit-label">Made by Joestar</span>
+        <span class="hero-overlay__credit-avatar" aria-hidden="true">
+          <img src="logos/Jojo2.jpg" alt="" />
+        </span>
+      </a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // -------- CONFIG --------
+  const MAINNET_LAUNCH = new Date('2026-02-09T00:00:00Z');
+  const APY = 0.04;
+  // CoinGecko coin id for MegaUSD (USDm)
+  const CG_USDM_ID = 'megausd';
+  const CG_USDM_API = `https://api.coingecko.com/api/v3/coins/${CG_USDM_ID}?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false`;
+  const CG_USDM_HISTORY = `https://api.coingecko.com/api/v3/coins/${CG_USDM_ID}/market_chart?vs_currency=usd&days=180`;
+  // MegaETH Blockscout explorer — live fees, market price history, token snapshots
+  const BS_BASE        = 'https://megaeth.blockscout.com/api/v2';
+  const BS_STATS       = `${BS_BASE}/stats`;
+  const BS_CHART_TX    = `${BS_BASE}/stats/charts/transactions`;
+  const BS_CHART_MKT   = `${BS_BASE}/stats/charts/market`;
+  const BS_TOKEN       = (addr) => `${BS_BASE}/tokens/${addr}`;
+  // Token contracts on MegaETH mainnet (verified via Blockscout token search)
+  const USDM_TOKEN_ADDRESS  = '0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7'; // MegaUSD (USDm)
+  const USDT0_TOKEN_ADDRESS = '0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb'; // USDT0 (LayerZero OFT)
+  const ETH_PRICE_API = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd';
+  // growthepie — MegaETH chain metrics (network fees/revenue)
+  const GP_MEGAETH = 'https://api.growthepie.xyz/v1/chains/megaeth.json';
+  // DefiLlama — chain-level on-chain revenue (gas fees) for MegaETH
+  // (https://defillama.com/chain/MegaETH adapter, blockscout-based, current).
+  const DL_FEES_MEGAETH   = 'https://api.llama.fi/summary/fees/megaeth?dataType=dailyFees';
+  // DefiLlama — used only for the "all stables on MegaETH" comparison curve
+  const DL_ALL_ON_MEGAETH = 'https://stablecoins.llama.fi/stablecoincharts/Megaeth';
+
+  // -------- HELPERS --------
+  const fmtUSD = (n, d = 0) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const fmtUSDc = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  // Compact dollar formatter: $12.3K / $4.5M / $1.2B / $3.4T.
+  // Used in tight UI slots (KPI cards) so big numbers don't overflow.
+  function fmtUSDCompact(n) {
+    if (n == null || !isFinite(n)) return '$ —';
+    const abs = Math.abs(n);
+    if (abs < 1000) return '$' + n.toFixed(0);
+    const units = [
+      { v: 1e12, s: 'T' },
+      { v: 1e9,  s: 'B' },
+      { v: 1e6,  s: 'M' },
+      { v: 1e3,  s: 'K' },
+    ];
+    for (const { v, s } of units) {
+      if (abs >= v) {
+        const x = n / v;
+        // 3 sig figs without trailing zeros: 12.3K, 1.23M, 999K
+        const str = (Math.abs(x) >= 100) ? x.toFixed(0)
+                  : (Math.abs(x) >= 10)  ? x.toFixed(1)
+                  :                        x.toFixed(2);
+        return '$' + str.replace(/\.?0+$/, '') + s;
+      }
+    }
+    return '$' + n.toFixed(0);
+  }
+  // Auto-switch: use full format for short numbers, compact when too long for a KPI card.
+  function fmtUSDFit(n, maxLen = 10) {
+    const full = fmtUSD(n);
+    return full.length <= maxLen ? full : fmtUSDCompact(n);
+  }
+  const fmtETH = (n) => Number(n).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  const fmtNum = (n) => Number(n).toLocaleString('en-US');
+  const isoDate = (d) => d.toISOString().slice(0, 10);
+
+  function daysBetween(a, b) {
+    return Math.max(0, Math.floor((b - a) / 86400000));
+  }
+
+  function buildDateSeries(start, end) {
+    const out = [];
+    const d = new Date(start);
+    while (d <= end) {
+      out.push(new Date(d));
+      d.setUTCDate(d.getUTCDate() + 1);
+    }
+    return out;
+  }
+
+  // -------- CORS-SAFE FETCH --------
+  // Browsers block direct calls to CoinGecko / DefiLlama / growthepie from
+  // localhost & most third-party origins. We try the URL directly first
+  // (works in extensions, file://, or hosts that have been allowlisted),
+  // then fall through a small ladder of public CORS proxies. Blockscout
+  // already sets permissive CORS headers, so its calls keep using `fetch`.
+  const CORS_PROXIES = [
+    (u) => 'https://corsproxy.io/?' + encodeURIComponent(u),
+    (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+    (u) => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
+  ];
+  async function corsFetch(url, init) {
+    try {
+      const r = await fetch(url, init);
+      if (r.ok) return r;
+    } catch (_) { /* CORS / network — fall through to proxies */ }
+    for (const wrap of CORS_PROXIES) {
+      try {
+        const r = await fetch(wrap(url), init);
+        if (r.ok) return r;
+      } catch (_) { /* try next proxy */ }
+    }
+    // Return a dummy non-ok Response so callers' `if (!res.ok)` handling kicks in.
+    return new Response('', { status: 502, statusText: 'cors-fetch-failed' });
+  }
+
+  // -------- DATA FETCH --------
+  async function fetchUSDmTVL() {
+    // CoinGecko: market cap of USDm == circulating supply * peg ($1) ≈ TVL
+    try {
+      const res = await corsFetch(CG_USDM_API);
+      if (!res.ok) throw new Error('CG usdm ' + res.status);
+      const j = await res.json();
+      const mcap = j?.market_data?.market_cap?.usd;
+      if (typeof mcap === 'number' && mcap > 0) return mcap;
+    } catch (e) {
+      console.warn('CoinGecko USDm fetch failed:', e);
+    }
+    return null;
+  }
+
+  async function fetchUSDmHistory() {
+    // CoinGecko: daily-aggregated USDm market cap since launch.
+    // Free tier returns hourly samples for days<=90 and daily for >=180.
+    // We collapse per UTC day (last sample = end-of-day mcap) so the series
+    // tracks real supply changes, not just current snapshot.
+    try {
+      const res = await corsFetch(CG_USDM_HISTORY);
+      if (!res.ok) {
+        // fallback to days=90 if 180 fails (rate-limit / pro requirement)
+        const r2 = await corsFetch(`https://api.coingecko.com/api/v3/coins/${CG_USDM_ID}/market_chart?vs_currency=usd&days=90`);
+        if (!r2.ok) throw new Error('CG history ' + res.status + '/' + r2.status);
+        const j2 = await r2.json();
+        return Array.isArray(j2?.market_caps) ? j2.market_caps : null;
+      }
+      const j = await res.json();
+      return Array.isArray(j?.market_caps) ? j.market_caps : null;
+    } catch (e) {
+      console.warn('CoinGecko USDm history fetch failed:', e);
+      return null;
+    }
+  }
+
+  async function fetchTokenSupplyHistoryOnChain(address, decimals) {
+    // Reconstruct daily on-chain supply by paginating Blockscout's
+    // Etherscan-compatible logs API for ERC-20 Transfer events where:
+    //   - topic1 == 0x0  -> mint  (from address(0))
+    //   - topic2 == 0x0  -> burn  (to address(0))
+    // Returns Map<dateISO, supplyUSD> with values forward-filled by callers.
+    // The endpoint caps at 1000 events per page; we advance fromBlock until
+    // the page comes back short (or empty).
+    const TRANSFER = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+    const ZERO     = '0x0000000000000000000000000000000000000000000000000000000000000000';
+    const PAGE     = 1000;
+    const denom    = Math.pow(10, decimals);
+
+    async function fetchAllLogs(extraQS) {
+      const out = [];
+      let fromBlock = 0;
+      // safety cap to avoid runaway loops on misconfigured endpoints
+      for (let i = 0; i < 200; i++) {
+        const url = `https://megaeth.blockscout.com/api?module=logs&action=getLogs`
+                  + `&fromBlock=${fromBlock}&toBlock=latest`
+                  + `&address=${address}&topic0=${TRANSFER}` + extraQS;
+        let res, j;
+        try { res = await fetch(url); j = await res.json(); }
+        catch (e) { console.warn('logs fetch err', e); break; }
+        const arr = Array.isArray(j?.result) ? j.result : [];
+        if (!arr.length) break;
+        out.push(...arr);
+        if (arr.length < PAGE) break;
+        const lastBlk = parseInt(arr[arr.length - 1].blockNumber, 16);
+        if (!Number.isFinite(lastBlk) || lastBlk + 1 <= fromBlock) break;
+        fromBlock = lastBlk + 1;
+      }
+      return out;
+    }
+
+    try {
+      const [mints, burns] = await Promise.all([
+        fetchAllLogs(`&topic1=${ZERO}&topic0_1_opr=and`),
+        fetchAllLogs(`&topic2=${ZERO}&topic0_2_opr=and`),
+      ]);
+
+      // Daily net change (signed)
+      const delta = new Map(); // dateISO -> netChange (in token units)
+      const addEvent = (log, sign) => {
+        const ts = parseInt(log.timeStamp, 16) * 1000;
+        const day = isoDate(new Date(ts));
+        // value is uint256 hex in `data`; use BigInt for precision
+        let raw;
+        try { raw = BigInt(log.data); } catch { return; }
+        // Convert BigInt(base units) -> Number(token units) safely
+        const units = Number(raw) / denom;
+        delta.set(day, (delta.get(day) || 0) + sign * units);
+      };
+      mints.forEach(l => addEvent(l, +1));
+      burns.forEach(l => addEvent(l, -1));
+
+      // Cumulative running supply per UTC day
+      const sortedDays = [...delta.keys()].sort();
+      const supplyByDay = new Map();
+      let acc = 0;
+      for (const d of sortedDays) {
+        acc += delta.get(d);
+        supplyByDay.set(d, Math.max(0, acc));
+      }
+      return supplyByDay;
+    } catch (e) {
+      console.warn('on-chain supply history failed for', address, e);
+      return null;
+    }
+  }
+
+  async function fetchTokenSupplyOnMegaETH(address) {
+    // MegaETH Blockscout v2: /tokens/{address} returns total_supply (base units),
+    // decimals, and circulating_market_cap. We assume 1:1 USD peg.
+    try {
+      const res = await fetch(BS_TOKEN(address));
+      if (!res.ok) throw new Error('blockscout token ' + res.status);
+      const j = await res.json();
+      const decimals = Number(j?.decimals);
+      const raw = j?.total_supply;
+      if (raw == null || !Number.isFinite(decimals)) return null;
+      // total_supply is a stringified base-unit integer; divide by 10^decimals
+      // Use a string-safe path for very large supplies.
+      const s = String(raw);
+      const big = BigInt(s);
+      const div = BigInt(10) ** BigInt(decimals);
+      const whole = Number(big / div);
+      const frac  = Number(big % div) / Number(div);
+      return whole + frac;
+    } catch (e) {
+      console.warn('Blockscout token supply fetch failed for', address, e);
+      return null;
+    }
+  }
+
+  async function fetchBlockscoutStats() {
+    try {
+      const res = await fetch(BS_STATS);
+      if (!res.ok) throw new Error('blockscout stats ' + res.status);
+      return await res.json();
+    } catch (e) {
+      console.warn('Blockscout stats fetch failed:', e);
+      return null;
+    }
+  }
+
+  async function fetchBlockscoutDailyFees() {
+    // Blockscout doesn't expose a /charts/fees endpoint, so we synthesise daily
+    // network revenue from three sources:
+    //   - /charts/transactions    → daily tx counts
+    //   - /charts/market          → daily ETH closing price
+    //   - /stats                  → current gas_used_today, transactions_today,
+    //                              and gas_prices.average (gwei). We assume
+    //                              avg gas/tx and gas price are roughly
+    //                              constant historically (acknowledged in note).
+    // dailyFee_USD ≈ txCount_d × (gas_used_today / transactions_today)
+    //               × gasPriceGwei × 1e-9  × ETHPrice_d
+    try {
+      const [statsRes, txRes, mktRes] = await Promise.all([
+        fetch(BS_STATS), fetch(BS_CHART_TX), fetch(BS_CHART_MKT),
+      ]);
+      if (!statsRes.ok || !txRes.ok || !mktRes.ok) {
+        throw new Error('blockscout fees ' + statsRes.status + '/' + txRes.status + '/' + mktRes.status);
+      }
+      const stats  = await statsRes.json();
+      const txJson = await txRes.json();
+      const mkJson = await mktRes.json();
+
+      const gasUsedToday = Number(stats?.gas_used_today) || 0;
+      const txToday      = Number(stats?.transactions_today) || 0;
+      const gasPriceGwei = Number(stats?.gas_prices?.average) || 0;
+      const avgGasPerTx  = txToday > 0 ? gasUsedToday / txToday : 0;
+
+      const priceMap = new Map();
+      for (const row of (mkJson?.chart_data || [])) {
+        priceMap.set(row.date, Number(row.closing_price) || 0);
+      }
+
+      const map = new Map();
+      for (const row of (txJson?.chart_data || [])) {
+        const date = row.date;
+        const txCount = Number(row.transactions_count) || 0;
+        const ethPrice = priceMap.get(date) || 0;
+        const ethFees = txCount * avgGasPerTx * gasPriceGwei * 1e-9;
+        const usdFees = ethFees * ethPrice;
+        map.set(date, { usd: usdFees, eth: ethFees });
+      }
+      return map;
+    } catch (e) {
+      console.warn('Blockscout fees compute failed:', e);
+      return null;
+    }
+  }
+
+  async function fetchDefiLlamaChainFees() {
+    // DefiLlama exposes MegaETH as a "chain" with its own daily fees feed,
+    // sourced from the Blockscout adapter and updated daily — this is the
+    // primary on-chain revenue source because it tracks the latest day
+    // (growthepie's pipeline can lag by days/weeks).
+    try {
+      const res = await corsFetch(DL_FEES_MEGAETH);
+      if (!res.ok) throw new Error('DL chain fees ' + res.status);
+      const j = await res.json();
+      const arr = j?.totalDataChart || [];
+      const map = new Map();
+      for (const [ts, usd] of arr) {
+        if (typeof ts !== 'number') continue;
+        map.set(isoDate(new Date(ts * 1000)), Number(usd) || 0);
+      }
+      return map;
+    } catch (e) {
+      console.warn('DefiLlama chain fees fetch failed:', e);
+      return null;
+    }
+  }
+
+  async function fetchEthPriceHistory() {
+    // Blockscout daily ETH closing price — used to convert DefiLlama's
+    // USD-only fee series back into ETH for the table.
+    try {
+      const res = await fetch(BS_CHART_MKT);
+      if (!res.ok) throw new Error('BS market ' + res.status);
+      const j = await res.json();
+      const map = new Map();
+      for (const row of (j?.chart_data || [])) {
+        map.set(row.date, Number(row.closing_price) || 0);
+      }
+      return map;
+    } catch (e) {
+      console.warn('Blockscout ETH price history fetch failed:', e);
+      return null;
+    }
+  }
+
+  async function fetchAllStablesOnMegaETH() {
+    // DefiLlama: total stablecoin circulating on MegaETH, daily
+    try {
+      const res = await corsFetch(DL_ALL_ON_MEGAETH);
+      if (!res.ok) throw new Error('DL all-megaeth ' + res.status);
+      const arr = await res.json();
+      const map = new Map();
+      for (const row of arr) {
+        const ts = Number(row.date) * 1000;
+        const v = Number(row.totalCirculatingUSD?.peggedUSD ?? row.totalCirculating?.peggedUSD ?? 0);
+        map.set(isoDate(new Date(ts)), v);
+      }
+      return map;
+    } catch (e) {
+      console.warn('DefiLlama all-stables-on-MegaETH fetch failed:', e);
+      return null;
+    }
+  }
+
+  // -------- OPIUM MATH: stables TVL on other chains (DefiLlama) --------
+  // Each entry uses DefiLlama's chain slug for /stablecoincharts/{chain}.
+  const OPIUM_CHAINS = [
+    { slug: 'Solana',   label: 'Solana',   color: '#C586FF', logo: 'https://icons.llamao.fi/icons/chains/rsz_solana.jpg' },
+    { slug: 'BSC',      label: 'BSC',      color: '#F3BA2F', logo: 'https://icons.llamao.fi/icons/chains/rsz_bsc.jpg' },
+    { slug: 'Base',     label: 'Base',     color: '#6DD0A9', logo: 'https://icons.llamao.fi/icons/chains/rsz_base.jpg' },
+    { slug: 'Arbitrum', label: 'Arbitrum', color: '#28A0F0', logo: 'https://icons.llamao.fi/icons/chains/rsz_arbitrum.jpg' },
+  ];
+  const MEGAETH_LOGO = 'https://icons.llamao.fi/icons/chains/rsz_megaeth.jpg';
+  async function fetchChainsTvlAll(slugs) {
+    // Single request — returns Map<slug, DeFi TVL USD> from DefiLlama.
+    // Uses /v2/chains (the canonical DeFi TVL list shown on defillama.com).
+    // NOTE: this is DeFi TVL, NOT stablecoin circulating supply (which is
+    // 2-3× larger and dominated by passive bridged USDT/USDC).
+    try {
+      const res = await corsFetch('https://api.llama.fi/v2/chains');
+      if (!res.ok) throw new Error('DL v2/chains ' + res.status);
+      const arr = await res.json();
+      const out = new Map();
+      for (const slug of slugs) {
+        const row = arr.find(r => r?.name === slug);
+        const v = Number(row?.tvl ?? 0);
+        if (v > 0) out.set(slug, v);
+      }
+      return out;
+    } catch (e) {
+      console.warn('chains TVL fetch failed:', e);
+      return null;
+    }
+  }
+
+  async function fetchChainStablesLatest(slug) {
+    // DefiLlama's /stablecoinchains endpoint is the authoritative current
+    // total — same number shown on defillama.com/stablecoins. The per-chain
+    // /stablecoincharts/{chain} historical series can include legacy/dead
+    // tokens and overstate TVL by 20-40%, so we don't use it for the
+    // hypothetical comparison.
+    try {
+      const res = await corsFetch('https://stablecoins.llama.fi/stablecoinchains');
+      if (!res.ok) throw new Error('DL chains ' + res.status);
+      const arr = await res.json();
+      const row = arr.find(r => r?.name === slug);
+      const v = Number(row?.totalCirculatingUSD?.peggedUSD ?? 0);
+      return v > 0 ? v : null;
+    } catch (e) {
+      console.warn('chain stables fetch failed for', slug, e);
+      return null;
+    }
+  }
+
+  async function fetchGrowthepie() {
+    // Single hit — returns { fees: Map<dateISO,{usd,eth}>, stables: Map<dateISO, usd> }
+    // for MegaETH. growthepie.xyz publishes a continuous daily series since
+    // ~Nov 2025 with no gaps, which is more reliable than synthesising fees
+    // from Blockscout snapshots and more complete than DefiLlama for stables.
+    try {
+      const res = await corsFetch(GP_MEGAETH);
+      if (!res.ok) throw new Error('growthepie ' + res.status);
+      const j = await res.json();
+      const feeRows = j?.data?.metrics?.fees?.daily?.data || [];
+      const stRows  = j?.data?.metrics?.stables_mcap?.daily?.data || [];
+      const fees = new Map();
+      for (const [ts, usd, eth] of feeRows) {
+        fees.set(isoDate(new Date(ts)), { usd: Number(usd) || 0, eth: Number(eth) || 0 });
+      }
+      const stables = new Map();
+      for (const row of stRows) {
+        // row shape: [unix_ms, usd] (and possibly an eth value)
+        const ts = Number(row[0]);
+        const usd = Number(row[1]) || 0;
+        if (ts > 0) stables.set(isoDate(new Date(ts)), usd);
+      }
+      return { fees, stables };
+    } catch (e) {
+      console.warn('growthepie fetch failed:', e);
+      return { fees: null, stables: null };
+    }
+  }
+
+  async function fetchEthPrice() {
+    try {
+      const res = await corsFetch(ETH_PRICE_API);
+      if (!res.ok) throw new Error('eth price ' + res.status);
+      const j = await res.json();
+      return j.ethereum?.usd ?? 3000;
+    } catch (e) {
+      console.warn('ETH price fetch failed:', e);
+      return 3000;
+    }
+  }
+
+  // -------- RENDER --------
+  const chartInstances = {};
+
+  function renderKPIs(tvl, daysSinceLaunch, dailyRev, cumRev, annualRev, usdmShare) {
+    document.getElementById('kpi-tvl').textContent  = tvl != null ? fmtUSDFit(tvl) : '$ —';
+    document.getElementById('kpi-daily').textContent = fmtUSDFit(dailyRev);
+    const annEl = document.getElementById('kpi-annual');
+    if (annEl) annEl.textContent = fmtUSDFit(annualRev);
+    document.getElementById('kpi-cum').textContent   = fmtUSDFit(cumRev);
+    document.getElementById('kpi-days').textContent  = (usdmShare != null && isFinite(usdmShare))
+      ? (usdmShare * 100).toFixed(1) + '%'
+      : '—';
+  }
+
+  function gradient(ctx, hex) {
+    // Build a translucent vertical gradient from the given hex color
+    const g = ctx.createLinearGradient(0, 0, 0, 360);
+    const r = parseInt(hex.slice(1, 3), 16);
+    const gC = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    g.addColorStop(0, `rgba(${r},${gC},${b},0.35)`);
+    g.addColorStop(1, `rgba(${r},${gC},${b},0.00)`);
+    return g;
+  }
+
+  function makeLineChart(canvasId, datasets, dates, opts = {}) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const labels = dates.map(d => isoDate(d));
+    if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+    const stacked = !!opts.stacked;
+    const percent = !!opts.percent;
+
+    let renderDatasets = datasets;
+    if (percent) {
+      // normalise so each timestamp's stack sums to 100
+      const n = dates.length;
+      const totals = new Array(n).fill(0);
+      for (let i = 0; i < n; i++) {
+        for (const d of datasets) totals[i] += Number(d.values[i]) || 0;
+      }
+      renderDatasets = datasets.map(d => ({
+        ...d,
+        values: d.values.map((v, i) => totals[i] > 0 ? (Number(v) || 0) / totals[i] * 100 : 0),
+      }));
+    }
+
+    const ds = renderDatasets.map(d => ({
+      label: d.label,
+      data: d.values,
+      borderColor: d.color,
+      backgroundColor: (d.fill || stacked) ? gradient(ctx, d.color) : 'transparent',
+      borderWidth: 2,
+      fill: stacked ? (d.fillTarget || (renderDatasets.indexOf(d) === 0 ? 'origin' : '-1')) : !!d.fill,
+      tension: 0.25,
+      pointRadius: 0,
+      pointHoverRadius: 5,
+      pointHoverBackgroundColor: d.color,
+      pointHoverBorderColor: '#19191A',
+      pointHoverBorderWidth: 2,
+      stack: stacked ? 'stack0' : undefined,
+    }));
+    chartInstances[canvasId] = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets: ds },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            display: datasets.length > 1,
+            labels: { color: '#ECE8E8', font: { family: 'Helvetica Neue' }, boxWidth: 12, boxHeight: 12 }
+          },
+          tooltip: {
+            backgroundColor: '#1E1E20',
+            borderColor: 'rgba(144,215,159,0.4)',
+            borderWidth: 1,
+            titleColor: '#ECE8E8',
+            bodyColor: '#ECE8E8',
+            titleFont: { family: 'Helvetica Neue', weight: '600' },
+            bodyFont: { family: 'Courier New', weight: '700' },
+            padding: 12,
+            displayColors: true,
+            callbacks: {
+              title: (items) => items[0].label,
+              label: (item) => percent
+                ? '  ' + item.dataset.label + ': ' + item.parsed.y.toFixed(1) + '%'
+                : '  ' + item.dataset.label + ': ' + fmtUSDc(item.parsed.y),
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#DFD9D9', font: { family: 'Courier New', size: 10 }, maxRotation: 0, autoSkipPadding: 24 },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            stacked: stacked,
+            min: percent ? 0 : undefined,
+            max: percent ? 100 : undefined,
+            ticks: {
+              color: '#DFD9D9',
+              font: { family: 'Courier New', size: 10 },
+              callback: (v) => percent
+                ? Number(v).toFixed(0) + '%'
+                : '$' + Number(v).toLocaleString('en-US')
+            },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          }
+        }
+      }
+    });
+  }
+
+  function renderChart(dates, values) {
+    makeLineChart('revenueChart', [{ label: 'Total Daily Revenue (USD)', values, color: '#6DD0A9', fill: true }], dates);
+  }
+
+  // -------- CHART STATE (raw datasets per panel + display mode) --------
+  const chartState = {
+    revenue: { canvas: 'revenueChart', mode: 'abs', dates: [], datasets: [] },
+    cum:     { canvas: 'cumChart',     mode: 'abs', dates: [], datasets: [] },
+    annual:  { canvas: 'annualChart',  mode: 'abs', dates: [], datasets: [] },
+    tvl:     { canvas: 'tvlChart',     mode: 'abs', dates: [], datasets: [] },
+    stables: { canvas: 'stablesChart', mode: 'abs', dates: [], datasets: [] },
+    opium:   { canvas: 'opiumChart',   kind: 'bar', mode: 'abs', labels: [], values: [], colors: [] },
+  };
+  // panels that support the mode toggle (must have >1 dataset to be meaningful)
+  const PERCENT_PANELS = new Set(['revenue', 'stables']);
+
+  function renderPanel(key) {
+    const s = chartState[key];
+    if (!s) return;
+    if (key === 'opium') {
+      if (s.labels && s.labels.length) renderOpiumBars(s.labels, s.values, s.colors, s.logos);
+      return;
+    }
+    if (s.kind === 'bar') {
+      if (!s.labels || !s.labels.length) return;
+      makeBarChart(s.canvas, s.labels, s.values, s.colors);
+      return;
+    }
+    if (!s.dates.length) return;
+    const isPct = s.mode === 'pct';
+    const isStk = s.mode === 'stk';
+    makeLineChart(s.canvas, s.datasets, s.dates, {
+      stacked: isPct || isStk,
+      percent: isPct,
+    });
+  }
+
+  function renderOpiumBars(labels, values, colors, logos) {
+    const host = document.getElementById('opiumBars');
+    if (!host) return;
+    // Sort descending by value but keep index 0 (MegaETH base) for multiplier reference
+    const baseVal = values[0] || 0;
+    const rows = labels.map((l, i) => ({
+      label: l,
+      value: values[i],
+      color: colors[i],
+      logo: logos ? logos[i] : null,
+      isBase: i === 0,
+    }));
+    rows.sort((a, b) => b.value - a.value);
+    const max = rows.reduce((m, r) => Math.max(m, r.value), 0) || 1;
+    host.innerHTML = rows.map(r => {
+      const pct = Math.max(1.5, (r.value / max) * 100);
+      const mult = baseVal > 0 ? (r.value / baseVal) : null;
+      const multTxt = r.isBase
+        ? 'BASELINE'
+        : (mult != null ? (mult >= 100 ? mult.toFixed(0) : mult.toFixed(1)) + '×' : '—');
+      const r0 = parseInt(r.color.slice(1,3),16);
+      const g0 = parseInt(r.color.slice(3,5),16);
+      const b0 = parseInt(r.color.slice(5,7),16);
+      const glow = `rgba(${r0},${g0},${b0},0.45)`;
+      const logoTag = r.logo
+        ? `<img class="chain-logo" src="${r.logo}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`
+        : '';
+      return `
+        <div class="opium-row${r.isBase ? ' is-base' : ''}">
+          <div class="opium-name">${logoTag}<span>${r.label}</span></div>
+          <div class="opium-track" style="--c:${r.color};--glow:${glow}">
+            <div class="opium-fill" style="--c:${r.color};--glow:${glow};width:${pct}%"></div>
+            <div class="opium-meta">
+              <span class="opium-val">${fmtUSD(r.value)}<span class="unit">/ yr</span></span>
+              <span class="opium-mult" style="--c:${r.color};--glow:${glow}">${multTxt}</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function makeBarChart(canvasId, labels, values, colors) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+    // build a vertical gradient fill for each bar from its base color
+    const fills = colors.map(hex => {
+      const r = parseInt(hex.slice(1,3),16);
+      const g = parseInt(hex.slice(3,5),16);
+      const b = parseInt(hex.slice(5,7),16);
+      const grad = ctx.createLinearGradient(0, 0, 0, 360);
+      grad.addColorStop(0, `rgba(${r},${g},${b},0.95)`);
+      grad.addColorStop(1, `rgba(${r},${g},${b},0.35)`);
+      return grad;
+    });
+    chartInstances[canvasId] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          backgroundColor: fills,
+          borderColor: colors,
+          borderWidth: 1,
+          borderRadius: 0,
+          maxBarThickness: 88,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1E1E20',
+            borderColor: 'rgba(197,134,255,0.45)',
+            borderWidth: 1,
+            titleColor: '#ECE8E8',
+            bodyColor: '#ECE8E8',
+            padding: 12,
+            displayColors: false,
+            callbacks: {
+              label: (item) => '  ' + fmtUSD(item.parsed.y) + ' / yr',
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: { color: '#DFD9D9', font: { family: 'Courier New', size: 11 } },
+            grid: { color: 'rgba(255,255,255,0.04)' },
+          },
+          y: {
+            ticks: {
+              color: '#DFD9D9',
+              font: { family: 'Courier New', size: 10 },
+              callback: (v) => '$' + Number(v).toLocaleString('en-US'),
+            },
+            grid: { color: 'rgba(255,255,255,0.04)' },
+          },
+        },
+      },
+    });
+  }
+
+  function renderTable(rows) {
+    const body = document.getElementById('txBody');
+    if (!rows.length) {
+      body.innerHTML = '<tr><td colspan="5" class="skeleton">No data</td></tr>';
+      return;
+    }
+    body.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.date}</td>
+        <td class="col-eth">${fmtETH(r.txEth)}</td>
+        <td class="col-usd">${fmtUSDc(r.txUsd)}</td>
+        <td class="col-usdm">${fmtUSDc(r.usdmRev)}</td>
+        <td class="col-total">${fmtUSDc(r.total)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // -------- MAIN --------
+  async function main() {
+    const now = new Date();
+    const lu = document.getElementById('lastUpdated');
+    if (lu) {
+      lu.textContent =
+        'Last updated: ' + now.toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+    }
+
+    // Fast path: every source returns within seconds.
+    const [tvlRaw, ethPrice, history, dlStables, gp, dlFees, ethPriceHist, bsFees, usdmLive, usdt0Live, opiumTvl] = await Promise.all([
+      fetchUSDmTVL(),
+      fetchEthPrice(),
+      fetchUSDmHistory(),
+      fetchAllStablesOnMegaETH(),
+      fetchGrowthepie(),
+      fetchDefiLlamaChainFees(),
+      fetchEthPriceHistory(),
+      fetchBlockscoutDailyFees(),
+      fetchTokenSupplyOnMegaETH(USDM_TOKEN_ADDRESS),
+      fetchTokenSupplyOnMegaETH(USDT0_TOKEN_ADDRESS),
+      fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug)),
+    ]);
+    const gpFees    = gp?.fees    || null;
+    const gpStables = gp?.stables || null;
+    // Merge stables sources — growthepie has continuous daily coverage,
+    // DefiLlama fills any gaps. growthepie wins on overlap (cleaner series).
+    const allStables = new Map();
+    if (dlStables) for (const [k, v] of dlStables) allStables.set(k, v);
+    if (gpStables)  for (const [k, v] of gpStables)  allStables.set(k, v);
+    const tvl = tvlRaw ?? usdmLive ?? 50_000_000; // prefer CoinGecko, then on-chain explorer, then fallback
+    const usingFallback = tvlRaw == null && usdmLive == null;
+
+    const days = Math.max(1, daysBetween(MAINNET_LAUNCH, now));
+    const dailyRev = (tvl * APY) / 365;
+
+    // ------------------------------------------------------------------
+    // CANONICAL DATE AXIS: every chart shares the same x-axis, anchored
+    // at MAINNET_LAUNCH (Feb 9, 2026) through today. Missing data is
+    // forward-filled (supplies) or zero-filled (fees) so charts always
+    // start at the launch date even when sources have shorter history.
+    // ------------------------------------------------------------------
+    const dates = buildDateSeries(MAINNET_LAUNCH, now);
+    const dateKeys = dates.map(d => isoDate(d));
+
+    // USDm mcap series since launch (CoinGecko hourly -> daily UTC, ffill).
+    let mcapSeries;
+    if (history && history.length) {
+      const byDay = new Map();
+      for (const [ts, mcap] of history) {
+        if (ts < MAINNET_LAUNCH.getTime()) continue;
+        const key = isoDate(new Date(ts));
+        const prev = byDay.get(key);
+        if (!prev || ts > prev.ts) byDay.set(key, { ts, mcap: Number(mcap) });
+      }
+      // Backward-fill the first few launch days that may pre-date CG's first
+      // sample, so the "other stables = total - USDm" derivation doesn't show
+      // a misleading $100M spike during the 1-2 days before CG indexed USDm.
+      const sortedKeys = [...byDay.keys()].sort();
+      const firstMcap  = sortedKeys.length ? byDay.get(sortedKeys[0]).mcap : 0;
+      let last = firstMcap;
+      mcapSeries = dateKeys.map(k => {
+        const v = byDay.get(k)?.mcap;
+        if (typeof v === 'number') { last = v; return v; }
+        return last;
+      });
+    } else {
+      mcapSeries = dateKeys.map(() => tvl);
+    }
+    const usdmDaily = mcapSeries.map(m => (m * APY) / 365);
+    let cumRev;
+
+    // Per-day network fees (USD) — growthepie is PRIMARY because it provides
+    // a continuous, gap-free daily series for MegaETH since launch. Blockscout's
+    // synthesised fees (txCount × avgGas × gasPrice) are only used to fill the
+    // very latest day(s) when growthepie hasn't published yet, so the table and
+    // chart never have zero-holes between known days.
+    // Priority: DefiLlama chain fees (current, gap-free) → growthepie → Blockscout.
+    // DefiLlama only ships USD; derive ETH via Blockscout's daily close map.
+    const rawNetUsd = dates.map((d) => {
+      const k = isoDate(d);
+      const dl = dlFees?.get(k);
+      if (dl != null && dl > 0) return dl;
+      const gp = gpFees?.get(k);
+      if (gp && gp.usd > 0) return gp.usd;
+      const bs = bsFees?.get(k);
+      if (bs && bs.usd > 0) return bs.usd;
+      return null;
+    });
+    const rawNetEth = dates.map((d) => {
+      const k = isoDate(d);
+      const dl = dlFees?.get(k);
+      if (dl != null && dl > 0) {
+        const px = ethPriceHist?.get(k) || ethPrice;
+        if (px > 0) return dl / px;
+      }
+      const gp = gpFees?.get(k);
+      if (gp && gp.eth > 0) return gp.eth;
+      const bs = bsFees?.get(k);
+      if (bs && bs.eth > 0) return bs.eth;
+      return null;
+    });
+    // Forward-fill so the chart never falls back to $0 just because the
+    // upstream source (growthepie pipeline can be a few days behind, Blockscout
+    // depends on /stats today-snapshot) hasn't published a given day yet.
+    function ffillNumbers(arr) {
+      let last = 0;
+      return arr.map(v => {
+        if (v != null) { last = v; return v; }
+        return last;
+      });
+    }
+    const networkDaily    = ffillNumbers(rawNetUsd);
+    const networkDailyEth = ffillNumbers(rawNetEth);
+
+    // Annualized run-rate = 7-day rolling avg of (USDm yield + network fees) × 365.
+    // Smooths the daily noise and projects "if the chain keeps earning at this
+    // pace, this is the yearly revenue".
+    const WIN = 7;
+    const totalDaily = dates.map((d, i) => usdmDaily[i] + networkDaily[i]);
+    cumRev = totalDaily.reduce((a, b) => a + b, 0);
+
+    // Annualized run-rate, in USD: exact USDm yield each day (it's already
+    // a deterministic mcap × APY ÷ 365 figure, no need to smooth) PLUS a
+    // rolling 7-day average of on-chain network fees (which are noisy day to
+    // day). Result is then × 365 to project the yearly run-rate.
+    const annualizedSeries = dates.map((_, i) => {
+      const lo = Math.max(0, i - WIN + 1);
+      const feeSlice = networkDaily.slice(lo, i + 1);
+      const feeAvg = feeSlice.reduce((a, b) => a + b, 0) / feeSlice.length;
+      return (usdmDaily[i] + feeAvg) * 365;
+    });
+    const annualizedRunRate = annualizedSeries[annualizedSeries.length - 1] || 0;
+
+    // Cumulative running series
+    const cumSeries = [];
+    let acc = 0;
+    for (const v of totalDaily) { acc += v; cumSeries.push(acc); }
+
+    // "Other stables" on MegaETH = (total stables on chain) − USDm.
+    // Total comes from growthepie (primary, gap-free daily) merged with
+    // DefiLlama. On MegaETH today this bucket is dominated by USDT0
+    // (live snapshot via Blockscout shown in the note below).
+    let lastOther = 0;
+    const otherSeries = dateKeys.map((k, i) => {
+      const total = allStables.get(k);
+      if (total != null) {
+        lastOther = Math.max(0, total - mcapSeries[i]);
+      }
+      return lastOther;
+    });
+
+    // USDT0 + USDm supply curves reconstructed from on-chain mint/burn events
+    // via Blockscout logs API. Forward-filled across the canonical date axis.
+    function ffillFromMap(map) {
+      if (!map || !map.size) return null;
+      const sortedKeys = [...map.keys()].sort();
+      let last = 0;
+      // walk both axes in lockstep; find the last known value <= each date
+      let p = 0;
+      return dateKeys.map(k => {
+        while (p < sortedKeys.length && sortedKeys[p] <= k) {
+          last = map.get(sortedKeys[p]);
+          p++;
+        }
+        return last;
+      });
+    }
+
+    // USDT0 supply curve on MegaETH ≈ (total stables − USDm) from DefiLlama.
+    // This is the only daily, launch-anchored, *MegaETH-only* source for
+    // USDT0. CoinGecko's mcap is global cross-chain (~$4B vs $14M on MegaETH)
+    // and Blockscout's logs API caps at 1000 events/page which makes the
+    // mint/burn reconstruction unreliable for high-throughput LayerZero OFTs.
+    const usdt0Series = otherSeries;
+
+    // Chart note
+    const noteEl = document.getElementById('chartNote');
+    if (history && (dlFees || gpFees || bsFees)) {
+      const sources = [];
+      if (dlFees && dlFees.size) sources.push('DefiLlama (chain fees, daily)');
+      if (gpFees && gpFees.size) sources.push('growthepie (fallback)');
+      if (bsFees && bsFees.size) sources.push('Blockscout (latest day)');
+      noteEl.textContent =
+        'USDm yield = CoinGecko mcap × 4% ÷ 365. Network revenue: ' + sources.join(' + ') + '.';
+    } else if (history) {
+      noteEl.textContent = 'USDm yield only (network fee sources unavailable) — CoinGecko mcap × 4% ÷ 365';
+    } else if (gpFees || bsFees || dlFees) {
+      noteEl.textContent = 'Network fees only (CoinGecko USDm history unavailable) — flat baseline used for yield.';
+    } else {
+      noteEl.textContent = usingFallback
+        ? 'Estimated (sources unavailable — using $50M placeholder TVL)'
+        : 'Estimated (based on current TVL flat baseline)';
+    }
+
+    const usdmLast = mcapSeries[mcapSeries.length - 1] || 0;
+    const otherLast = otherSeries[otherSeries.length - 1] || 0;
+    const totalLast = usdmLast + otherLast;
+    const usdmShare = totalLast > 0 ? usdmLast / totalLast : null;
+    renderKPIs(tvl, days, dailyRev, cumRev, annualizedRunRate, usdmShare);
+
+    // Daily revenue chart — USDm Yield + Network Fees, anchored at
+    // mainnet launch. Days where Blockscout has no fee data show as 0
+    // (chart note explains the ≈30-day Blockscout window).
+    chartState.revenue.dates    = dates;
+    chartState.revenue.datasets = [
+      { label: 'USDm Yield',   values: usdmDaily,    color: '#FF8AA8', fill: true },
+      { label: 'Network Fees', values: networkDaily, color: '#7EAAD4', fill: true },
+    ];
+    renderPanel('revenue');
+
+    // Cumulative chart
+    chartState.cum.dates    = dates;
+    chartState.cum.datasets = [
+      { label: 'Cumulative Revenue (USD)', values: cumSeries, color: '#90D79F', fill: true }
+    ];
+    renderPanel('cum');
+
+    // Annualized run-rate chart — 7d rolling avg × 365
+    chartState.annual.dates    = dates;
+    chartState.annual.datasets = [
+      { label: 'Annualized Revenue (USDm yield + avg fees) × 365', values: annualizedSeries, color: '#F5AF94', fill: true }
+    ];
+    renderPanel('annual');
+
+    // USDm TVL chart
+    chartState.tvl.dates    = dates;
+    chartState.tvl.datasets = [
+      { label: 'USDm TVL on MegaETH (USD)', values: mcapSeries, color: '#FF8AA8', fill: true }
+    ];
+    renderPanel('tvl');
+
+    // USDm vs Other stables — "Other" = DefiLlama per-chain stable total
+    // minus USDm. On MegaETH today this is ~80% USDT0 + USDC + bridged
+    // tokens. We can't isolate USDT0 cleanly from a daily series (CoinGecko
+    // mcap is global cross-chain, DefiLlama doesn't list USDT0 separately,
+    // and Blockscout's logs API caps at 1000 events/page which makes the
+    // mint/burn reconstruction unreliable for high-throughput LayerZero OFTs).
+    const stablesNoteEl = document.getElementById('stablesNote');
+    chartState.stables.dates = dates;
+    if (allStables.size) {
+      chartState.stables.datasets = [
+        { label: 'USDm',  values: mcapSeries,  color: '#FF8AA8', fill: false },
+        { label: 'USDT0', values: usdt0Series, color: '#26A17B', fill: false },
+      ];
+      const live = [];
+      if (usdmLive  != null) live.push('USDm: '  + fmtUSD(usdmLive));
+      if (usdt0Live != null) live.push('USDT0: ' + fmtUSD(usdt0Live));
+      const srcs = [];
+      if (gpStables && gpStables.size) srcs.push('growthepie');
+      if (dlStables && dlStables.size) srcs.push('DefiLlama');
+      stablesNoteEl.textContent =
+        'Total stables (' + (srcs.join(' + ') || 'none') + ') − USDm. '
+        + 'On MegaETH this bucket is dominated by USDT0 (LayerZero OFT, no per-token daily feed exists). '
+        + (live.length ? 'Live on-chain (Blockscout): ' + live.join(' · ') + '. ' : '')
+        + 'Toggle [ % ] for share view.';
+    } else if (usdt0Live != null) {
+      const flat = dateKeys.map(() => usdt0Live);
+      chartState.stables.datasets = [
+        { label: 'USDm',  values: mcapSeries, color: '#FF8AA8', fill: false },
+        { label: 'USDT0', values: flat,       color: '#26A17B', fill: false },
+      ];
+      stablesNoteEl.textContent =
+        'DefiLlama unavailable — USDT0 shown as flat line at live Blockscout snapshot (' + fmtUSD(usdt0Live) + ').';
+    } else {
+      chartState.stables.datasets = [
+        { label: 'USDm', values: mcapSeries, color: '#FF8AA8', fill: false },
+      ];
+      stablesNoteEl.textContent = 'Stable supply sources unavailable — only USDm shown.';
+    }
+    renderPanel('stables');
+
+    // ------------------------------------------------------------------
+    // OPIUM MATH: hypothetical annualized revenue if MegaETH had
+    // the stables TVL of other major chains. Fee component stays at
+    // MegaETH's actual 7d-avg network fees × 365 (chains differ in fee
+    // economics, so we don't substitute that). USDm yield component is
+    // (chain stables TVL × APY).
+    // ------------------------------------------------------------------
+    const feeAvg7 = (() => {
+      const lo = Math.max(0, networkDaily.length - WIN);
+      const slice = networkDaily.slice(lo);
+      return slice.length ? slice.reduce((a,b)=>a+b,0) / slice.length : 0;
+    })();
+    const feeAnnualized = feeAvg7 * 365;
+    const opiumLabels = ['MegaETH (now)'];
+    const opiumValues = [annualizedRunRate];
+    const opiumColors = ['#90D79F'];
+    const opiumLogos  = [MEGAETH_LOGO];
+    OPIUM_CHAINS.forEach((c) => {
+      const tvlChain = opiumTvl ? opiumTvl.get(c.slug) : null;
+      if (tvlChain == null || !(tvlChain > 0)) return;
+      const hyp = tvlChain * APY + feeAnnualized;
+      opiumLabels.push(c.label);
+      opiumValues.push(hyp);
+      opiumColors.push(c.color);
+      opiumLogos.push(c.logo);
+    });
+    chartState.opium.labels = opiumLabels;
+    chartState.opium.values = opiumValues;
+    chartState.opium.colors = opiumColors;
+    chartState.opium.logos  = opiumLogos;
+    renderOpiumBars(opiumLabels, opiumValues, opiumColors, opiumLogos);
+
+    // KPI: show the top hypothetical annualized run-rate
+    const opiumKpiEl = document.getElementById('kpi-opium');
+    if (opiumKpiEl) {
+      const target = opiumValues.length > 1 ? Math.max(...opiumValues.slice(1)) : null;
+      opiumKpiEl.textContent = target != null ? fmtUSDFit(target) : '$ —';
+    }
+    const opiumKpiSub = document.querySelector('.kpi-opium .kpi-sub');
+    if (opiumKpiSub) {
+      // find label of max
+      let maxIdx = 1, maxVal = -Infinity;
+      for (let i = 1; i < opiumValues.length; i++) if (opiumValues[i] > maxVal) { maxVal = opiumValues[i]; maxIdx = i; }
+      if (opiumLabels[maxIdx]) opiumKpiSub.textContent = `if MegaETH had ${opiumLabels[maxIdx]}'s DeFi TVL`;
+    }
+    const opiumNoteEl = document.getElementById('opiumNote');
+    if (opiumNoteEl) {
+      opiumNoteEl.textContent =
+        'Hypothetical = chain DeFi TVL × 4% APY + MegaETH 7d-avg network fees × 365. '
+        + 'TVL via DefiLlama /v2/chains (canonical DeFi TVL — not stablecoin circulating supply, not token market cap). '
+        + 'Fee component held constant at MegaETH actual ($'
+        + Math.round(feeAnnualized).toLocaleString('en-US') + '/yr).';
+    }
+
+    // Build table — last 14 days using combined Blockscout + growthepie fees
+    const N = Math.min(14, dates.length);
+    const tailDates    = dates.slice(-N).reverse();
+    const tailUsdm     = usdmDaily.slice(-N).reverse();
+    const tailFeesUsd  = networkDaily.slice(-N).reverse();
+    const tailFeesEth  = networkDailyEth.slice(-N).reverse();
+    const rows = tailDates.map((d, idx) => {
+      const usdmRev = tailUsdm[idx];
+      const txUsd   = tailFeesUsd[idx];
+      const txEth   = tailFeesEth[idx];
+      return {
+        date: isoDate(d),
+        txEth,
+        txUsd,
+        usdmRev,
+        total: txUsd + usdmRev,
+      };
+    });
+    renderTable(rows);
+
+    // Table note
+    const txNoteEl = document.getElementById('txNote');
+    const srcs = [];
+    if (dlFees && dlFees.size) srcs.push('DefiLlama');
+    if (gpFees && gpFees.size) srcs.push('growthepie');
+    if (bsFees && bsFees.size) srcs.push('Blockscout');
+    if (srcs.length) {
+      txNoteEl.textContent = 'Network revenue from ' + srcs.join(' + ') + ' — daily MegaETH gas fees, USD via ETH close.';
+    } else {
+      txNoteEl.textContent = 'Network fee sources unavailable — values shown as zero.';
+    }
+  }
+
+  function hideLoader() {
+    const ov = document.getElementById('loadingOverlay');
+    if (!ov) return;
+    const status = document.getElementById('loadStatus');
+    if (status) status.innerHTML = 'Sync complete · Entering mainnet<span class="blink">_</span>';
+    setTimeout(() => ov.classList.add('hide'), 250);
+    setTimeout(() => ov.remove(), 900);
+  }
+
+  main()
+    .catch((err) => { console.error('[megaeth] main() failed:', err); })
+    .finally(hideLoader);
+
+  // Safety: never leave the overlay stuck on screen.
+  setTimeout(hideLoader, 20000);
+
+  // -------- BRAND ASSETS (token logos, used in chart headers etc.) --------
+  const LOGO_USDM  = 'https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136';
+  const LOGO_USDT0 = 'https://coin-images.coingecko.com/coins/images/53705/large/usdt0.jpg?1737086183';
+  const logoImg = (kind, cls = '') => {
+    if (kind === 'dollar') return `<span class="token-logo dollar ${cls}">$</span>`;
+    if (kind === 'opium')  return `<span class="token-logo opium ${cls}">☠</span>`;
+    if (kind === 'usdt0')  return `<img class="token-logo usdt0 ${cls}" src="${LOGO_USDT0}" alt="USDT0" />`;
+    return `<img class="token-logo ${cls}" src="${LOGO_USDM}" alt="USDm" />`;
+  };
+
+  // KPI cards as chart tabs
+  const TAB_META = {
+    revenue: { title: 'DAILY REVENUE', desc: 'USDm reserve yield vs MegaETH network fees, day by day since launch.', chart: 'revenueChart', key: 'revenue', logos: ['usdm'] },
+    cum:     { title: 'CUMULATIVE REVENUE', desc: 'Running total of daily revenue accumulated since Feb 9, 2026.',         chart: 'cumChart',     key: 'cum' },
+    annual:  { title: 'ANNUALIZED REVENUE', desc: 'Run-rate projection: 7-day rolling daily revenue × 365.',              chart: 'annualChart',  key: 'annual', logos: ['dollar'] },
+    tvl:     { title: 'USDM TVL',          desc: 'Circulating USDm market cap (CoinGecko / megausd) since launch.',        chart: 'tvlChart',     key: 'tvl', logos: ['usdm'] },
+    stables: { title: 'USDM vs OTHERS',    desc: 'USDm market cap vs the rest of the MegaETH stable supply (DefiLlama / growthepie).', chart: 'stablesChart', key: 'stables', logos: ['usdm', 'usdt0'] },
+    opium:   { title: 'FORECAST',          desc: 'Hypothetical annualized revenue if MegaETH had the DeFi TVL of other major chains.', chart: 'opiumChart', key: 'opium' },
+  };
+  let activeTab = 'tvl';
+  function selectTab(target) {
+    activeTab = target;
+    document.querySelectorAll('#kpiTabs .card').forEach(c =>
+      c.classList.toggle('active', c.dataset.tab === target));
+    document.querySelectorAll('.panel').forEach(p =>
+      p.classList.toggle('active', p.dataset.panel === target));
+    const meta = TAB_META[target];
+    if (meta) {
+      const logoHTML = (meta.logos || []).map(k => logoImg(k, 'lg')).join('');
+      document.getElementById('chartTitle').innerHTML = logoHTML + '<span>' + meta.title + '</span>';
+      document.getElementById('chartDesc').textContent  = meta.desc;
+      // toggle visibility of the % switch
+      const tog = document.getElementById('modeToggle');
+      tog.classList.toggle('show', PERCENT_PANELS.has(target));
+      // sync toggle buttons to current mode of this panel
+      const m = chartState[target]?.mode || 'abs';
+      tog.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+      // Re-render the panel after it becomes visible so Chart.js measures
+      // the now-visible canvas (charts created while display:none get a 0×0
+      // backing buffer and stay blank otherwise).
+      requestAnimationFrame(() => renderPanel(target));
+    }
+  }
+  document.querySelectorAll('#kpiTabs .card').forEach(card => {
+    card.addEventListener('click', () => selectTab(card.dataset.tab));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTab(card.dataset.tab); }
+    });
+  });
+
+  // Mode toggle (Absolute / Stacked / Percentage) — only active for multi-dataset panels
+  document.querySelectorAll('#modeToggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!PERCENT_PANELS.has(activeTab)) return;
+      const mode = btn.dataset.mode;
+      chartState[activeTab].mode = mode;
+      document.querySelectorAll('#modeToggle button').forEach(b =>
+        b.classList.toggle('active', b === btn));
+      renderPanel(activeTab);
+    });
+  });
+
+  // Auto-refresh daily
+  setInterval(main, 24 * 60 * 60 * 1000);
+</script>
+</body>
+</html>
