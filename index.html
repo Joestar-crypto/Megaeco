@@ -1133,7 +1133,7 @@
       <div class="arrow">[ VIEW → ]</div>
       <div class="kpi-label"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />// Daily Revenue</div>
       <div class="kpi-value" id="kpi-daily">$ —</div>
-      <div class="kpi-sub">TVL × 4% APY ÷ 365</div>
+      <div class="kpi-sub" id="kpi-daily-sub">TVL × ~3.09% APY ÷ 365</div>
     </div>
     <div class="card kpi-annual" data-tab="annual" role="button" tabindex="0">
       <span class="corner tl"></span><span class="corner br"></span>
@@ -1211,7 +1211,7 @@
     </div>
     <div class="panel" data-panel="opium">
       <div class="chart-wrap" style="height:auto;min-height:340px"><div id="opiumBars" class="opium-bars"></div></div>
-      <div class="note" id="opiumNote">Hypothetical run-rate = (chain DeFi TVL × 4% APY) + MegaETH 7d-avg network fees × 365.</div>
+      <div class="note" id="opiumNote">Hypothetical run-rate = (chain DeFi TVL × USDm APY) + MegaETH 7d-avg network fees × 365.</div>
     </div>
     <div class="panel" data-panel="chainrev">
       <div class="chart-wrap" style="height:auto;min-height:340px"><div id="chainRevBars" class="opium-bars"></div></div>
@@ -1251,12 +1251,12 @@
     <div class="explain">
       <ul>
         <li><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><strong style="color:var(--pink)">USDm</strong> is MegaETH's native stablecoin, backed by Ethena's delta-neutral reserves.</li>
-        <li>Its reserve yield (<strong style="color:var(--green)">~4% APY</strong>) funds sequencer operations across the network.</li>
+        <li>Its reserve yield (<strong style="color:var(--green)" id="usdm-apy-pct">~3.09% APY</strong>) funds sequencer operations across the network.</li>
         <li>This yield-funded model means gas costs approach <strong style="color:var(--blue)">zero</strong> for end users.</li>
         <li>Every dollar held in USDm directly subsidizes MegaETH's economic security.</li>
       </ul>
       <div class="formula">
-        Daily Revenue <span class="op">=</span> TVL <span class="op">×</span> <span class="num">4%</span> <span class="op">÷</span> <span class="num">365</span>
+        Daily Revenue <span class="op">=</span> TVL <span class="op">×</span> <span class="num" id="formula-apy">~3.09%</span> <span class="op">÷</span> <span class="num">365</span>
       </div>
     </div>
   </details>
@@ -1277,7 +1277,26 @@
 <script>
   // -------- CONFIG --------
   const MAINNET_LAUNCH = new Date('2026-02-09T00:00:00Z');
-  const APY = 0.04;
+  // USDm yield comes from BUIDL via:
+  //   USDm = 90 % USDtb,  USDtb = 99 % BUIDL
+  //   USDm_APY = 0.90 × 0.99 × BUIDL_APY  =  0.891 × BUIDL_APY
+  // We scrape BUIDL's live 7D APY from rwa.xyz at runtime; if that fails we
+  // fall back to the last-known value (3.47 % on 30 Apr 2026).
+  const USDM_COMPOSITION   = 0.90 * 0.99;     // 89.1 %
+  const BUIDL_APY_FALLBACK = 0.0347;          // BUIDL 7D APY snapshot
+  // Mutable — overwritten once fetchUSDmAPY() resolves.
+  let APY       = USDM_COMPOSITION * BUIDL_APY_FALLBACK; // ~3.09 %
+  let BUIDL_APY = BUIDL_APY_FALLBACK;
+  // Approximate BUIDL APY history since USDm launch (rwa.xyz / BlackRock
+  // BUIDL 7D APY snapshots, in chronological order). Used to back-fill the
+  // historical USDm yield curve so old days reflect the rate that actually
+  // applied at the time, not today's rate.
+  const BUIDL_APY_HISTORY = [
+    { date: '2026-02-09', apy: 0.0420 },
+    { date: '2026-03-01', apy: 0.0408 },
+    { date: '2026-04-01', apy: 0.0372 },
+    { date: '2026-04-30', apy: 0.0347 },
+  ];
   // CoinGecko coin id for MegaUSD (USDm)
   const CG_USDM_ID = 'megausd';
   const CG_USDM_API = `https://api.coingecko.com/api/v3/coins/${CG_USDM_ID}?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false`;
@@ -1441,6 +1460,61 @@
   function cacheSet(key, value) {
     try { localStorage.setItem('mfcache:' + key, JSON.stringify({ t: Date.now(), v: value })); }
     catch { /* quota / private mode — ignore */ }
+  }
+
+  // -------- LIVE BUIDL APY (drives USDm yield) --------
+  async function fetchUSDmAPY() {
+    // rwa.xyz JSON API is gated (401), but their public /treasuries page
+    // contains BUIDL's 7D APY in plain HTML. Scrape via CORS proxy and
+    // extract the first percentage that follows the 'BUIDL' ticker.
+    try {
+      const res = await corsFetch('https://app.rwa.xyz/treasuries');
+      if (!res.ok) throw new Error('rwa.xyz ' + res.status);
+      const html = await res.text();
+      const idx = html.indexOf('BUIDL');
+      if (idx < 0) throw new Error('BUIDL row not found');
+      const slice = html.slice(idx, idx + 1200);
+      // Match the first plausible percentage following BUIDL.
+      const m = slice.match(/(\d+\.\d+)\s*%/);
+      if (!m) throw new Error('APY % not found near BUIDL');
+      const buidl = parseFloat(m[1]) / 100;
+      if (!Number.isFinite(buidl) || buidl <= 0 || buidl > 0.20) {
+        throw new Error('implausible BUIDL APY: ' + m[1]);
+      }
+      const usdm = USDM_COMPOSITION * buidl;
+      console.info(`[megafees] BUIDL 7D APY=${(buidl*100).toFixed(2)}% → USDm APY=${(usdm*100).toFixed(2)}%`);
+      return { buidl, usdm };
+    } catch (e) {
+      console.warn('[megafees] BUIDL APY fetch failed, fallback:', e.message);
+      return { buidl: BUIDL_APY_FALLBACK, usdm: USDM_COMPOSITION * BUIDL_APY_FALLBACK };
+    }
+  }
+
+  // Returns the BUIDL APY that applied on a given ISO date (linear-interp
+  // between known snapshots, clamped to history bounds, latest live value
+  // appended as the most recent snapshot).
+  function buidlAPYOn(isoDateStr) {
+    const series = [...BUIDL_APY_HISTORY];
+    // Append today's live BUIDL APY as the rightmost anchor.
+    const todayISO = new Date().toISOString().slice(0, 10);
+    if (BUIDL_APY && (!series.length || series[series.length - 1].date < todayISO)) {
+      series.push({ date: todayISO, apy: BUIDL_APY });
+    }
+    if (!series.length) return BUIDL_APY_FALLBACK;
+    if (isoDateStr <= series[0].date) return series[0].apy;
+    if (isoDateStr >= series[series.length - 1].date) return series[series.length - 1].apy;
+    for (let i = 1; i < series.length; i++) {
+      if (isoDateStr <= series[i].date) {
+        const a = series[i - 1], b = series[i];
+        const t = (Date.parse(isoDateStr) - Date.parse(a.date)) /
+                  (Date.parse(b.date) - Date.parse(a.date));
+        return a.apy + (b.apy - a.apy) * t;
+      }
+    }
+    return series[series.length - 1].apy;
+  }
+  function usdmAPYOn(isoDateStr) {
+    return USDM_COMPOSITION * buidlAPYOn(isoDateStr);
   }
 
   async function fetchUSDmTVL() {
@@ -2268,6 +2342,7 @@
     const pTvl       = fetchUSDmTVL();
     const pEthPrice  = fetchEthPrice();
     const pHistory   = fetchUSDmHistory();
+    const pApy       = fetchUSDmAPY();
     const pDlStables = fetchAllStablesOnMegaETH();
     const pGp        = fetchGrowthepie();
     const pDlFees    = fetchDefiLlamaChainFees();
@@ -2321,9 +2396,19 @@
     // Race for first KPI: Blockscout (always fast) or CoinGecko — hide overlay.
     Promise.race([pUsdmLive, pTvl]).then(v => { if (v != null) hideLoader(); });
 
-    const [tvlRaw, ethPrice, history, dlStables, gp, dlFees, ethPriceHist, bsFees, usdmLive, usdt0Live, opiumTvl] = await Promise.all([
-      pTvl, pEthPrice, pHistory, pDlStables, pGp, pDlFees, pEthHist, pBsFees, pUsdmLive, pUsdt0Live, pOpiumTvl,
+    const [tvlRaw, ethPrice, history, apyData, dlStables, gp, dlFees, ethPriceHist, bsFees, usdmLive, usdt0Live, opiumTvl] = await Promise.all([
+      pTvl, pEthPrice, pHistory, pApy, pDlStables, pGp, pDlFees, pEthHist, pBsFees, pUsdmLive, pUsdt0Live, pOpiumTvl,
     ]);
+    // Apply live BUIDL/USDm APY (overrides fallback)
+    if (apyData?.buidl > 0) BUIDL_APY = apyData.buidl;
+    if (apyData?.usdm  > 0) APY       = apyData.usdm;
+    // Update APY-dependent UI labels with the resolved live rate
+    const apyPct   = (APY * 100).toFixed(2);
+    const buidlPct = (BUIDL_APY * 100).toFixed(2);
+    const _set = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+    _set('kpi-daily-sub', `TVL × ${apyPct}% APY ÷ 365`);
+    _set('usdm-apy-pct',  `${apyPct}% APY (BUIDL ${buidlPct}% × 89.1%)`);
+    _set('formula-apy',   `${apyPct}%`);
     const gpFees    = gp?.fees    || null;
     const gpStables = gp?.stables || null;
     // Merge stables sources — growthepie has continuous daily coverage,
@@ -2370,7 +2455,9 @@
     } else {
       mcapSeries = dateKeys.map(() => tvl);
     }
-    const usdmDaily = mcapSeries.map(m => (m * APY) / 365);
+    // Use the BUIDL APY that applied on each historical date (back-filled
+    // from BUIDL_APY_HISTORY snapshots). Today's days use the live APY.
+    const usdmDaily = mcapSeries.map((m, i) => (m * usdmAPYOn(dateKeys[i])) / 365);
     let cumRev;
 
     // Per-day network fees (USD) — growthepie is PRIMARY because it provides
@@ -2485,9 +2572,9 @@
       if (gpFees && gpFees.size) sources.push('growthepie (fallback)');
       if (bsFees && bsFees.size) sources.push('Blockscout (latest day)');
       noteEl.textContent =
-        'USDm yield = CoinGecko mcap × 4% ÷ 365. Network revenue: ' + sources.join(' + ') + '.';
+        'USDm yield = CoinGecko mcap × ' + (APY * 100).toFixed(2) + '% ÷ 365 (USDm = 89.1% BUIDL via USDtb). Network revenue: ' + sources.join(' + ') + '.';
     } else if (history) {
-      noteEl.textContent = 'USDm yield only (network fee sources unavailable) — CoinGecko mcap × 4% ÷ 365';
+      noteEl.textContent = 'USDm yield only (network fee sources unavailable) — CoinGecko mcap × ' + (APY * 100).toFixed(2) + '% ÷ 365';
     } else if (gpFees || bsFees || dlFees) {
       noteEl.textContent = 'Network fees only (CoinGecko USDm history unavailable) — flat baseline used for yield.';
     } else {
@@ -2621,7 +2708,7 @@
     const opiumNoteEl = document.getElementById('opiumNote');
     if (opiumNoteEl) {
       opiumNoteEl.textContent =
-        'Hypothetical = chain DeFi TVL × 4% APY + MegaETH 7d-avg network fees × 365. '
+        'Hypothetical = chain DeFi TVL × ' + (APY * 100).toFixed(2) + '% USDm APY + MegaETH 7d-avg network fees × 365. '
         + 'TVL via DefiLlama /v2/chains (canonical DeFi TVL — not stablecoin circulating supply, not token market cap). '
         + 'Fee component held constant at MegaETH actual ($'
         + Math.round(feeAnnualized).toLocaleString('en-US') + '/yr).';
