@@ -20,7 +20,7 @@
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#19191A" />
 <link rel="canonical" href="https://megafees.com/" />
-<link rel="icon" type="image/svg+xml" href="logo.svg" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="alternate icon" type="image/png" href="Megafees.png" />
 <link rel="apple-touch-icon" href="Megafees.png" />
 
@@ -245,8 +245,8 @@
 
   /* MEGAFEES native title — matches the dashboard DA (mono, brackets, green-2 accents) */
   .mf-logo {
-    width: clamp(44px, 6vw, 68px);
-    height: clamp(44px, 6vw, 68px);
+    width: clamp(56px, 8vw, 88px);
+    height: clamp(56px, 8vw, 88px);
     flex-shrink: 0;
     display: block;
   }
@@ -254,7 +254,7 @@
     margin: 8px 0 28px;
     display: flex;
     align-items: flex-end;
-    gap: 22px;
+    gap: 10px;
     flex-wrap: wrap;
     position: relative;
     padding: 0 0 22px;
@@ -1774,22 +1774,42 @@
   ];
 
   async function fetchChainDailyFeesSeries(slug) {
-    // Returns Array<[tsMs, usd]> sorted ascending, or null on failure.
-    try {
-      const url = `https://api.llama.fi/summary/fees/${slug}?dataType=dailyFees`;
+    // api.llama.fi sets Access-Control-Allow-Origin: * so we can fetch directly
+    // without a CORS proxy. Using the proxy ladder here caused 36 simultaneous
+    // proxy requests (9 chains × 4 attempts) → proxy rate-limits → missing bars.
+    const url = `https://api.llama.fi/summary/fees/${encodeURIComponent(slug)}?dataType=dailyFees`;
+    // Try direct first (no cache-busting needed, llama.fi is always fresh).
+    const tryDirect = async () => {
+      const ctrl = new AbortController();
+      const id = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
+      try {
+        const r = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
+        clearTimeout(id);
+        if (!r.ok) throw new Error('DL fees ' + slug + ' ' + r.status);
+        return await r.json();
+      } finally { clearTimeout(id); }
+    };
+    // If direct fails (network error, non-CORS env), fall back to a single proxy.
+    const tryProxy = async () => {
       const res = await corsFetch(url);
-      if (!res.ok) throw new Error('DL fees ' + slug + ' ' + res.status);
-      const j = await res.json();
-      const arr = j?.totalDataChart || [];
-      if (!Array.isArray(arr) || arr.length === 0) return null;
-      return arr
-        .filter(p => Array.isArray(p) && typeof p[0] === 'number' && Number.isFinite(Number(p[1])))
-        .map(([ts, v]) => [ts * 1000, Number(v)])
-        .sort((a, b) => a[0] - b[0]);
-    } catch (e) {
-      console.warn('chain fees series fetch failed for', slug, e);
-      return null;
+      if (!res.ok) throw new Error('DL fees proxy ' + slug + ' ' + res.status);
+      return res.json();
+    };
+    let j = null;
+    try { j = await tryDirect(); }
+    catch (e) {
+      console.warn('llama direct failed for', slug, e.message, '— trying proxy');
+      try { j = await tryProxy(); } catch (e2) {
+        console.warn('chain fees series fetch failed for', slug, e2);
+        return null;
+      }
     }
+    const arr = j?.totalDataChart || [];
+    if (!Array.isArray(arr) || arr.length === 0) return null;
+    return arr
+      .filter(p => Array.isArray(p) && typeof p[0] === 'number' && Number.isFinite(Number(p[1])))
+      .map(([ts, v]) => [ts * 1000, Number(v)])
+      .sort((a, b) => a[0] - b[0]);
   }
 
   async function fetchChainRevenueComparison(megaExtraDaily = 0) {
