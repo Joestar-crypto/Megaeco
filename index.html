@@ -1789,12 +1789,13 @@
     // tracks gas fees (~$2k/day on MegaETH today), but real chain revenue
     // also includes the USDm yield that funds the sequencer. We add it on
     // top so MegaETH's bar is comparable to peer chains' total fee revenue.
-    const results = await Promise.all(
-      CHAIN_REV_PEERS.map(c => fetchChainDailyFeesSeries(c.slug))
-    );
-    // MegaETH: reuse the existing fetcher to stay consistent with the rest
-    // of the dashboard (Blockscout-adapter feed) and pick the LATEST daily.
-    const megaSeries = await fetchChainDailyFeesSeries('megaeth');
+    //
+    // All 9 chain feeds are fetched in PARALLEL (peers + megaeth) so the
+    // bottleneck is the slowest single request, not their sum.
+    const allSlugs = [...CHAIN_REV_PEERS.map(c => c.slug), 'megaeth'];
+    const all = await Promise.all(allSlugs.map(s => fetchChainDailyFeesSeries(s)));
+    const results = all.slice(0, CHAIN_REV_PEERS.length);
+    const megaSeries = all[all.length - 1];
     const out = [];
     // peers — 30-day average
     CHAIN_REV_PEERS.forEach((c, i) => {
@@ -2248,6 +2249,47 @@
     const pUsdt0Live = fetchTokenSupplyOnMegaETH(USDT0_TOKEN_ADDRESS);
     const pOpiumTvl  = fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug));
 
+    // Chain revenue comparison: kick off the 9 fees fetches IMMEDIATELY
+    // (don't wait for TVL). When TVL arrives we'll compute the USDm-yield
+    // delta and re-render — but the bars themselves load in parallel with
+    // every other panel so this tab is ready as fast as the rest.
+    const pChainFees = Promise.all(
+      [...CHAIN_REV_PEERS.map(c => c.slug), 'megaeth'].map(s => fetchChainDailyFeesSeries(s))
+    );
+    Promise.all([
+      pChainFees,
+      Promise.race([pTvl, pUsdmLive]),  // resolve as soon as TVL is known
+    ]).then(([all, tvlEarly]) => {
+      const tvlVal = tvlEarly ?? 0;
+      const dailyYield = (tvlVal * APY) / 365;
+      const peers = all.slice(0, CHAIN_REV_PEERS.length);
+      const megaSeries = all[all.length - 1];
+      const rows = [];
+      CHAIN_REV_PEERS.forEach((c, i) => {
+        const series = peers[i];
+        if (!series || series.length === 0) return;
+        const last30 = series.slice(-30);
+        const avg = last30.reduce((s, p) => s + p[1], 0) / last30.length;
+        if (avg > 0) rows.push({ ...c, value: avg, mode: '30d avg' });
+      });
+      let megaGas = 0;
+      if (megaSeries && megaSeries.length > 0) {
+        const tail = megaSeries.slice(-3);
+        const latest = [...tail].reverse().find(p => p[1] > 0) || tail[tail.length - 1];
+        megaGas = latest[1] || 0;
+      }
+      const megaTotal = megaGas + dailyYield;
+      if (megaTotal > 0) {
+        rows.push({
+          slug: 'megaeth', label: 'MegaETH', color: '#90D79F',
+          logo: 'https://icons.llamao.fi/icons/chains/rsz_megaeth.jpg',
+          value: megaTotal, gas: megaGas, yield: dailyYield,
+          mode: 'daily', isBase: true,
+        });
+      }
+      renderChainRevenueBars(rows);
+    }).catch(e => { console.warn('chain revenue render failed', e); renderChainRevenueBars(null); });
+
     // Race for first KPI: Blockscout (always fast) or CoinGecko — hide overlay.
     Promise.race([pUsdmLive, pTvl]).then(v => { if (v != null) hideLoader(); });
 
@@ -2266,12 +2308,6 @@
 
     const days = Math.max(1, daysBetween(MAINNET_LAUNCH, now));
     const dailyRev = (tvl * APY) / 365;
-
-    // Kick off chain revenue comparison now that we have the USDm yield.
-    // Render independently of the rest of the pipeline.
-    fetchChainRevenueComparison(dailyRev)
-      .then(rows => renderChainRevenueBars(rows))
-      .catch(e => { console.warn('chain revenue render failed', e); renderChainRevenueBars(null); });
 
     // ------------------------------------------------------------------
     // CANONICAL DATE AXIS: every chart shares the same x-axis, anchored
