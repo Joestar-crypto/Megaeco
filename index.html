@@ -20,7 +20,8 @@
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#19191A" />
 <link rel="canonical" href="https://megafees.com/" />
-<link rel="icon" type="image/png" href="Megafees.png" />
+<link rel="icon" type="image/svg+xml" href="logo.svg" />
+<link rel="alternate icon" type="image/png" href="Megafees.png" />
 <link rel="apple-touch-icon" href="Megafees.png" />
 
 <!-- Open Graph -->
@@ -243,6 +244,12 @@
   .megafees-banner { display: none; }
 
   /* MEGAFEES native title — matches the dashboard DA (mono, brackets, green-2 accents) */
+  .mf-logo {
+    width: clamp(44px, 6vw, 68px);
+    height: clamp(44px, 6vw, 68px);
+    flex-shrink: 0;
+    display: block;
+  }
   .mf-title {
     margin: 8px 0 28px;
     display: flex;
@@ -1098,6 +1105,7 @@
   <!-- HERO -->
   <section class="hero hero-banner">
     <div class="mf-title">
+      <img class="mf-logo" src="logo.svg" alt="MegaFees logo" width="64" height="64" />
       <div class="mf-mark">
         <span class="mf-bracket">[</span><span class="mf-mega">MEGA</span><span class="mf-fees">FEES</span><span class="mf-cursor">_</span><span class="mf-bracket">]</span>
       </div>
