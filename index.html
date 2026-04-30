@@ -1251,26 +1251,34 @@
   // Browsers block direct calls to CoinGecko / DefiLlama / growthepie from
   // localhost & most third-party origins. We try the URL directly first
   // (works in extensions, file://, or hosts that have been allowlisted),
-  // then fall through a small ladder of public CORS proxies. Blockscout
-  // already sets permissive CORS headers, so its calls keep using `fetch`.
+  // then race all CORS proxies in parallel. Blockscout sets permissive
+  // CORS headers, so its calls keep using `fetch` directly.
   const CORS_PROXIES = [
     (u) => 'https://corsproxy.io/?' + encodeURIComponent(u),
     (u) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
     (u) => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
   ];
+  // Per-request timeout (ms) — anything slower is considered dead.
+  const FETCH_TIMEOUT_MS = 6000;
+  function fetchTimeout(url, init, ms = FETCH_TIMEOUT_MS) {
+    const ctrl = new AbortController();
+    const id = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { ...(init || {}), signal: ctrl.signal })
+      .finally(() => clearTimeout(id));
+  }
   async function corsFetch(url, init) {
+    // Race the direct fetch + every proxy simultaneously, take the first OK response.
+    const attempts = [
+      fetchTimeout(url, init).then(r => r.ok ? r : Promise.reject(new Error('http ' + r.status))),
+      ...CORS_PROXIES.map(wrap =>
+        fetchTimeout(wrap(url), init).then(r => r.ok ? r : Promise.reject(new Error('http ' + r.status)))
+      ),
+    ];
     try {
-      const r = await fetch(url, init);
-      if (r.ok) return r;
-    } catch (_) { /* CORS / network — fall through to proxies */ }
-    for (const wrap of CORS_PROXIES) {
-      try {
-        const r = await fetch(wrap(url), init);
-        if (r.ok) return r;
-      } catch (_) { /* try next proxy */ }
+      return await Promise.any(attempts);
+    } catch (_) {
+      return new Response('', { status: 502, statusText: 'cors-fetch-failed' });
     }
-    // Return a dummy non-ok Response so callers' `if (!res.ok)` handling kicks in.
-    return new Response('', { status: 502, statusText: 'cors-fetch-failed' });
   }
 
   // -------- DATA FETCH --------
@@ -1898,19 +1906,27 @@
         'Last updated: ' + now.toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
     }
 
-    // Fast path: every source returns within seconds.
+    // Kick off every fetch in parallel up-front (don't await yet) so they
+    // all run concurrently. Then hide the loader as soon as the *fastest*
+    // useful source returns — the page becomes interactive even while
+    // slower historical series are still loading.
+    const pTvl       = fetchUSDmTVL();
+    const pEthPrice  = fetchEthPrice();
+    const pHistory   = fetchUSDmHistory();
+    const pDlStables = fetchAllStablesOnMegaETH();
+    const pGp        = fetchGrowthepie();
+    const pDlFees    = fetchDefiLlamaChainFees();
+    const pEthHist   = fetchEthPriceHistory();
+    const pBsFees    = fetchBlockscoutDailyFees();
+    const pUsdmLive  = fetchTokenSupplyOnMegaETH(USDM_TOKEN_ADDRESS);
+    const pUsdt0Live = fetchTokenSupplyOnMegaETH(USDT0_TOKEN_ADDRESS);
+    const pOpiumTvl  = fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug));
+
+    // Race for first KPI: Blockscout (always fast) or CoinGecko — hide overlay.
+    Promise.race([pUsdmLive, pTvl]).then(v => { if (v != null) hideLoader(); });
+
     const [tvlRaw, ethPrice, history, dlStables, gp, dlFees, ethPriceHist, bsFees, usdmLive, usdt0Live, opiumTvl] = await Promise.all([
-      fetchUSDmTVL(),
-      fetchEthPrice(),
-      fetchUSDmHistory(),
-      fetchAllStablesOnMegaETH(),
-      fetchGrowthepie(),
-      fetchDefiLlamaChainFees(),
-      fetchEthPriceHistory(),
-      fetchBlockscoutDailyFees(),
-      fetchTokenSupplyOnMegaETH(USDM_TOKEN_ADDRESS),
-      fetchTokenSupplyOnMegaETH(USDT0_TOKEN_ADDRESS),
-      fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug)),
+      pTvl, pEthPrice, pHistory, pDlStables, pGp, pDlFees, pEthHist, pBsFees, pUsdmLive, pUsdt0Live, pOpiumTvl,
     ]);
     const gpFees    = gp?.fees    || null;
     const gpStables = gp?.stables || null;
@@ -2250,11 +2266,12 @@
 
   function hideLoader() {
     const ov = document.getElementById('loadingOverlay');
-    if (!ov) return;
+    if (!ov || ov.dataset.hidden === '1') return;
+    ov.dataset.hidden = '1';
     const status = document.getElementById('loadStatus');
     if (status) status.innerHTML = 'Sync complete · Entering mainnet<span class="blink">_</span>';
-    setTimeout(() => ov.classList.add('hide'), 250);
-    setTimeout(() => ov.remove(), 900);
+    setTimeout(() => ov.classList.add('hide'), 120);
+    setTimeout(() => ov.remove(), 600);
   }
 
   main()
@@ -2262,7 +2279,7 @@
     .finally(hideLoader);
 
   // Safety: never leave the overlay stuck on screen.
-  setTimeout(hideLoader, 20000);
+  setTimeout(hideLoader, 8000);
 
   // -------- BRAND ASSETS (token logos, used in chart headers etc.) --------
   const LOGO_USDM  = 'https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136';
