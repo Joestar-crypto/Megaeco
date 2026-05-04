@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Serve Megaeco localhost",
+			"type": "shell",
+			"command": "if (Get-Command py -ErrorAction SilentlyContinue) { py -m http.server 8000 } elseif (Get-Command python -ErrorAction SilentlyContinue) { python -m http.server 8000 } elseif (Get-Command node -ErrorAction SilentlyContinue) { npx --yes http-server -p 8000 . } else { Write-Error 'No Python or Node runtime found'; exit 1 }",
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}
