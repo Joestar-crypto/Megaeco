@@ -641,6 +641,39 @@
   .chart-wrap {
     position: relative;
     height: 420px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .chart-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, transparent 74%, rgba(255, 255, 255, 0.012) 100%);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+  .chart-wrap::after {
+    content: 'MEGAFEES.COM';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
+    font-size: clamp(24px, 4.6vw, 54px);
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    line-height: 1;
+    color: rgba(236, 232, 232, 0.07);
+    text-shadow: 0 0 22px rgba(144, 215, 159, 0.035);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: 2;
+  }
+  .chart-wrap > * {
+    position: relative;
+    z-index: 1;
   }
 
   /* TABS */
@@ -876,6 +909,48 @@
     letter-spacing: 0.04em;
   }
   .chain-rev-summary strong { color: #fff; font-weight: 800; }
+
+  .mega-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+  }
+  .mega-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    border: 1px solid var(--border);
+    padding: 18px;
+  }
+  .mega-card h3 {
+    margin: 0 0 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .mega-card .desc {
+    margin-bottom: 14px;
+    min-height: 38px;
+  }
+  .mega-card .mode-toggle {
+    margin-bottom: 14px;
+  }
+  .mega-card .chart-wrap {
+    height: 320px;
+  }
+  .mega-note {
+    background: rgba(126,170,212,0.06);
+    border-left-color: var(--blue);
+    color: var(--blue);
+  }
+  .mega-note.mega-note-green {
+    background: rgba(144,215,159,0.06);
+    border-left-color: var(--green);
+    color: var(--green);
+  }
+  .mega-note strong { color: #fff; }
 
   /* TABLE */
   .table-scroll { overflow-x: auto; }
@@ -1135,6 +1210,9 @@
       height: auto;
       min-height: 68px;
     }
+    .mega-grid {
+      grid-template-columns: 1fr;
+    }
     .opium-fill { min-width: 24px; }
     .opium-meta {
       position: relative;
@@ -1315,6 +1393,7 @@
       font-size: clamp(17px, 6vw, 22px);
     }
     .chart-wrap { height: 280px; }
+    .mega-card .chart-wrap { height: 260px; }
     .opium-track { min-height: 62px; }
     .opium-meta { min-height: 62px; }
     .opium-val { font-size: 15px; }
@@ -1613,6 +1692,30 @@
     </div>
   </section>
 
+  <section class="section">
+    <h2><img class="token-logo lg" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />MEGA Token</h2>
+    <div class="desc">Blockscout holder growth and live Terminal commitment split for MEGA on MegaETH.</div>
+    <div class="mega-grid">
+      <div class="mega-card">
+        <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />MEGA Holders</h3>
+        <div class="desc">Unique wallets and contracts holding a positive MEGA balance, reconstructed from Blockscout transfer history.</div>
+        <div class="chart-wrap"><canvas id="megaHoldersChart"></canvas></div>
+        <div class="note mega-note" id="megaHoldersNote">Loading MEGA holders history…</div>
+      </div>
+      <div class="mega-card">
+        <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />Committed vs Free Float</h3>
+        <div class="desc">Historical circulating MEGA split between Terminal commitments and liquid supply, with absolute, stacked and percentage views.</div>
+        <div class="mode-toggle show" id="megaFloatModeToggle" role="tablist" aria-label="MEGA float display mode">
+          <button type="button" data-mode="abs"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
+          <button type="button" data-mode="stk" class="active"><span class="glyph"><i></i><i></i><i></i></span>Stacked</button>
+          <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>Percentage</button>
+        </div>
+        <div class="chart-wrap"><canvas id="megaFloatChart"></canvas></div>
+        <div class="note mega-note mega-note-green" id="megaFloatNote">Loading MEGA committed vs free float…</div>
+      </div>
+    </div>
+  </section>
+
   <!-- TX REVENUE TABLE -->
   <section class="section">
     <h2>Transaction Revenue Breakdown</h2>
@@ -1657,7 +1760,7 @@
 
   <footer>
     <div class="footer-inner">
-      <div class="footer-data">Data: CoinGecko (USDm market cap, ETH price) · DefiLlama (chain fees fallback + stables) · growthepie (network-fee/stables fallback) · MegaETH Blockscout stats-service (network fees, 24h fee counter, live token supply, ETH price history)</div>
+      <div class="footer-data">Data: CoinGecko (USDm market cap, ETH price) · DefiLlama (chain fees fallback + stables) · growthepie (network-fee/stables fallback) · MegaETH Blockscout stats-service / token APIs (network fees, live token supply, MEGA holders history, MegaStaking MEGA balance)</div>
       <a class="hero-overlay__credit" href="https://x.com/JoestarCrypto" target="_blank" rel="noreferrer noopener">
         <span class="hero-overlay__credit-label">Made by Joestar</span>
         <span class="hero-overlay__credit-avatar"><img src="logos/Jojo2.jpg" alt="" /></span>
@@ -1702,7 +1805,14 @@
   const BS_STATS_LINE     = (chartId, from, to, resolution = 'DAY') =>
     `https://megaeth.blockscout.com/stats-service/api/v1/lines/${chartId}?from=${from}&to=${to}&resolution=${resolution}`;
   const BS_TOKEN       = (addr) => `${BS_BASE}/tokens/${addr}`;
+  const BS_ADDRESS     = (addr) => `${BS_BASE}/addresses/${addr}`;
+  const BS_ADDRESS_TOKENS = (addr, type = 'ERC-20') => `${BS_ADDRESS(addr)}/tokens?type=${encodeURIComponent(type)}`;
   // Token contracts on MegaETH mainnet (verified via Blockscout token search)
+  const MEGA_TOKEN_ADDRESS   = '0x28B7E77f82B25B95953825F1E3eA0E36c1c29861'; // MegaETH (MEGA)
+  const MEGA_STAKING_ADDRESS = '0x42bfAAA203B8259270A1b5EF4576dB6b8359Daa1'; // MegaStakingProxy, used by Terminal commitments
+  const MEGA_FLOAT_START_DAY = '2026-05-01';
+  const ERC20_TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+  const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
   const USDM_TOKEN_ADDRESS  = '0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7'; // MegaUSD (USDm)
   const USDT0_TOKEN_ADDRESS = '0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb'; // USDT0 (LayerZero OFT)
   const ETH_PRICE_API = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd';
@@ -1759,10 +1869,47 @@
     });
     return symbol ? text + ' ' + symbol : text;
   };
+  const fmtTokenCompact = (n) => {
+    const value = Math.abs(Number(n) || 0);
+    if (value >= 1e9) return (Number(n) / 1e9).toFixed(value >= 10e9 ? 0 : 1).replace(/\.0$/, '') + 'B';
+    if (value >= 1e6) return (Number(n) / 1e6).toFixed(value >= 10e6 ? 0 : 1).replace(/\.0$/, '') + 'M';
+    if (value >= 1e3) return (Number(n) / 1e3).toFixed(value >= 10e3 ? 0 : 1).replace(/\.0$/, '') + 'K';
+    return fmtNum(Math.round(Number(n) || 0));
+  };
   const isoDate = (d) => d.toISOString().slice(0, 10);
 
   function daysBetween(a, b) {
     return Math.max(0, Math.floor((b - a) / 86400000));
+  }
+
+  function fromBaseUnits(raw, decimals) {
+    if (raw == null || !Number.isFinite(decimals)) return null;
+    try {
+      const big = BigInt(String(raw));
+      const div = BigInt(10) ** BigInt(decimals);
+      const whole = Number(big / div);
+      const frac  = Number(big % div) / Number(div);
+      return whole + frac;
+    } catch {
+      return null;
+    }
+  }
+
+  function topicToAddress(topic) {
+    const hex = String(topic || '').toLowerCase().replace(/^0x/, '');
+    return hex.length >= 40 ? ('0x' + hex.slice(-40)) : null;
+  }
+
+  function mapSeriesByDate(points, dateKeys, initialValue = 0) {
+    let last = initialValue;
+    return dateKeys.map((key) => {
+      const value = points?.get(key);
+      if (Number.isFinite(value)) {
+        last = value;
+        return value;
+      }
+      return last;
+    });
   }
 
   function buildDateSeries(start, end) {
@@ -2078,18 +2225,304 @@
       if (!res.ok) throw new Error('blockscout token ' + res.status);
       const j = await res.json();
       const decimals = Number(j?.decimals);
-      const raw = j?.total_supply;
-      if (raw == null || !Number.isFinite(decimals)) return null;
-      // total_supply is a stringified base-unit integer; divide by 10^decimals
-      // Use a string-safe path for very large supplies.
-      const s = String(raw);
-      const big = BigInt(s);
-      const div = BigInt(10) ** BigInt(decimals);
-      const whole = Number(big / div);
-      const frac  = Number(big % div) / Number(div);
-      return whole + frac;
+      const supply = fromBaseUnits(j?.total_supply, decimals);
+      return Number.isFinite(supply) ? supply : null;
     } catch (e) {
       console.warn('Blockscout token supply fetch failed for', address, e);
+      return null;
+    }
+  }
+
+  async function fetchTokenSnapshotOnMegaETH(address) {
+    try {
+      const res = await fetch(BS_TOKEN(address));
+      if (!res.ok) throw new Error('blockscout token ' + res.status);
+      const j = await res.json();
+      const decimals = Number(j?.decimals);
+      const totalSupply = fromBaseUnits(j?.total_supply, decimals);
+      const holdersCount = Number(j?.holders_count);
+      const marketCap = Number(j?.circulating_market_cap);
+      const price = Number(j?.exchange_rate);
+      const circulatingSupply = marketCap > 0 && price > 0 ? marketCap / price : null;
+      return {
+        address,
+        decimals,
+        totalSupply: Number.isFinite(totalSupply) ? totalSupply : null,
+        holdersCount: Number.isFinite(holdersCount) ? holdersCount : null,
+        marketCap: marketCap > 0 ? marketCap : null,
+        price: price > 0 ? price : null,
+        circulatingSupply: circulatingSupply > 0 ? circulatingSupply : null,
+      };
+    } catch (e) {
+      console.warn('Blockscout token snapshot fetch failed for', address, e);
+      return null;
+    }
+  }
+
+  async function fetchAddressTokenBalanceOnMegaETH(address, tokenAddress) {
+    try {
+      const res = await fetch(BS_ADDRESS_TOKENS(address));
+      if (!res.ok) throw new Error('blockscout address tokens ' + res.status);
+      const j = await res.json();
+      const items = Array.isArray(j?.items) ? j.items : [];
+      const row = items.find((item) => item?.token?.address_hash?.toLowerCase() === tokenAddress.toLowerCase());
+      if (!row) return 0;
+      const decimals = Number(row?.token?.decimals);
+      const value = fromBaseUnits(row?.value, decimals);
+      return Number.isFinite(value) ? value : 0;
+    } catch (e) {
+      console.warn('Blockscout address token balance fetch failed for', address, tokenAddress, e);
+      return null;
+    }
+  }
+
+  async function fetchBundledMegaHoldersHistory() {
+    try {
+      const res = await fetch('data/mega-holders-history.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('bundled mega holders ' + res.status);
+      const arr = await res.json();
+      return Array.isArray(arr) && arr.length ? new Map(arr) : null;
+    } catch (e) {
+      console.warn('Bundled MEGA holders history fetch failed:', e);
+      return null;
+    }
+  }
+
+  let megaTransferLogsPromise = null;
+  async function fetchMegaTransferLogs() {
+    if (megaTransferLogsPromise) return megaTransferLogsPromise;
+    megaTransferLogsPromise = (async () => {
+      const PAGE = 1000;
+
+      async function fetchLogsPage(fromBlock) {
+        const url = `https://megaeth.blockscout.com/api?module=logs&action=getLogs`
+                  + `&fromBlock=${fromBlock}&toBlock=latest`
+                  + `&address=${MEGA_TOKEN_ADDRESS}&topic0=${ERC20_TRANSFER_TOPIC}`;
+        let lastError = null;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('MEGA transfer logs ' + res.status);
+            const j = await res.json();
+            return Array.isArray(j?.result) ? j.result : [];
+          } catch (e) {
+            lastError = e;
+          }
+        }
+        throw lastError || new Error('MEGA transfer logs failed');
+      }
+
+      const out = [];
+      let fromBlock = 0;
+      for (let i = 0; i < 400; i++) {
+        const arr = await fetchLogsPage(fromBlock);
+        if (!arr.length) break;
+        out.push(...arr);
+        if (arr.length < PAGE) break;
+        const lastBlk = parseInt(arr[arr.length - 1].blockNumber, 16);
+        if (!Number.isFinite(lastBlk) || lastBlk + 1 <= fromBlock) break;
+        fromBlock = lastBlk + 1;
+      }
+      out.sort((a, b) => {
+        const blockDiff = parseInt(a.blockNumber, 16) - parseInt(b.blockNumber, 16);
+        if (blockDiff !== 0) return blockDiff;
+        return parseInt(a.logIndex, 16) - parseInt(b.logIndex, 16);
+      });
+      return out;
+    })();
+    try {
+      return await megaTransferLogsPromise;
+    } catch (e) {
+      megaTransferLogsPromise = null;
+      throw e;
+    }
+  }
+
+  async function fetchMegaHoldersHistoryOnChain() {
+    const cacheKey = 'mega-holders-history:v2';
+
+    async function restoreFallback() {
+      const cached = cacheGet(cacheKey);
+      if (Array.isArray(cached) && cached.length) return new Map(cached);
+      return fetchBundledMegaHoldersHistory();
+    }
+
+    try {
+      const logs = await fetchMegaTransferLogs();
+      if (!logs.length) return await restoreFallback();
+
+      const balances = new Map();
+      const holdersByDay = new Map();
+      let holderCount = 0;
+      const applyDelta = (address, delta) => {
+        const prev = balances.get(address) || 0n;
+        let next = prev + delta;
+        if (next < 0n) next = 0n;
+        if (prev === 0n && next > 0n) holderCount += 1;
+        if (prev > 0n && next === 0n) holderCount = Math.max(0, holderCount - 1);
+        if (next > 0n) balances.set(address, next);
+        else balances.delete(address);
+      };
+
+      for (const log of logs) {
+        let raw;
+        try { raw = BigInt(log.data); } catch { continue; }
+        const from = topicToAddress(log.topics?.[1]);
+        const to = topicToAddress(log.topics?.[2]);
+        if (from && from !== ZERO_ADDRESS) applyDelta(from, -raw);
+        if (to && to !== ZERO_ADDRESS) applyDelta(to, raw);
+        const ts = parseInt(log.timeStamp, 16) * 1000;
+        if (Number.isFinite(ts) && ts > 0) {
+          holdersByDay.set(isoDate(new Date(ts)), holderCount);
+        }
+      }
+
+      if (holdersByDay.size) cacheSet(cacheKey, [...holdersByDay.entries()]);
+      return holdersByDay.size ? holdersByDay : await restoreFallback();
+    } catch (e) {
+      console.warn('MEGA holders history fetch failed:', e);
+      return await restoreFallback();
+    }
+  }
+
+  async function fetchMegaCommitmentHistoryOnChain(snapshot) {
+    const cacheKey = 'mega-commitment-history:v2';
+
+    function restoreFromCache() {
+      const cached = cacheGet(cacheKey);
+      if (
+        cached
+        && Array.isArray(cached?.dates)
+        && cached.dates.length
+        && Array.isArray(cached?.committed)
+        && cached.committed.length === cached.dates.length
+        && Array.isArray(cached?.freeFloat)
+        && cached.freeFloat.length === cached.dates.length
+      ) {
+        return cached;
+      }
+      return null;
+    }
+
+    if (!(snapshot?.circulatingSupply > 0) || !(snapshot?.committed >= 0)) {
+      return restoreFromCache();
+    }
+
+    try {
+      const PAGE = 1000;
+      const stakingTopic = '0x' + MEGA_STAKING_ADDRESS.toLowerCase().replace(/^0x/, '').padStart(64, '0');
+
+      async function fetchLogs(extraQS) {
+        const out = [];
+        let fromBlock = 0;
+        for (let i = 0; i < 80; i++) {
+          const url = `https://megaeth.blockscout.com/api?module=logs&action=getLogs`
+                    + `&fromBlock=${fromBlock}&toBlock=latest`
+                    + `&address=${MEGA_TOKEN_ADDRESS}&topic0=${ERC20_TRANSFER_TOPIC}${extraQS}`;
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('MEGA commitment logs ' + res.status);
+          const j = await res.json();
+          const arr = Array.isArray(j?.result) ? j.result : [];
+          if (!arr.length) break;
+          out.push(...arr);
+          if (arr.length < PAGE) break;
+          const lastBlk = parseInt(arr[arr.length - 1].blockNumber, 16);
+          if (!Number.isFinite(lastBlk) || lastBlk + 1 <= fromBlock) break;
+          fromBlock = lastBlk + 1;
+        }
+        return out;
+      }
+
+      const [outgoing, incoming] = await Promise.all([
+        fetchLogs(`&topic1=${stakingTopic}&topic0_1_opr=and`),
+        fetchLogs(`&topic2=${stakingTopic}&topic0_2_opr=and`),
+      ]);
+      const logs = [
+        ...outgoing.map((log) => ({ ...log, __dir: 'out' })),
+        ...incoming.map((log) => ({ ...log, __dir: 'in' })),
+      ].sort((a, b) => {
+        const blockDiff = parseInt(a.blockNumber, 16) - parseInt(b.blockNumber, 16);
+        if (blockDiff !== 0) return blockDiff;
+        return parseInt(a.logIndex, 16) - parseInt(b.logIndex, 16);
+      });
+      if (!logs.length) return restoreFromCache();
+
+      const committedByDay = new Map();
+      let committedRaw = 0n;
+
+      for (const log of logs) {
+        let raw;
+        try { raw = BigInt(log.data); } catch { continue; }
+        if (log.__dir === 'out') committedRaw -= raw;
+        if (log.__dir === 'in') committedRaw += raw;
+        if (committedRaw < 0n) committedRaw = 0n;
+        const ts = parseInt(log.timeStamp, 16) * 1000;
+        if (Number.isFinite(ts) && ts > 0) {
+          committedByDay.set(isoDate(new Date(ts)), Number(committedRaw) / 1e18);
+        }
+      }
+
+      const start = new Date(MEGA_FLOAT_START_DAY + 'T00:00:00Z');
+      const dateKeys = buildDateSeries(start, new Date()).map((d) => isoDate(d));
+      const committedDays = [...committedByDay.keys()].sort();
+      let runningCommitted = 0;
+
+      for (const day of committedDays) {
+        if (day > MEGA_FLOAT_START_DAY) break;
+        if (Number.isFinite(committedByDay.get(day))) runningCommitted = committedByDay.get(day);
+      }
+
+      const committed = [];
+      const freeFloat = [];
+      const liveSupply = Number(snapshot.circulatingSupply);
+      for (const day of dateKeys) {
+        if (Number.isFinite(committedByDay.get(day))) runningCommitted = committedByDay.get(day);
+        let supply = Math.max(0, liveSupply || 0);
+        let locked = Math.max(0, Number(runningCommitted) || 0);
+        if (supply < locked) supply = locked;
+        locked = Math.min(locked, supply);
+        committed.push(locked);
+        freeFloat.push(Math.max(0, supply - locked));
+      }
+
+      if (dateKeys.length) {
+        const last = dateKeys.length - 1;
+        const liveCommitted = Number(snapshot.committed);
+        if (Number.isFinite(liveSupply) && liveSupply > 0) {
+          const locked = Number.isFinite(liveCommitted)
+            ? Math.max(0, Math.min(liveCommitted, liveSupply))
+            : Math.max(0, Math.min(committed[last] || 0, liveSupply));
+          committed[last] = locked;
+          freeFloat[last] = Math.max(0, liveSupply - locked);
+        }
+      }
+
+      const out = { dates: dateKeys, committed, freeFloat };
+      cacheSet(cacheKey, out);
+      return out;
+    } catch (e) {
+      console.warn('MEGA commitment history fetch failed:', e);
+      return restoreFromCache();
+    }
+  }
+
+  async function fetchMegaCommitmentSnapshot() {
+    try {
+      const [tokenSnapshot, committedLive] = await Promise.all([
+        fetchTokenSnapshotOnMegaETH(MEGA_TOKEN_ADDRESS),
+        fetchAddressTokenBalanceOnMegaETH(MEGA_STAKING_ADDRESS, MEGA_TOKEN_ADDRESS),
+      ]);
+      if (!tokenSnapshot) return null;
+      const circulating = tokenSnapshot.circulatingSupply;
+      const committed = Number.isFinite(committedLive)
+        ? (circulating != null ? Math.max(0, Math.min(committedLive, circulating)) : committedLive)
+        : null;
+      const freeFloat = circulating != null && committed != null
+        ? Math.max(0, circulating - committed)
+        : null;
+      return { ...tokenSnapshot, committed, freeFloat };
+    } catch (e) {
+      console.warn('MEGA commitment snapshot fetch failed:', e);
       return null;
     }
   }
@@ -2570,6 +3003,7 @@
   const LOAD_TARGETS = [
     'kpi-tvl', 'kpi-daily', 'kpi-annual', 'kpi-cum', 'kpi-days', 'kpi-opium', 'kpi-rank',
     'panel-tvl', 'panel-revenue', 'panel-cum', 'panel-annual', 'panel-stables', 'panel-opium', 'panel-chainrev',
+    'panel-mega-holders', 'panel-mega-float',
   ];
   const LOAD_TARGET_SET = new Set(LOAD_TARGETS);
   const LOAD_LABELS = {
@@ -2587,6 +3021,8 @@
     'panel-stables': 'stables chart',
     'panel-opium': 'forecast chart',
     'panel-chainrev': 'rank chart',
+    'panel-mega-holders': 'MEGA holders chart',
+    'panel-mega-float': 'MEGA float chart',
   };
   const loadTracker = {
     total: LOAD_TARGETS.length,
@@ -2661,6 +3097,16 @@
     if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
     const stacked = !!opts.stacked;
     const percent = !!opts.percent;
+    const valueFormatter = typeof opts.valueFormatter === 'function'
+      ? opts.valueFormatter
+      : (v) => fmtUSDc(v);
+    const tickFormatter = typeof opts.tickFormatter === 'function'
+      ? opts.tickFormatter
+      : (v) => '$' + Number(v).toLocaleString('en-US');
+    const pointRadius = Number.isFinite(opts.pointRadius) ? Number(opts.pointRadius) : 0;
+    const pointHoverRadius = Number.isFinite(opts.pointHoverRadius)
+      ? Number(opts.pointHoverRadius)
+      : Math.max(pointRadius, 5);
 
     let renderDatasets = datasets;
     if (percent) {
@@ -2672,20 +3118,22 @@
       }
       renderDatasets = datasets.map(d => ({
         ...d,
+        rawValues: Array.isArray(d.values) ? d.values.slice() : [],
         values: d.values.map((v, i) => totals[i] > 0 ? (Number(v) || 0) / totals[i] * 100 : 0),
       }));
     }
 
-    const ds = renderDatasets.map(d => ({
+    const ds = renderDatasets.map((d, index) => ({
       label: d.label,
       data: d.values,
+      rawValues: Array.isArray(d.rawValues) ? d.rawValues.slice() : Array.isArray(d.values) ? d.values.slice() : [],
       borderColor: d.color,
       backgroundColor: (d.fill || stacked) ? gradient(ctx, d.color) : 'transparent',
       borderWidth: 2,
-      fill: stacked ? (d.fillTarget || (renderDatasets.indexOf(d) === 0 ? 'origin' : '-1')) : !!d.fill,
+      fill: stacked ? (d.fillTarget || (index === 0 ? 'origin' : '-1')) : !!d.fill,
       tension: 0.25,
-      pointRadius: 0,
-      pointHoverRadius: 5,
+      pointRadius,
+      pointHoverRadius,
       pointHoverBackgroundColor: d.color,
       pointHoverBorderColor: '#19191A',
       pointHoverBorderWidth: 2,
@@ -2715,9 +3163,12 @@
             displayColors: true,
             callbacks: {
               title: (items) => items[0].label,
-              label: (item) => percent
-                ? '  ' + item.dataset.label + ': ' + item.parsed.y.toFixed(1) + '%'
-                : '  ' + item.dataset.label + ': ' + fmtUSDc(item.parsed.y),
+              label: (item) => {
+                if (!percent) return '  ' + item.dataset.label + ': ' + valueFormatter(item.parsed.y, item);
+                const rawValue = item.dataset.rawValues?.[item.dataIndex];
+                const rawSuffix = Number.isFinite(rawValue) ? ' (' + valueFormatter(rawValue, item) + ')' : '';
+                return '  ' + item.dataset.label + ': ' + item.parsed.y.toFixed(1) + '%' + rawSuffix;
+              },
             }
           }
         },
@@ -2735,7 +3186,7 @@
               font: { family: 'Courier New', size: 10 },
               callback: (v) => percent
                 ? Number(v).toFixed(0) + '%'
-                : '$' + Number(v).toLocaleString('en-US')
+                : tickFormatter(v)
             },
             grid: { color: 'rgba(255,255,255,0.04)' }
           }
@@ -2746,6 +3197,213 @@
 
   function renderChart(dates, values) {
     makeLineChart('revenueChart', [{ label: 'Total Daily Revenue (USD)', values, color: '#6DD0A9', fill: true }], dates);
+  }
+
+  function makeMegaCompositionChart(canvasId, segments) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+    const total = segments.reduce((sum, segment) => sum + Math.max(0, Number(segment.value) || 0), 0) || 1;
+    chartInstances[canvasId] = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Current'],
+        datasets: segments.map((segment) => ({
+          label: segment.label,
+          data: [Math.max(0, Number(segment.value) || 0) / total * 100],
+          actualValue: Math.max(0, Number(segment.value) || 0),
+          borderColor: segment.color,
+          backgroundColor: gradient(ctx, segment.color),
+          borderWidth: 2,
+          stack: 'mega-float',
+          borderRadius: 4,
+          borderSkipped: false,
+        })),
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            display: true,
+            labels: { color: '#ECE8E8', font: { family: 'Helvetica Neue' }, boxWidth: 12, boxHeight: 12 }
+          },
+          tooltip: {
+            backgroundColor: '#1E1E20',
+            borderColor: 'rgba(144,215,159,0.4)',
+            borderWidth: 1,
+            titleColor: '#ECE8E8',
+            bodyColor: '#ECE8E8',
+            titleFont: { family: 'Helvetica Neue', weight: '600' },
+            bodyFont: { family: 'Courier New', weight: '700' },
+            padding: 12,
+            displayColors: true,
+            callbacks: {
+              title: () => 'Current circulating MEGA',
+              label: (item) => {
+                const pct = item.parsed.x;
+                return '  ' + item.dataset.label + ': ' + pct.toFixed(1) + '% (' + fmtToken(item.dataset.actualValue, 'MEGA', 0) + ')';
+              },
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            min: 0,
+            max: 100,
+            ticks: {
+              color: '#DFD9D9',
+              font: { family: 'Courier New', size: 10 },
+              callback: (v) => Number(v).toFixed(0) + '%'
+            },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            stacked: true,
+            ticks: {
+              color: '#DFD9D9',
+              font: { family: 'Courier New', size: 10 },
+            },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  function renderMegaHoldersChart(historyByDay, currentHolders) {
+    const note = document.getElementById('megaHoldersNote');
+    if (!historyByDay || !historyByDay.size) {
+      if (note) note.textContent = 'MEGA holders history unavailable right now (Blockscout transfer reconstruction failed).';
+      markReady('panel-mega-holders');
+      return;
+    }
+    const sortedDays = [...historyByDay.keys()].sort();
+    const visibleStartDay = MEGA_FLOAT_START_DAY;
+    const filteredDays = sortedDays.filter((day) => day >= visibleStartDay);
+    const firstVisibleDay = filteredDays[0] || sortedDays[sortedDays.length - 1];
+    const start = new Date(firstVisibleDay + 'T00:00:00Z');
+    const dates = buildDateSeries(start, new Date());
+    const dateKeys = dates.map((d) => isoDate(d));
+    const values = mapSeriesByDate(historyByDay, dateKeys, 0);
+    const latest = Number.isFinite(currentHolders) ? currentHolders : values[values.length - 1];
+    makeLineChart('megaHoldersChart', [
+      { label: 'MEGA holders', values, color: '#7EAAD4', fill: true }
+    ], dates, {
+      valueFormatter: (v) => fmtNum(Math.round(v)) + ' holders',
+      tickFormatter: (v) => Number(v).toLocaleString('en-US'),
+    });
+    if (note) note.textContent = 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.';
+    markReady('panel-mega-holders');
+  }
+
+  const megaFloatState = {
+    mode: 'stk',
+    dates: [],
+    datasets: [],
+  };
+
+  function renderMegaFloatPanel() {
+    if (!megaFloatState.dates.length || !megaFloatState.datasets.length) return;
+    const isPct = megaFloatState.mode === 'pct';
+    const isStk = megaFloatState.mode === 'stk';
+    makeLineChart('megaFloatChart', megaFloatState.datasets, megaFloatState.dates, {
+      stacked: isPct || isStk,
+      percent: isPct,
+      valueFormatter: (v) => fmtToken(v, 'MEGA', 0),
+      tickFormatter: (v) => fmtTokenCompact(v),
+      pointRadius: megaFloatState.dates.length > 1 ? 0 : 5,
+      pointHoverRadius: megaFloatState.dates.length > 1 ? 5 : 7,
+    });
+    markReady('panel-mega-float');
+  }
+
+  function renderMegaFloatChart(snapshot, history = null) {
+    const note = document.getElementById('megaFloatNote');
+    if (!snapshot || !(snapshot.circulatingSupply > 0) || !(snapshot.committed >= 0) || snapshot.freeFloat == null) {
+      if (note) note.textContent = 'MEGA committed vs free-float split unavailable right now (Blockscout live snapshot missing).';
+      markReady('panel-mega-float');
+      return;
+    }
+    let dates = [new Date()];
+    let committedValues = [snapshot.committed];
+    let freeValues = [snapshot.freeFloat];
+    if (
+      history
+      && Array.isArray(history?.dates)
+      && history.dates.length
+      && Array.isArray(history?.committed)
+      && history.committed.length === history.dates.length
+      && Array.isArray(history?.freeFloat)
+      && history.freeFloat.length === history.dates.length
+    ) {
+      dates = history.dates.map((day) => new Date(day + 'T00:00:00Z'));
+      committedValues = history.committed.slice();
+      freeValues = history.freeFloat.slice();
+      const last = dates.length - 1;
+      committedValues[last] = snapshot.committed;
+      freeValues[last] = snapshot.freeFloat;
+    }
+    megaFloatState.dates = dates;
+    megaFloatState.datasets = [
+      { label: 'Committed on Terminal', values: committedValues, color: '#90D79F', fill: false },
+      { label: 'Free float', values: freeValues, color: '#C586FF', fill: false },
+    ];
+    renderMegaFloatPanel();
+    if (note) note.innerHTML = 'Terminal commitments are tracked on-chain via <strong>MegaStakingProxy</strong>. '
+      + (history?.dates?.length ? 'History is shown from <strong>' + MEGA_FLOAT_START_DAY + '</strong> with <strong>ABS</strong>, <strong>STACKED</strong> and <strong>%</strong> views. ' : '')
+      + 'Current split: <strong>'
+      + fmtToken(snapshot.committed, 'MEGA', 0)
+      + '</strong> committed vs <strong>'
+      + fmtToken(snapshot.freeFloat, 'MEGA', 0)
+      + '</strong> free on a circulating base of <strong>'
+      + fmtToken(snapshot.circulatingSupply, 'MEGA', 0)
+      + '</strong>.';
+  }
+
+  let megaHoldersRetryTimer = null;
+  function loadMegaHoldersChart(snapshotPromise, attempt = 0) {
+    if (megaHoldersRetryTimer) {
+      clearTimeout(megaHoldersRetryTimer);
+      megaHoldersRetryTimer = null;
+    }
+    const note = document.getElementById('megaHoldersNote');
+    const delay = attempt === 0 ? 4000 : 12000 * attempt;
+    if (attempt === 0) {
+      Promise.all([fetchBundledMegaHoldersHistory(), snapshotPromise]).then(([bundledHistory, snapshot]) => {
+        if (!bundledHistory || !bundledHistory.size || chartInstances.megaHoldersChart) return;
+        renderMegaHoldersChart(bundledHistory, snapshot?.holdersCount ?? null);
+        const bundledNote = document.getElementById('megaHoldersNote');
+        if (bundledNote) bundledNote.textContent = 'Blockscout holders snapshot bundled with the site, shown from ' + MEGA_FLOAT_START_DAY + '. Live refresh running in background…';
+      }).catch(() => null);
+    }
+    if (note) note.textContent = attempt === 0
+      ? 'Loading MEGA holders history…'
+      : 'Retrying MEGA holders history…';
+    megaHoldersRetryTimer = setTimeout(() => {
+      Promise.all([fetchMegaHoldersHistoryOnChain(), snapshotPromise]).then(([historyByDay, snapshot]) => {
+        if (historyByDay && historyByDay.size) {
+          renderMegaHoldersChart(historyByDay, snapshot?.holdersCount ?? null);
+          return;
+        }
+        if (attempt < 2) {
+          loadMegaHoldersChart(snapshotPromise, attempt + 1);
+          return;
+        }
+        renderMegaHoldersChart(null, null);
+      }).catch((e) => {
+        console.warn('MEGA holders chart failed', e);
+        if (attempt < 2) {
+          loadMegaHoldersChart(snapshotPromise, attempt + 1);
+          return;
+        }
+        renderMegaHoldersChart(null, null);
+      });
+    }, delay);
   }
 
   // -------- CHART STATE (raw datasets per panel + display mode) --------
@@ -2987,6 +3645,17 @@
     const pUsdt0Live   = fetchTokenSupplyOnMegaETH(USDT0_TOKEN_ADDRESS);
     const pUsdt0History = fetchTokenSupplyHistoryOnChain(USDT0_TOKEN_ADDRESS, 6);
     const pOpiumTvl    = fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug));
+    const pMegaSnapshot = fetchMegaCommitmentSnapshot();
+
+    pMegaSnapshot.then((snapshot) => {
+      renderMegaFloatChart(snapshot, null);
+      return fetchMegaCommitmentHistoryOnChain(snapshot).then((history) => {
+        if (history?.dates?.length) renderMegaFloatChart(snapshot, history);
+      });
+    }).catch((e) => {
+      console.warn('MEGA float chart failed', e);
+      renderMegaFloatChart(null);
+    });
 
     // Chain revenue comparison: kick off the public DefiLlama leaderboard and
     // the MegaETH gas-fee series immediately. Once TVL lands we inject the
@@ -3363,6 +4032,8 @@
     } else {
       txNoteEl.textContent = 'Network fee sources unavailable — values shown as zero.';
     }
+
+    loadMegaHoldersChart(pMegaSnapshot);
   }
 
   function hideLoader() {
@@ -3441,6 +4112,15 @@
       document.querySelectorAll('#modeToggle button').forEach(b =>
         b.classList.toggle('active', b === btn));
       renderPanel(activeTab);
+    });
+  });
+
+  document.querySelectorAll('#megaFloatModeToggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      megaFloatState.mode = btn.dataset.mode;
+      document.querySelectorAll('#megaFloatModeToggle button').forEach(b =>
+        b.classList.toggle('active', b === btn));
+      renderMegaFloatPanel();
     });
   });
 
