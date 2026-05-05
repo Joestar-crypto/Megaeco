@@ -380,12 +380,84 @@
   }
 
   /* KPI CARDS */
-  .kpis {
+  .kpi-groups {
     display: grid;
     width: 100%;
     max-width: none;
     margin: 0 0 18px;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    align-items: start;
+  }
+  .kpi-group {
+    --group-accent: var(--green-2);
+    position: relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    border: 1px solid var(--border);
+    padding: 12px;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .kpi-group::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 12px;
+    height: 12px;
+    border-top: 1px solid var(--group-accent);
+    border-left: 1px solid var(--group-accent);
+    opacity: 0.9;
+  }
+  .kpi-group::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 12px;
+    height: 12px;
+    border-right: 1px solid var(--group-accent);
+    border-bottom: 1px solid var(--group-accent);
+    opacity: 0.9;
+  }
+  .kpi-group[data-group="usdm"] { --group-accent: var(--pink); }
+  .kpi-group[data-group="revenue"] { --group-accent: var(--peach); }
+  .kpi-group[data-group="comparison"] { --group-accent: #C586FF; }
+  .kpi-group[data-group="mega"] { --group-accent: var(--blue); }
+  .kpi-group-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .kpi-group-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--group-accent);
+    text-shadow: 0 0 14px rgba(255,255,255,0.06);
+  }
+  .kpi-group-meta {
+    flex-shrink: 0;
+    min-width: 32px;
+    padding: 4px 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .kpi-stack {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 10px;
   }
   .card {
@@ -407,7 +479,31 @@
     background: rgba(144,215,159,0.04);
   }
   .card.active .accent-bar { opacity: 1; height: 3px; }
-  .card .arrow {
+  .shortcut-card {
+    appearance: none;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 15px 12px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    min-height: 86px;
+    text-align: left;
+    color: var(--text);
+    font: inherit;
+    border-radius: 0 !important;
+  }
+  .shortcut-card:hover,
+  .shortcut-card:focus-visible {
+    border-color: var(--border-strong);
+    outline: none;
+  }
+  .card .arrow,
+  .shortcut-card .arrow {
     position: absolute;
     bottom: 14px;
     right: 16px;
@@ -421,11 +517,22 @@
     z-index: 2;
   }
   .card:hover .arrow,
-  .card.active .arrow {
+  .card.active .arrow,
+  .shortcut-card:hover .arrow,
+  .shortcut-card:focus-visible .arrow {
     opacity: 1;
     transform: translateY(0);
   }
   .card { padding-bottom: 18px; }
+  .shortcut-copy {
+    margin-top: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0.82;
+  }
   .kpi-label {
     color: var(--muted);
     font-size: 11px;
@@ -484,22 +591,28 @@
     text-shadow: 0 0 18px rgba(197,134,255,0.35);
   }
 
-  .card {
+  .card,
+  .shortcut-card {
     border-radius: 0 !important;
   }
-  .card .corner {
+  .card .corner,
+  .shortcut-card .corner {
     position: absolute;
     width: 10px; height: 10px;
     pointer-events: none;
   }
-  .card .corner.tl { top: -1px; left: -1px; border-top: 1px solid; border-left: 1px solid; }
-  .card .corner.br { bottom: -1px; right: -1px; border-bottom: 1px solid; border-right: 1px solid; }
+  .card .corner.tl,
+  .shortcut-card .corner.tl { top: -1px; left: -1px; border-top: 1px solid; border-left: 1px solid; }
+  .card .corner.br,
+  .shortcut-card .corner.br { bottom: -1px; right: -1px; border-bottom: 1px solid; border-right: 1px solid; }
   .kpi-tvl   .corner { color: var(--pink); }
   .kpi-daily .corner { color: var(--green); }
   .kpi-annual .corner { color: var(--peach); }
   .kpi-cum   .corner { color: var(--green-2); }
   .kpi-days  .corner { color: var(--blue); }
   .kpi-opium .corner { color: #C586FF; }
+  .shortcut-holders .corner { color: var(--blue); }
+  .shortcut-float .corner { color: var(--green); }
 
   .accent-bar {
     position: absolute;
@@ -517,7 +630,18 @@
   .kpi-opium .accent-bar { background: linear-gradient(90deg, #C586FF 0%, var(--pink) 50%, var(--peach) 100%); box-shadow: 0 0 22px rgba(197,134,255,0.65); }
 
   /* Per-card radial glow (subtle, brand-tinted) */
-  .card::after {
+  .shortcut-holders { --card-glow: rgba(126,170,212,0.18); }
+  .shortcut-float { --card-glow: rgba(144,215,159,0.18); }
+  .shortcut-holders .accent-bar {
+    background: linear-gradient(90deg, var(--blue) 0%, var(--green-2) 100%);
+    box-shadow: 0 0 18px rgba(126,170,212,0.45);
+  }
+  .shortcut-float .accent-bar {
+    background: linear-gradient(90deg, var(--green) 0%, var(--peach) 100%);
+    box-shadow: 0 0 18px rgba(144,215,159,0.45);
+  }
+  .card::after,
+  .shortcut-card::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -526,7 +650,10 @@
     opacity: 0.55;
     transition: opacity 0.2s ease;
   }
-  .card:hover::after, .card.active::after { opacity: 1; }
+  .card:hover::after,
+  .card.active::after,
+  .shortcut-card:hover::after,
+  .shortcut-card:focus-visible::after { opacity: 1; }
   .kpi-tvl    { --card-glow: rgba(255,138,168,0.16); }
   .kpi-daily  { --card-glow: rgba(144,215,159,0.16); }
   .kpi-annual { --card-glow: rgba(245,175,148,0.18); }
@@ -537,7 +664,7 @@
   .kpi-rank .kpi-value { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.35); }
   .kpi-rank .accent-bar { background: linear-gradient(90deg, var(--green) 0%, var(--green-2) 100%); box-shadow: 0 0 18px rgba(144,215,159,0.55); }
   .kpi-rank .corner { color: var(--green); }
-  .card > * { position: relative; z-index: 1; }
+  .card > *, .shortcut-card > * { position: relative; z-index: 1; }
 
   /* TOKEN LOGOS */
   .token-logo {
@@ -920,6 +1047,7 @@
     background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
     border: 1px solid var(--border);
     padding: 18px;
+    scroll-margin-top: 24px;
   }
   .mega-card h3 {
     margin: 0 0 8px;
@@ -1063,17 +1191,25 @@
 
   /* Responsive */
   @media (max-width: 1120px) {
-    .kpis {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
+    .kpi-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
       margin-bottom: 16px;
+    }
+    .kpi-group {
+      padding: 10px;
     }
     .card {
       min-height: 74px;
       padding: 12px 10px 8px;
       padding-bottom: 10px;
     }
-    .card .arrow { display: none; }
+    .shortcut-card {
+      min-height: 74px;
+      padding: 12px 10px 10px;
+    }
+    .card .arrow,
+    .shortcut-card .arrow { display: none; }
     .kpi-label {
       display: -webkit-box;
       margin-top: 3px;
@@ -1124,17 +1260,28 @@
       line-height: 1.6;
       letter-spacing: 0.10em;
     }
-    .kpis {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .kpi-groups {
+      grid-template-columns: 1fr;
       gap: 10px;
       margin-bottom: 16px;
+    }
+    .kpi-group {
+      padding: 10px;
+    }
+    .kpi-group-head {
+      margin-bottom: 8px;
     }
     .card {
       min-height: 72px;
       padding: 13px 9px 8px;
       padding-bottom: 9px;
     }
-    .card .arrow {
+    .shortcut-card {
+      min-height: 72px;
+      padding: 13px 9px 9px;
+    }
+    .card .arrow,
+    .shortcut-card .arrow {
       display: none;
     }
     .kpi-label {
@@ -1365,8 +1512,8 @@
       font-size: 9px;
       letter-spacing: 0.08em;
     }
-    .kpis {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .kpi-groups {
+      grid-template-columns: 1fr;
       gap: 6px;
       margin-bottom: 14px;
     }
@@ -1375,6 +1522,19 @@
       min-height: 66px;
       padding: 11px 7px 7px;
       padding-bottom: 8px;
+    }
+    .shortcut-card {
+      min-height: 66px;
+      padding: 11px 7px 8px;
+    }
+    .kpi-group-title {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+    }
+    .kpi-group-meta,
+    .shortcut-copy {
+      font-size: 9px;
+      letter-spacing: 0.12em;
     }
     .kpi-label {
       margin-top: 2px;
@@ -1410,6 +1570,353 @@
     }
     .formula { font-size: 12px; }
     .load-bar { width: min(280px, 78vw); }
+  }
+
+  /* CATEGORY NAVIGATION + STACKED CATEGORY VIEW */
+  .category-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 0 18px;
+  }
+  .category-card {
+    --accent: var(--green-2);
+    position: relative;
+    min-width: 0;
+    min-height: 152px;
+    padding: 18px 16px 16px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+  }
+  .category-card::before,
+  .category-card::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    opacity: 0.9;
+  }
+  .category-card::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid var(--accent);
+    border-left: 1px solid var(--accent);
+  }
+  .category-card::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 1px solid var(--accent);
+    border-bottom: 1px solid var(--accent);
+  }
+  .category-card > * {
+    position: relative;
+    z-index: 1;
+  }
+  .category-card:hover,
+  .category-card:focus-visible,
+  .category-card.active {
+    border-color: rgba(255,255,255,0.12);
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.018));
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 12px 26px rgba(0,0,0,0.18);
+    outline: none;
+  }
+  .category-card.active {
+    transform: translateY(-1px);
+  }
+  .category-card[data-category="usdm"] { --accent: var(--pink); }
+  .category-card[data-category="revenue"] { --accent: var(--peach); }
+  .category-card[data-category="comparison"] { --accent: #C586FF; }
+  .category-card[data-category="mega"] { --accent: var(--blue); }
+  .category-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .category-card-label {
+    display: inline-flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1.05;
+    text-shadow: 0 0 18px rgba(255,255,255,0.08);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+  .category-card-label .token-logo {
+    margin-right: 0;
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    vertical-align: middle;
+  }
+  .category-card-label .token-logo.dollar {
+    font-size: 16px;
+  }
+  .category-card-label .token-logo.compare {
+    width: 26px;
+    height: 26px;
+    font-size: 10px;
+  }
+  .category-card-count {
+    flex-shrink: 0;
+    padding: 5px 9px 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+    color: var(--muted);
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: none;
+    line-height: 1;
+  }
+  .category-card-title {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .category-card-primary {
+    margin-top: 22px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    max-width: 100%;
+    font-family: var(--mono);
+    font-size: clamp(24px, 2.3vw, 36px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .category-card-primary-main {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .category-card-primary-suffix {
+    flex-shrink: 0;
+    font-family: 'Helvetica Neue', system-ui, sans-serif;
+    font-size: 0.42em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0.88;
+  }
+  .category-card[data-category="usdm"] .category-card-primary { color: var(--pink); text-shadow: 0 0 14px rgba(255,138,168,0.24); }
+  .category-card[data-category="revenue"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
+  .category-card[data-category="comparison"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
+  .category-card[data-category="mega"] .category-card-primary { color: var(--blue); text-shadow: 0 0 14px rgba(126,170,212,0.24); }
+  .category-card-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    margin-top: 10px;
+  }
+  .category-card-detail {
+    padding: 4px 8px 3px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.02);
+    color: var(--muted);
+    font-family: 'Helvetica Neue', system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    opacity: 0.88;
+  }
+  .category-card-stats {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .category-stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .category-stat-label {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.82;
+  }
+  .category-stat-value {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .category-browser {
+    scroll-margin-top: 24px;
+  }
+  .category-panel {
+    display: none;
+  }
+  .category-panel.active {
+    display: block;
+  }
+  .category-stack {
+    display: grid;
+    gap: 18px;
+  }
+  .category-chart-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    border: 1px solid var(--border);
+    padding: 18px;
+  }
+  .category-chart-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .category-chart-copy {
+    flex: 1;
+    min-width: 220px;
+  }
+  .category-chart-copy h3 {
+    margin: 0 0 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .category-chart-copy .desc {
+    margin-bottom: 0;
+  }
+  .category-panel .panel {
+    display: block;
+  }
+  .category-panel .mega-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 0;
+  }
+  .panel-mode-toggle {
+    display: inline-flex;
+  }
+  .token-logo.compare {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #C586FF, #7EAAD4 55%, #90D79F);
+    color: #19191A;
+    font-family: var(--mono);
+    font-weight: 900;
+    font-size: 8px;
+    letter-spacing: -0.08em;
+    box-shadow: 0 0 12px rgba(197,134,255,0.5);
+    width: 18px;
+    height: 18px;
+  }
+  @media (max-width: 1120px) {
+    .category-cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .category-card {
+      min-height: 144px;
+      padding: 16px 14px 14px;
+    }
+    .category-card-label {
+      font-size: 16px;
+      gap: 9px;
+    }
+    .category-card-label .token-logo,
+    .category-card-label .token-logo.compare {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  @media (max-width: 820px) {
+    .category-cards {
+      grid-template-columns: 1fr;
+    }
+    .category-card {
+      min-height: 134px;
+      padding: 15px 12px 13px;
+    }
+    .category-card-label {
+      font-size: 16px;
+      gap: 8px;
+    }
+    .category-card-label .token-logo,
+    .category-card-label .token-logo.compare {
+      width: 24px;
+      height: 24px;
+    }
+    .category-card-primary {
+      font-size: clamp(20px, 5.8vw, 28px);
+    }
+    .category-chart-card,
+    .mega-card {
+      padding: 16px;
+    }
+    .category-chart-head {
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+  }
+  @media (max-width: 560px) {
+    .category-card {
+      min-height: 118px;
+      padding: 12px 10px;
+    }
+    .category-card-count,
+    .category-stat-label,
+    .category-stat-value {
+      font-size: 9px;
+    }
+    .category-card-label {
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      gap: 7px;
+    }
+    .category-card-label .token-logo,
+    .category-card-label .token-logo.compare {
+      width: 20px;
+      height: 20px;
+    }
+    .category-card-primary {
+      margin-top: 16px;
+      font-size: clamp(18px, 7vw, 24px);
+    }
+    .category-chart-card,
+    .mega-card {
+      padding: 14px 12px;
+    }
   }
 
   /* LOADING PILL */
@@ -1597,121 +2104,245 @@
     <p>>>  USDM Yield + Network Fees · Live On-Chain Data · Updated Daily</p>
   </section>
 
-  <!-- KPI CARDS (clickable → chart tabs) -->
-  <div class="kpis" id="kpiTabs">
-    <div class="card kpi-tvl active" data-tab="tvl" role="button" tabindex="0">
-      <span class="corner tl"></span><span class="corner br"></span>
-      <div class="accent-bar"></div>
-      <div class="arrow">[ VIEW → ]</div>
-      <div class="kpi-label"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />// USDm TVL</div>
-      <div class="kpi-value" id="kpi-tvl">$ —</div>
+  <!-- CATEGORY CARDS -->
+  <div class="category-cards" id="kpiTabs">
+    <div class="category-card active" data-category="usdm" role="button" tabindex="0">
+      <div class="category-card-top">
+        <div class="category-card-label"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />USDM</div>
+        <div class="category-card-count">2 charts</div>
+      </div>
+      <div class="category-card-primary" id="kpi-tvl">$ —</div>
+      <div class="category-card-details">
+        <span class="category-card-detail">USDm TVL</span>
+        <span class="category-card-detail">USDm vs USDT0</span>
+      </div>
+      <div class="category-card-stats">
+        <div class="category-stat">
+          <span class="category-stat-label">USDm vs USDT0</span>
+          <span class="category-stat-value" id="kpi-days">—</span>
+        </div>
+      </div>
     </div>
-    <div class="card kpi-daily" data-tab="revenue" role="button" tabindex="0">
-      <span class="corner tl"></span><span class="corner br"></span>
-      <div class="accent-bar"></div>
-      <div class="arrow">[ VIEW → ]</div>
-      <div class="kpi-label"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />// Daily Revenue</div>
-      <div class="kpi-value" id="kpi-daily">$ —</div>
+
+    <div class="category-card" data-category="mega" role="button" tabindex="0">
+      <div class="category-card-top">
+        <div class="category-card-label"><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />Mega</div>
+        <div class="category-card-count">3 charts</div>
+      </div>
+      <div class="category-card-primary" id="kpi-mega-holders">—</div>
+      <div class="category-card-details">
+        <span class="category-card-detail">MEGA Holders</span>
+        <span class="category-card-detail">Committed vs Free Float</span>
+        <span class="category-card-detail">MEGA P/E</span>
+      </div>
+      <div class="category-card-stats">
+        <div class="category-stat">
+          <span class="category-stat-label">Committed share</span>
+          <span class="category-stat-value" id="kpi-mega-split">—</span>
+        </div>
+      </div>
     </div>
-    <div class="card kpi-annual" data-tab="annual" role="button" tabindex="0">
-      <span class="corner tl"></span><span class="corner br"></span>
-      <div class="accent-bar"></div>
-      <div class="arrow">[ VIEW → ]</div>
-      <div class="kpi-label"><span class="token-logo dollar">$</span>// Annualized Revenue</div>
-      <div class="kpi-value" id="kpi-annual">$ —</div>
+
+    <div class="category-card" data-category="revenue" role="button" tabindex="0">
+      <div class="category-card-top">
+        <div class="category-card-label"><span class="token-logo dollar">$</span>Revenue</div>
+        <div class="category-card-count">3 charts</div>
+      </div>
+      <div class="category-card-primary" id="kpi-daily">$ —</div>
+      <div class="category-card-details">
+        <span class="category-card-detail">Daily Revenue</span>
+        <span class="category-card-detail">Annualized Revenue</span>
+        <span class="category-card-detail">Cumulative Revenue</span>
+      </div>
+      <div class="category-card-stats">
+        <div class="category-stat">
+          <span class="category-stat-label">Annualized</span>
+          <span class="category-stat-value" id="kpi-annual">$ —</span>
+        </div>
+        <div class="category-stat">
+          <span class="category-stat-label">Cumulative</span>
+          <span class="category-stat-value" id="kpi-cum">$ —</span>
+        </div>
+      </div>
     </div>
-    <div class="card kpi-cum" data-tab="cum" role="button" tabindex="0">
-      <span class="corner tl"></span><span class="corner br"></span>
-      <div class="accent-bar"></div>
-      <div class="arrow">[ VIEW → ]</div>
-      <div class="kpi-label">// Cumulative Revenue</div>
-      <div class="kpi-value" id="kpi-cum">$ —</div>
-    </div>
-    <div class="card kpi-days" data-tab="stables" role="button" tabindex="0">
-      <span class="corner tl"></span><span class="corner br"></span>
-      <div class="accent-bar"></div>
-      <div class="arrow">[ VIEW → ]</div>
-      <div class="kpi-label"><span class="token-pair"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><img class="token-logo usdt0" src="https://coin-images.coingecko.com/coins/images/53705/large/usdt0.jpg?1737086183" alt="USDT0" /></span>// USDm vs USDT0</div>
-      <div class="kpi-value" id="kpi-days">—</div>
-    </div>
-    <div class="card kpi-opium" data-tab="opium" role="button" tabindex="0">
-      <span class="corner tl"></span><span class="corner br"></span>
-      <div class="accent-bar"></div>
-      <div class="arrow">[ VIEW → ]</div>
-      <div class="kpi-label">// Forecast</div>
-      <div class="kpi-value" id="kpi-opium">$ —</div>
-    </div>
-    <div class="card kpi-rank" data-tab="chainrev" role="button" tabindex="0">
-      <span class="corner tl"></span><span class="corner br"></span>
-      <div class="accent-bar"></div>
-      <div class="arrow">[ VIEW → ]</div>
-      <div class="kpi-label"><img class="token-logo" src="https://icons.llamao.fi/icons/chains/rsz_megaeth.jpg" alt="MegaETH" referrerpolicy="no-referrer" />// Chain Rank</div>
-      <div class="kpi-value" id="kpi-rank">—</div>
+
+    <div class="category-card" data-category="comparison" role="button" tabindex="0">
+      <div class="category-card-top">
+        <div class="category-card-label"><span class="token-logo compare">VS</span>Comparison</div>
+        <div class="category-card-count">3 charts</div>
+      </div>
+      <div class="category-card-primary" id="kpi-rank">—</div>
+      <div class="category-card-details">
+        <span class="category-card-detail">Forecast</span>
+        <span class="category-card-detail">Chain Revenue</span>
+        <span class="category-card-detail">P/E Ratio</span>
+      </div>
+      <div class="category-card-stats">
+        <div class="category-stat">
+          <span class="category-stat-label">Forecast</span>
+          <span class="category-stat-value" id="kpi-opium">$ —</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- CHART PANELS (driven by KPI card clicks above) -->
-  <section class="section">
+  <!-- CATEGORY PANELS -->
+  <section class="section category-browser" id="categoryBrowser">
     <div class="chart-header">
       <div class="title-block">
-        <h2 id="chartTitle"><img class="token-logo lg" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><span>USDM TVL</span></h2>
-        <div class="desc" id="chartDesc">Circulating USDm market cap (CoinGecko / megausd) since launch.</div>
-      </div>
-      <div class="mode-toggle" id="modeToggle" role="tablist" aria-label="Display mode">
-        <button type="button" data-mode="abs" class="active"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
-        <button type="button" data-mode="stk"><span class="glyph"><i></i><i></i><i></i></span>Stacked</button>
-        <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>Percentage</button>
+        <h2 id="chartTitle"><span>USDM</span></h2>
       </div>
     </div>
 
-    <div class="panel" data-panel="revenue">
-      <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
-      <div class="note" id="chartNote">Estimated (based on current TVL flat baseline)</div>
-    </div>
-    <div class="panel" data-panel="cum">
-      <div class="chart-wrap"><canvas id="cumChart"></canvas></div>
-    </div>
-    <div class="panel" data-panel="annual">
-      <div class="chart-wrap"><canvas id="annualChart"></canvas></div>
-      <div class="note" id="annualNote">Run-rate = (daily USDm yield + 7-day avg network fees) × 365.</div>
-    </div>
-    <div class="panel active" data-panel="tvl">
-      <div class="chart-wrap"><canvas id="tvlChart"></canvas></div>
-    </div>
-    <div class="panel" data-panel="stables">
-      <div class="chart-wrap"><canvas id="stablesChart"></canvas></div>
-      <div class="note" id="stablesNote">USDT0 is sourced from MegaETH Blockscout. When transfer-history reconstruction is unavailable, the chart falls back to the live Blockscout supply snapshot.</div>
-    </div>
-    <div class="panel" data-panel="opium">
-      <div class="chart-wrap" style="height:auto;min-height:340px"><div id="opiumBars" class="opium-bars"></div></div>
-      <div class="note" id="opiumNote">Hypothetical run-rate = (chain DeFi TVL × USDm APY) + MegaETH 7d-avg network fees × 365.</div>
-    </div>
-    <div class="panel" data-panel="chainrev">
-      <div class="chart-wrap" style="height:auto;min-height:340px"><div id="chainRevBars" class="opium-bars"></div></div>
-      <div class="note" id="chainRevSummary">Loading chain revenue comparison…</div>
-    </div>
-  </section>
+    <div class="category-panel active" data-category="usdm">
+      <div class="category-stack">
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />USDm TVL</h3>
+              <div class="desc">Circulating USDm market cap (CoinGecko / megausd) since launch.</div>
+            </div>
+          </div>
+          <div class="panel" data-panel="tvl">
+            <div class="chart-wrap"><canvas id="tvlChart"></canvas></div>
+          </div>
+        </article>
 
-  <section class="section">
-    <h2><img class="token-logo lg" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />MEGA Token</h2>
-    <div class="desc">Blockscout holder growth and live Terminal commitment split for MEGA on MegaETH.</div>
-    <div class="mega-grid">
-      <div class="mega-card">
-        <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />MEGA Holders</h3>
-        <div class="desc">Unique wallets and contracts holding a positive MEGA balance, reconstructed from Blockscout transfer history.</div>
-        <div class="chart-wrap"><canvas id="megaHoldersChart"></canvas></div>
-        <div class="note mega-note" id="megaHoldersNote">Loading MEGA holders history…</div>
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><span class="token-pair"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><img class="token-logo usdt0" src="https://coin-images.coingecko.com/coins/images/53705/large/usdt0.jpg?1737086183" alt="USDT0" /></span>USDm vs USDT0</h3>
+              <div class="desc">USDm market cap vs USDT0 supply on MegaETH, sourced from Blockscout.</div>
+            </div>
+            <div class="mode-toggle show panel-mode-toggle" data-mode-target="stables" role="tablist" aria-label="USDM vs USDT0 display mode">
+              <button type="button" data-mode="abs" class="active"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
+              <button type="button" data-mode="stk"><span class="glyph"><i></i><i></i><i></i></span>Stacked</button>
+              <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>Percentage</button>
+            </div>
+          </div>
+          <div class="panel" data-panel="stables">
+            <div class="chart-wrap"><canvas id="stablesChart"></canvas></div>
+            <div class="note" id="stablesNote">USDT0 is sourced from MegaETH Blockscout. When transfer-history reconstruction is unavailable, the chart falls back to the live Blockscout supply snapshot.</div>
+          </div>
+        </article>
       </div>
-      <div class="mega-card">
-        <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />Committed vs Free Float</h3>
-        <div class="desc">Historical circulating MEGA split between Terminal commitments and liquid supply, with absolute, stacked and percentage views.</div>
-        <div class="mode-toggle show" id="megaFloatModeToggle" role="tablist" aria-label="MEGA float display mode">
-          <button type="button" data-mode="abs"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
-          <button type="button" data-mode="stk" class="active"><span class="glyph"><i></i><i></i><i></i></span>Stacked</button>
-          <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>Percentage</button>
+    </div>
+
+    <div class="category-panel" data-category="mega">
+      <div class="mega-grid">
+        <div class="mega-card" id="mega-holders-card">
+          <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />MEGA Holders</h3>
+          <div class="desc">Unique wallets and contracts holding a positive MEGA balance, reconstructed from Blockscout transfer history.</div>
+          <div class="chart-wrap"><canvas id="megaHoldersChart"></canvas></div>
+          <div class="note mega-note" id="megaHoldersNote">Loading MEGA holders history…</div>
         </div>
-        <div class="chart-wrap"><canvas id="megaFloatChart"></canvas></div>
-        <div class="note mega-note mega-note-green" id="megaFloatNote">Loading MEGA committed vs free float…</div>
+        <div class="mega-card" id="mega-float-card">
+          <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />Committed vs Free Float</h3>
+          <div class="desc">Historical circulating MEGA split between Terminal commitments and liquid supply, with absolute, stacked and percentage views.</div>
+          <div class="mode-toggle show" id="megaFloatModeToggle" role="tablist" aria-label="MEGA float display mode">
+            <button type="button" data-mode="abs"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
+            <button type="button" data-mode="stk" class="active"><span class="glyph"><i></i><i></i><i></i></span>Stacked</button>
+            <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>Percentage</button>
+          </div>
+          <div class="chart-wrap"><canvas id="megaFloatChart"></canvas></div>
+          <div class="note mega-note mega-note-green" id="megaFloatNote">Loading MEGA committed vs free float…</div>
+        </div>
+        <div class="mega-card" id="mega-pe-history-card">
+          <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />MEGA P/E Since TGE</h3>
+          <div class="desc">MEGA token market cap divided by MegaETH annualized revenue, tracked day by day since the MEGA TGE.</div>
+          <div class="chart-wrap"><canvas id="megaPeHistoryChart"></canvas></div>
+          <div class="note mega-note" id="megaPeHistoryNote">Loading MEGA P/E history…</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-panel" data-category="revenue">
+      <div class="category-stack">
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />Daily Revenue</h3>
+              <div class="desc">USDm reserve yield vs MegaETH network fees, day by day since launch.</div>
+            </div>
+            <div class="mode-toggle show panel-mode-toggle" data-mode-target="revenue" role="tablist" aria-label="Revenue display mode">
+              <button type="button" data-mode="abs" class="active"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
+              <button type="button" data-mode="stk"><span class="glyph"><i></i><i></i><i></i></span>Stacked</button>
+              <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>Percentage</button>
+            </div>
+          </div>
+          <div class="panel" data-panel="revenue">
+            <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+            <div class="note" id="chartNote">Estimated (based on current TVL flat baseline)</div>
+          </div>
+        </article>
+
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><span class="token-logo dollar">$</span>Annualized Revenue</h3>
+              <div class="desc">Run-rate projection: 7-day rolling daily revenue × 365.</div>
+            </div>
+          </div>
+          <div class="panel" data-panel="annual">
+            <div class="chart-wrap"><canvas id="annualChart"></canvas></div>
+            <div class="note" id="annualNote">Run-rate = (daily USDm yield + 7-day avg network fees) × 365.</div>
+          </div>
+        </article>
+
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3>Cumulative Revenue</h3>
+              <div class="desc">Running total of daily revenue accumulated since Feb 9, 2026.</div>
+            </div>
+          </div>
+          <div class="panel" data-panel="cum">
+            <div class="chart-wrap"><canvas id="cumChart"></canvas></div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="category-panel" data-category="comparison">
+      <div class="category-stack">
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3>Forecast</h3>
+              <div class="desc">Hypothetical annualized revenue if MegaETH had the DeFi TVL of other major chains.</div>
+            </div>
+          </div>
+          <div class="panel" data-panel="opium">
+            <div class="chart-wrap" style="height:auto;min-height:340px"><div id="opiumBars" class="opium-bars"></div></div>
+            <div class="note" id="opiumNote">Hypothetical run-rate = (chain DeFi TVL × USDm APY) + MegaETH 7d-avg network fees × 365.</div>
+          </div>
+        </article>
+
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><img class="token-logo" src="https://icons.llamao.fi/icons/chains/rsz_megaeth.jpg" alt="MegaETH" referrerpolicy="no-referrer" />Chain Revenue</h3>
+              <div class="desc">MegaETH's latest daily on-chain revenue ranked against DefiLlama's revenue/chains leaderboard.</div>
+            </div>
+          </div>
+          <div class="panel" data-panel="chainrev">
+            <div class="chart-wrap" style="height:auto;min-height:340px"><div id="chainRevBars" class="opium-bars"></div></div>
+            <div class="note" id="chainRevSummary">Loading chain revenue comparison…</div>
+          </div>
+        </article>
+
+        <article class="category-chart-card" id="pe-ratio-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3>P/E Ratio</h3>
+              <div class="desc">Market cap divided by annualized revenue for every chain currently visible in Chain Rank, plus MegaETH.</div>
+            </div>
+          </div>
+          <div class="panel" data-panel="pe">
+            <div class="chart-wrap" style="height:auto;min-height:360px"><div id="peRatioBars" class="opium-bars"></div></div>
+            <div class="note" id="peRatioNote">Loading chain P/E ratio comparison…</div>
+          </div>
+        </article>
       </div>
     </div>
   </section>
@@ -1760,7 +2391,7 @@
 
   <footer>
     <div class="footer-inner">
-      <div class="footer-data">Data: CoinGecko (USDm market cap, ETH price) · DefiLlama (chain fees fallback + stables) · growthepie (network-fee/stables fallback) · MegaETH Blockscout stats-service / token APIs (network fees, live token supply, MEGA holders history, MegaStaking MEGA balance)</div>
+      <div class="footer-data">Data: CoinGecko (USDm market cap, ETH price, chain token market caps for P/E) · DefiLlama (chain fees fallback + stables) · growthepie (network-fee/stables fallback) · MegaETH Blockscout stats-service / token APIs (network fees, live token supply, MEGA holders history, MegaStaking MEGA balance)</div>
       <a class="hero-overlay__credit" href="https://x.com/JoestarCrypto" target="_blank" rel="noreferrer noopener">
         <span class="hero-overlay__credit-label">Made by Joestar</span>
         <span class="hero-overlay__credit-avatar"><img src="logos/Jojo2.jpg" alt="" /></span>
@@ -1794,8 +2425,10 @@
   ];
   // CoinGecko coin id for MegaUSD (USDm)
   const CG_USDM_ID = 'megausd';
+  const CG_MEGA_ID = 'megaeth';
   const CG_USDM_API = `https://api.coingecko.com/api/v3/coins/${CG_USDM_ID}?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false`;
   const CG_USDM_HISTORY = `https://api.coingecko.com/api/v3/coins/${CG_USDM_ID}/market_chart?vs_currency=usd&days=180`;
+  const CG_MEGA_HISTORY_RANGE = (fromSec, toSec) => `https://api.coingecko.com/api/v3/coins/${CG_MEGA_ID}/market_chart/range?vs_currency=usd&from=${fromSec}&to=${toSec}`;
   // MegaETH Blockscout explorer — live fees, market price history, token snapshots
   const BS_BASE          = 'https://megaeth.blockscout.com/api/v2';
   const BS_STATS         = `${BS_BASE}/stats`;
@@ -2134,6 +2767,51 @@
     const cached = cacheGet('usdm-history');
     if (cached) {
       console.info('[megafees] using cached USDm history (' + cached.length + ' points)');
+      return cached;
+    }
+    return null;
+  }
+
+  async function fetchMegaMarketCapHistory() {
+    const cacheKey = 'mega-marketcap-history-v2';
+    const historyStartMs = Date.parse(MEGA_FLOAT_START_DAY + 'T00:00:00Z');
+    const startSec = Math.floor(historyStartMs / 1000);
+    const endSec = Math.floor(Date.now() / 1000) + 3600;
+    const validate = (j) => {
+      const arr = j?.market_caps;
+      if (!Array.isArray(arr) || arr.length < 4) return false;
+      const firstTs = arr[0]?.[0];
+      const lastTs = arr[arr.length - 1]?.[0];
+      if (!Number.isFinite(firstTs) || !Number.isFinite(lastTs)) return false;
+      const age = Date.now() - lastTs;
+      const coversStart = firstTs <= historyStartMs + 36 * 60 * 60 * 1000;
+      return coversStart && age >= 0 && age < FRESH_MAX_AGE_MS;
+    };
+    const urls = [
+      CG_MEGA_HISTORY_RANGE(startSec, endSec),
+      `https://api.coingecko.com/api/v3/coins/${CG_MEGA_ID}/market_chart?vs_currency=usd&days=7`,
+      `https://api.coingecko.com/api/v3/coins/${CG_MEGA_ID}/market_chart?vs_currency=usd&days=30`,
+    ];
+
+    try {
+      for (const url of urls) {
+        const res = await corsFetch(url, null, validate);
+        if (!res.ok) continue;
+        const json = await res.json();
+        const arr = Array.isArray(json?.market_caps) ? json.market_caps : null;
+        if (arr?.length) {
+          cacheSet(cacheKey, arr);
+          return arr;
+        }
+      }
+      throw new Error('CoinGecko MEGA market cap history unavailable');
+    } catch (e) {
+      console.warn('CoinGecko MEGA market cap history fetch failed:', e);
+    }
+
+    const cached = cacheGet(cacheKey);
+    if (validate({ market_caps: cached })) {
+      console.info('[megafees] using cached MEGA market cap history (' + cached.length + ' points)');
       return cached;
     }
     return null;
@@ -2711,6 +3389,7 @@
   // JSON in a script tag, which we parse directly. Canton is excluded per user
   // request because DefiLlama explicitly flags its current incentives.
   const DL_REVENUE_CHAINS_PAGE = 'https://defillama.com/revenue/chains';
+  const DL_REVENUE_CHAINS_MIRROR = 'https://r.jina.ai/http://https://defillama.com/revenue/chains';
   const CHAIN_REV_DISPLAY_LIMIT = 10;
   const CHAIN_REV_COLORS = {
     'Tron': '#FF6B6B',
@@ -2741,9 +3420,299 @@
     'Mantle': '#66CDAA',
     'MegaETH': '#90D79F',
   };
+  const CHAIN_MARKET_CAP_ID_OVERRIDES = {
+    'base': {
+      id: 'ethereum',
+      note: 'Base uses ETH market cap as gas-asset fallback.',
+    },
+    'morph': {
+      id: 'ethereum',
+      note: 'Morph uses ETH market cap as gas-asset fallback.',
+    },
+  };
 
   function chainRevenueColor(label) {
     return CHAIN_REV_COLORS[label] || '#9AA7C2';
+  }
+
+  function buildVisibleChainRevenueRows(rows) {
+    const sorted = [...(Array.isArray(rows) ? rows : [])].sort((a, b) => b.value - a.value);
+    let visible = sorted.slice(0, CHAIN_REV_DISPLAY_LIMIT);
+    const megaIdx = sorted.findIndex((row) => row?.isBase);
+    if (megaIdx >= CHAIN_REV_DISPLAY_LIMIT) visible = [...visible, sorted[megaIdx]];
+    return {
+      sorted,
+      visible,
+      megaIdx,
+      megaRank: megaIdx >= 0 ? megaIdx + 1 : null,
+      total: sorted.length,
+    };
+  }
+
+  async function fetchChainMarketCaps(rows, megaSnapshot = null) {
+    const cachePrefix = 'chain-marketcap:';
+    const labels = [...new Set((Array.isArray(rows) ? rows : [])
+      .map((row) => String(row?.label || '').trim())
+      .filter(Boolean))];
+
+    function restoreFromCache() {
+      const out = new Map();
+      for (const label of labels) {
+        const cached = cacheGet(cachePrefix + label.toLowerCase());
+        if (cached && Number(cached.marketCap) > 0) out.set(label, cached);
+      }
+      if (!out.has('MegaETH') && Number(megaSnapshot?.marketCap) > 0) {
+        out.set('MegaETH', {
+          marketCap: Number(megaSnapshot.marketCap),
+          source: 'Blockscout',
+          geckoId: 'megaeth',
+          note: '',
+        });
+      }
+      return out.size ? out : null;
+    }
+
+    if (!labels.length) return null;
+
+    try {
+      const res = await corsFetch('https://api.llama.fi/v2/chains');
+      if (!res.ok) throw new Error('DL v2/chains ' + res.status);
+      const arr = await res.json();
+      const geckoByLabel = new Map(
+        (Array.isArray(arr) ? arr : []).map((row) => [
+          String(row?.name || '').trim().toLowerCase(),
+          String(row?.gecko_id || '').trim(),
+        ])
+      );
+      const metaByLabel = new Map();
+      const ids = new Set();
+      for (const label of labels) {
+        const lower = label.toLowerCase();
+        const liveId = geckoByLabel.get(lower) || '';
+        const fallback = CHAIN_MARKET_CAP_ID_OVERRIDES[lower];
+        const geckoId = liveId || fallback?.id || '';
+        metaByLabel.set(label, {
+          geckoId: geckoId || null,
+          note: !liveId && fallback?.note ? fallback.note : '',
+        });
+        if (geckoId) ids.add(geckoId);
+      }
+
+      let marketCapsJson = {};
+      if (ids.size) {
+        const idsParam = [...ids].map((id) => encodeURIComponent(id)).join(',');
+        const cgUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${idsParam}&vs_currencies=usd&include_market_cap=true`;
+        const cgRes = await corsFetch(cgUrl);
+        if (!cgRes.ok) throw new Error('CG market caps ' + cgRes.status);
+        marketCapsJson = await cgRes.json();
+      }
+
+      const out = new Map();
+      for (const label of labels) {
+        const meta = metaByLabel.get(label) || {};
+        let marketCap = Number(marketCapsJson?.[meta.geckoId]?.usd_market_cap || 0);
+        let source = marketCap > 0 ? 'CoinGecko' : null;
+        if (!(marketCap > 0) && label.toLowerCase() === 'megaeth' && Number(megaSnapshot?.marketCap) > 0) {
+          marketCap = Number(megaSnapshot.marketCap);
+          source = 'Blockscout';
+        }
+        if (marketCap > 0) {
+          const record = {
+            marketCap,
+            source,
+            geckoId: meta.geckoId || null,
+            note: meta.note || '',
+          };
+          out.set(label, record);
+          cacheSet(cachePrefix + label.toLowerCase(), record);
+          continue;
+        }
+        const cached = cacheGet(cachePrefix + label.toLowerCase());
+        if (cached && Number(cached.marketCap) > 0) out.set(label, cached);
+      }
+      return out.size ? out : restoreFromCache();
+    } catch (e) {
+      console.warn('chain market cap fetch failed:', e);
+      return restoreFromCache();
+    }
+  }
+
+  async function fetchChainPeRatioComparison(rows, megaSnapshot = null) {
+    const { visible } = buildVisibleChainRevenueRows(rows);
+    const peRows = visible.filter((row) => !['base', 'injective', 'morph'].includes(String(row?.label || '').trim().toLowerCase()));
+    if (!peRows.length) return null;
+    const marketCaps = await fetchChainMarketCaps(peRows, megaSnapshot);
+    if (!marketCaps || !marketCaps.size) return null;
+    const out = [];
+    const missingLabels = [];
+    const fallbackLabels = [];
+    for (const row of peRows) {
+      const marketInfo = marketCaps.get(row.label);
+      const annualizedRevenue = Number(row.value || 0) * 365;
+      const marketCap = Number(marketInfo?.marketCap || 0);
+      const ratio = annualizedRevenue > 0 && marketCap > 0 ? marketCap / annualizedRevenue : 0;
+      if (!(ratio > 0)) {
+        missingLabels.push(row.label);
+        continue;
+      }
+      if (marketInfo?.note) fallbackLabels.push(row.label);
+      out.push({
+        label: row.label,
+        logo: row.logo || null,
+        color: row.color,
+        isBase: !!row.isBase,
+        ratio,
+        marketCap,
+        annualizedRevenue,
+        source: marketInfo?.source || null,
+        note: marketInfo?.note || '',
+      });
+    }
+    return out.length
+      ? {
+          rows: out,
+          missingLabels,
+          fallbackLabels: [...new Set(fallbackLabels)],
+        }
+      : null;
+  }
+
+  function renderPeRatioBars(model) {
+    const host = document.getElementById('peRatioBars');
+    const note = document.getElementById('peRatioNote');
+    if (!host) return;
+    if (!model || !Array.isArray(model.rows) || !model.rows.length) {
+      host.innerHTML = '<div class="note">P/E ratio comparison unavailable right now.</div>';
+      if (note) note.textContent = 'Market cap or annualized revenue data unavailable for the visible chain set.';
+      markReady('panel-pe');
+      return;
+    }
+
+    const sorted = [...model.rows].sort((a, b) => a.ratio - b.ratio);
+    const max = sorted[sorted.length - 1]?.ratio || 1;
+    host.innerHTML = sorted.map((row) => {
+      const pct = Math.max(1.5, (row.ratio / max) * 100);
+      const ratioText = row.ratio >= 100 ? row.ratio.toFixed(0) : row.ratio.toFixed(1);
+      const r0 = parseInt(row.color.slice(1, 3), 16);
+      const g0 = parseInt(row.color.slice(3, 5), 16);
+      const b0 = parseInt(row.color.slice(5, 7), 16);
+      const glow = `rgba(${r0},${g0},${b0},0.45)`;
+      const logoTag = row.logo
+        ? `<img class="chain-logo" src="${row.logo}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">`
+        : '';
+      return `
+        <div class="opium-row${row.isBase ? ' is-base' : ''}">
+          <div class="opium-name">${logoTag}<span>${row.label}</span></div>
+          <div class="opium-track" style="--c:${row.color};--glow:${glow}">
+            <div class="opium-fill" style="--c:${row.color};--glow:${glow};width:${pct}%"></div>
+            <div class="opium-meta">
+              <span class="opium-val">${ratioText}<span class="unit">x P/E</span></span>
+              <span class="opium-mult" style="--c:${row.color};--glow:${glow}">MCAP ${fmtUSDCompact(row.marketCap)} · REV ${fmtUSDCompact(row.annualizedRevenue)}</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    if (note) {
+      const parts = [
+        'P/E = market cap / annualized revenue, with annualized revenue = current daily chain revenue × 365.',
+        'Lower is cheaper.',
+      ];
+      if (model.fallbackLabels?.length) {
+        parts.push('Fallback market cap source used for: ' + model.fallbackLabels.join(', ') + '.');
+      }
+      if (model.missingLabels?.length) {
+        parts.push('Omitted: ' + model.missingLabels.join(', ') + '.');
+      }
+      note.textContent = parts.join(' ');
+    }
+    markReady('panel-pe');
+  }
+
+  function parseCompactUsdValue(text) {
+    const raw = String(text || '').trim().replace(/^\$/, '').replace(/,/g, '');
+    const m = raw.match(/^([0-9]*\.?[0-9]+)\s*([kmbt])?$/i);
+    if (!m) {
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : 0;
+    }
+    const n = Number(m[1]);
+    if (!Number.isFinite(n)) return 0;
+    const unit = (m[2] || '').toLowerCase();
+    const mult = unit === 'k' ? 1e3
+      : unit === 'm' ? 1e6
+      : unit === 'b' ? 1e9
+      : unit === 't' ? 1e12
+      : 1;
+    return n * mult;
+  }
+
+  function normalizeRevenueChains(chains) {
+    return (Array.isArray(chains) ? chains : [])
+      .filter((chain) => chain && typeof chain.name === 'string')
+      .filter((chain) => chain.name.trim().toLowerCase() !== 'canton')
+      .map((chain) => {
+        const label = chain.name.trim();
+        const value = Number(chain.total24h);
+        if (!(value > 0)) return null;
+        return {
+          slug: String(chain.slug || label.toLowerCase().replace(/\s+/g, '-')),
+          label,
+          logo: chain.logo || null,
+          color: chainRevenueColor(label),
+          value,
+          mode: 'daily',
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function parseRevenueChainsPageHtml(html) {
+    if (typeof html !== 'string' || !html) return [];
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const nextDataText = doc.getElementById('__NEXT_DATA__')?.textContent || '';
+    if (!nextDataText) return [];
+    try {
+      const payload = JSON.parse(nextDataText);
+      return normalizeRevenueChains(payload?.props?.pageProps?.chains);
+    } catch {
+      return [];
+    }
+  }
+
+  function parseRevenueChainsMarkdown(markdown) {
+    if (typeof markdown !== 'string' || !markdown.includes('| Name | Revenue 24h |')) return [];
+    const lines = markdown.split(/\r?\n/);
+    const headerIdx = lines.findIndex((line) => line.includes('| Name | Revenue 24h |'));
+    if (headerIdx < 0) return [];
+    const rows = [];
+    for (const line of lines.slice(headerIdx + 2)) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('|')) {
+        if (rows.length) break;
+        continue;
+      }
+      const cols = trimmed.split('|').slice(1, -1).map((cell) => cell.trim());
+      if (cols.length < 4) continue;
+      const nameCell = cols[0];
+      const linkMatch = nameCell.match(/(?:!\[[^\]]*\]\((https?:\/\/[^)\s]+)\))?\s*\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/);
+      if (!linkMatch) continue;
+      const [, logo, labelRaw, href] = linkMatch;
+      const label = labelRaw.trim();
+      if (!label || label.toLowerCase() === 'canton') continue;
+      const value = parseCompactUsdValue(cols[1]);
+      if (!(value > 0)) continue;
+      const slugMatch = href.match(/\/revenue\/chain\/([^/?#)]+)/i);
+      rows.push({
+        slug: slugMatch?.[1] || label.toLowerCase().replace(/\s+/g, '-'),
+        label,
+        logo: logo || null,
+        color: chainRevenueColor(label),
+        value,
+        mode: 'daily',
+      });
+    }
+    return rows;
   }
 
   async function fetchRevenueChainsLeaderboard() {
@@ -2753,36 +3722,24 @@
       return Array.isArray(cached) && cached.length ? cached : null;
     }
     try {
-      const res = await corsFetch(DL_REVENUE_CHAINS_PAGE);
-      if (!res.ok) throw new Error('DL revenue/chains ' + res.status);
-      const html = await res.text();
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      const payloadText = [...doc.scripts]
-        .map((script) => script.textContent || '')
-        .find((text) => text.includes('"adapterType":"fees"')
-          && text.includes('"dataType":"dailyRevenue"')
-          && text.includes('"chains":['));
-      if (!payloadText) throw new Error('DL revenue/chains payload missing');
-      const payload = JSON.parse(payloadText);
-      const chains = payload?.props?.pageProps?.chains;
-      if (!Array.isArray(chains) || !chains.length) throw new Error('DL revenue/chains empty');
-      const rows = chains
-        .filter((chain) => chain && typeof chain.name === 'string')
-        .filter((chain) => chain.name.trim().toLowerCase() !== 'canton')
-        .map((chain) => {
-          const label = chain.name.trim();
-          const value = Number(chain.total24h);
-          if (!(value > 0)) return null;
-          return {
-            slug: label.toLowerCase().replace(/\s+/g, '-'),
-            label,
-            logo: chain.logo || null,
-            color: chainRevenueColor(label),
-            value,
-            mode: 'daily',
-          };
-        })
-        .filter(Boolean);
+      const rows = await Promise.any([
+        (async () => {
+          const res = await fetchTimeout(DL_REVENUE_CHAINS_MIRROR, { cache: 'no-store' });
+          if (!res.ok) throw new Error('DL mirror ' + res.status);
+          const markdown = await res.text();
+          const parsed = parseRevenueChainsMarkdown(markdown);
+          if (!parsed.length) throw new Error('DL mirror empty');
+          return parsed;
+        })(),
+        (async () => {
+          const res = await corsFetch(DL_REVENUE_CHAINS_PAGE);
+          if (!res.ok) throw new Error('DL revenue/chains ' + res.status);
+          const html = await res.text();
+          const parsed = parseRevenueChainsPageHtml(html);
+          if (!parsed.length) throw new Error('DL revenue/chains empty');
+          return parsed;
+        })(),
+      ]);
       if (rows.length) cacheSet(cacheKey, rows);
       return rows.length ? rows : restoreFromCache();
     } catch (e) {
@@ -2876,20 +3833,15 @@
     const summary = document.getElementById('chainRevSummary');
     if (!host) return;
     if (!rows || rows.length === 0) {
-      host.innerHTML = '<div class="note">Chain revenue comparison unavailable (DefiLlama unreachable).</div>';
+      host.innerHTML = '<div class="note">Live chain revenue comparison is temporarily unavailable.</div>';
       if (summary) summary.style.display = 'none';
       markReady('kpi-rank');
       markReady('panel-chainrev');
       return;
     }
     // Sort descending by value
-    const sorted = [...rows].sort((a, b) => b.value - a.value);
-    let visible = sorted.slice(0, CHAIN_REV_DISPLAY_LIMIT);
+    const { sorted, visible, megaIdx, megaRank, total } = buildVisibleChainRevenueRows(rows);
     const max = sorted[0].value || 1;
-    const megaIdx = sorted.findIndex(r => r.isBase);
-    const megaRank = megaIdx >= 0 ? megaIdx + 1 : null;
-    const total = sorted.length;
-    if (megaIdx >= CHAIN_REV_DISPLAY_LIMIT) visible = [...visible, sorted[megaIdx]];
 
     host.innerHTML = visible.map((r) => {
       const rank = sorted.indexOf(r) + 1;
@@ -2920,7 +3872,7 @@
       summary.style.display = '';
       if (megaRank == null) {
         summary.innerHTML = 'MegaETH revenue feed unavailable on DefiLlama right now.';
-        if (rankEl) rankEl.textContent = '—';
+        if (rankEl) setCategoryPrimary('kpi-rank', '—');
       } else {
         const ord = (n) => {
           const s = ['th','st','nd','rd'], v = n % 100;
@@ -2931,7 +3883,7 @@
           ? ` MegaETH daily = <strong>${fmtUSD(mega.value)}</strong> (gas ${fmtUSD(mega.gas)} + USDm yield ${fmtUSD(mega.yield)}).`
           : '';
         summary.innerHTML = `MegaETH ranks <strong>${ord(megaRank)} of ${total}</strong> on DefiLlama's daily <strong>revenue/chains</strong> leaderboard (Canton excluded).${breakdown}`;
-        if (rankEl) rankEl.textContent = `#${megaRank}`;
+        if (rankEl) setCategoryPrimary('kpi-rank', `#${megaRank}`, 'Chain Revenue');
       }
     }
     markReady('kpi-rank');
@@ -3002,8 +3954,8 @@
   const chartInstances = {};
   const LOAD_TARGETS = [
     'kpi-tvl', 'kpi-daily', 'kpi-annual', 'kpi-cum', 'kpi-days', 'kpi-opium', 'kpi-rank',
-    'panel-tvl', 'panel-revenue', 'panel-cum', 'panel-annual', 'panel-stables', 'panel-opium', 'panel-chainrev',
-    'panel-mega-holders', 'panel-mega-float',
+    'panel-tvl', 'panel-revenue', 'panel-cum', 'panel-annual', 'panel-stables', 'panel-opium', 'panel-chainrev', 'panel-pe',
+    'panel-mega-holders', 'panel-mega-float', 'panel-mega-pe',
   ];
   const LOAD_TARGET_SET = new Set(LOAD_TARGETS);
   const LOAD_LABELS = {
@@ -3021,8 +3973,10 @@
     'panel-stables': 'stables chart',
     'panel-opium': 'forecast chart',
     'panel-chainrev': 'rank chart',
+    'panel-pe': 'P/E chart',
     'panel-mega-holders': 'MEGA holders chart',
     'panel-mega-float': 'MEGA float chart',
+    'panel-mega-pe': 'MEGA P/E chart',
   };
   const loadTracker = {
     total: LOAD_TARGETS.length,
@@ -3062,9 +4016,22 @@
 
   updateLoader('cards + charts in parallel');
 
+  function setCategoryPrimary(id, mainText, suffix = '') {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const main = String(mainText || '—');
+    const tail = String(suffix || '').trim();
+    el.innerHTML = '<span class="category-card-primary-main"></span>'
+      + (tail ? '<span class="category-card-primary-suffix"></span>' : '');
+    const mainEl = el.querySelector('.category-card-primary-main');
+    const suffixEl = el.querySelector('.category-card-primary-suffix');
+    if (mainEl) mainEl.textContent = main;
+    if (suffixEl) suffixEl.textContent = tail;
+  }
+
   function renderKPIs(tvl, daysSinceLaunch, dailyRev, cumRev, annualRev, usdmShare) {
-    document.getElementById('kpi-tvl').textContent  = tvl != null ? fmtUSDFit(tvl) : '$ —';
-    document.getElementById('kpi-daily').textContent = fmtUSDFit(dailyRev);
+    setCategoryPrimary('kpi-tvl', tvl != null ? fmtUSDFit(tvl) : '$ —');
+    setCategoryPrimary('kpi-daily', fmtUSDFit(dailyRev));
     const annEl = document.getElementById('kpi-annual');
     if (annEl) annEl.textContent = fmtUSDFit(annualRev);
     document.getElementById('kpi-cum').textContent   = fmtUSDFit(cumRev);
@@ -3275,9 +4242,48 @@
     });
   }
 
+  const megaHoldersState = {
+    historyByDay: null,
+    currentHolders: null,
+  };
+
+  const megaSummaryState = {
+    holdersCount: null,
+    circulatingSupply: null,
+    committed: null,
+    freeFloat: null,
+  };
+
+  function renderMegaCategorySummary() {
+    const holdersEl = document.getElementById('kpi-mega-holders');
+    const splitEl = document.getElementById('kpi-mega-split');
+    if (holdersEl) {
+      setCategoryPrimary(
+        'kpi-mega-holders',
+        Number.isFinite(megaSummaryState.holdersCount)
+          ? fmtNum(Math.round(megaSummaryState.holdersCount))
+          : '—',
+        Number.isFinite(megaSummaryState.holdersCount) ? 'holders' : ''
+      );
+    }
+    if (splitEl) {
+      const circulating = Number(megaSummaryState.circulatingSupply);
+      const committed = Number(megaSummaryState.committed);
+      splitEl.textContent = circulating > 0 && Number.isFinite(committed)
+        ? ((committed / circulating) * 100).toFixed(1) + '% committed'
+        : '—';
+    }
+  }
+
   function renderMegaHoldersChart(historyByDay, currentHolders) {
     const note = document.getElementById('megaHoldersNote');
+    megaHoldersState.historyByDay = historyByDay && historyByDay.size ? new Map(historyByDay) : null;
+    megaHoldersState.currentHolders = Number.isFinite(currentHolders) ? currentHolders : null;
     if (!historyByDay || !historyByDay.size) {
+      if (Number.isFinite(currentHolders)) {
+        megaSummaryState.holdersCount = currentHolders;
+        renderMegaCategorySummary();
+      }
       if (note) note.textContent = 'MEGA holders history unavailable right now (Blockscout transfer reconstruction failed).';
       markReady('panel-mega-holders');
       return;
@@ -3297,6 +4303,8 @@
       valueFormatter: (v) => fmtNum(Math.round(v)) + ' holders',
       tickFormatter: (v) => Number(v).toLocaleString('en-US'),
     });
+    megaSummaryState.holdersCount = Number.isFinite(latest) ? latest : megaSummaryState.holdersCount;
+    renderMegaCategorySummary();
     if (note) note.textContent = 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.';
     markReady('panel-mega-holders');
   }
@@ -3305,6 +4313,17 @@
     mode: 'stk',
     dates: [],
     datasets: [],
+  };
+
+  const megaPeHistoryState = {
+    loading: true,
+    dates: [],
+    values: [],
+    startDay: MEGA_FLOAT_START_DAY,
+    currentRatio: null,
+    currentMarketCap: null,
+    currentAnnualizedRevenue: null,
+    note: 'Loading MEGA P/E history…',
   };
 
   function renderMegaFloatPanel() {
@@ -3325,6 +4344,10 @@
   function renderMegaFloatChart(snapshot, history = null) {
     const note = document.getElementById('megaFloatNote');
     if (!snapshot || !(snapshot.circulatingSupply > 0) || !(snapshot.committed >= 0) || snapshot.freeFloat == null) {
+      megaSummaryState.circulatingSupply = null;
+      megaSummaryState.committed = null;
+      megaSummaryState.freeFloat = null;
+      renderMegaCategorySummary();
       if (note) note.textContent = 'MEGA committed vs free-float split unavailable right now (Blockscout live snapshot missing).';
       markReady('panel-mega-float');
       return;
@@ -3353,6 +4376,10 @@
       { label: 'Committed on Terminal', values: committedValues, color: '#90D79F', fill: false },
       { label: 'Free float', values: freeValues, color: '#C586FF', fill: false },
     ];
+    megaSummaryState.circulatingSupply = snapshot.circulatingSupply;
+    megaSummaryState.committed = snapshot.committed;
+    megaSummaryState.freeFloat = snapshot.freeFloat;
+    renderMegaCategorySummary();
     renderMegaFloatPanel();
     if (note) note.innerHTML = 'Terminal commitments are tracked on-chain via <strong>MegaStakingProxy</strong>. '
       + (history?.dates?.length ? 'History is shown from <strong>' + MEGA_FLOAT_START_DAY + '</strong> with <strong>ABS</strong>, <strong>STACKED</strong> and <strong>%</strong> views. ' : '')
@@ -3363,6 +4390,121 @@
       + '</strong> free on a circulating base of <strong>'
       + fmtToken(snapshot.circulatingSupply, 'MEGA', 0)
       + '</strong>.';
+  }
+
+  function buildMegaPeHistoryModel(marketCapHistory, dates, dateKeys, annualizedSeries, megaSnapshot = null) {
+    const historyByDay = new Map();
+    for (const point of Array.isArray(marketCapHistory) ? marketCapHistory : []) {
+      const ts = Number(point?.[0]);
+      const marketCap = Number(point?.[1]);
+      if (!Number.isFinite(ts) || !(marketCap > 0)) continue;
+      const key = isoDate(new Date(ts));
+      const prev = historyByDay.get(key);
+      if (!prev || ts > prev.ts) historyByDay.set(key, { ts, marketCap });
+    }
+    if (Number(megaSnapshot?.marketCap) > 0) {
+      historyByDay.set(isoDate(new Date()), { ts: Date.now(), marketCap: Number(megaSnapshot.marketCap) });
+    }
+    const sortedDays = [...historyByDay.keys()].sort();
+    if (!sortedDays.length) return null;
+
+    const visibleStartDay = sortedDays[0] > MEGA_FLOAT_START_DAY ? sortedDays[0] : MEGA_FLOAT_START_DAY;
+    const startIndex = dateKeys.findIndex((day) => day >= visibleStartDay);
+    if (startIndex < 0) return null;
+
+    const scopedDates = dates.slice(startIndex);
+    const scopedKeys = dateKeys.slice(startIndex);
+    const scopedRevenue = annualizedSeries.slice(startIndex);
+    const normalizedHistory = [...historyByDay.values()]
+      .sort((a, b) => a.ts - b.ts)
+      .map((point) => [point.ts, point.marketCap]);
+    const fallbackMarketCap = Number(megaSnapshot?.marketCap) > 0
+      ? Number(megaSnapshot.marketCap)
+      : (latestHistoryMcap(normalizedHistory) || 0);
+    const scopedMarketCaps = buildMcapSeries(normalizedHistory, scopedKeys, fallbackMarketCap);
+
+    const outDates = [];
+    const outValues = [];
+    let currentRatio = null;
+    let currentMarketCap = null;
+    let currentAnnualizedRevenue = null;
+    for (let i = 0; i < scopedDates.length; i++) {
+      const annualizedRevenue = Number(scopedRevenue[i] || 0);
+      const marketCap = Number(scopedMarketCaps[i] || 0);
+      if (!(annualizedRevenue > 0) || !(marketCap > 0)) continue;
+      outDates.push(scopedDates[i]);
+      outValues.push(marketCap / annualizedRevenue);
+      currentRatio = marketCap / annualizedRevenue;
+      currentMarketCap = marketCap;
+      currentAnnualizedRevenue = annualizedRevenue;
+    }
+    if (!outDates.length) return null;
+
+    return {
+      dates: outDates,
+      values: outValues,
+      startDay: visibleStartDay,
+      currentRatio,
+      currentMarketCap,
+      currentAnnualizedRevenue,
+    };
+  }
+
+  function renderMegaPeHistoryPanel() {
+    const note = document.getElementById('megaPeHistoryNote');
+    if (!megaPeHistoryState.dates.length || !megaPeHistoryState.values.length) {
+      if (chartInstances.megaPeHistoryChart) {
+        chartInstances.megaPeHistoryChart.destroy();
+        delete chartInstances.megaPeHistoryChart;
+      }
+      if (note) note.textContent = megaPeHistoryState.note;
+      if (!megaPeHistoryState.loading) markReady('panel-mega-pe');
+      return;
+    }
+
+    makeLineChart('megaPeHistoryChart', [
+      { label: 'MEGA P/E', values: megaPeHistoryState.values, color: '#7EAAD4', fill: true }
+    ], megaPeHistoryState.dates, {
+      valueFormatter: (v) => (v >= 100 ? v.toFixed(0) : v.toFixed(1)) + 'x P/E',
+      tickFormatter: (v) => Number(v).toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: Number(v) >= 100 ? 0 : 1,
+      }) + 'x',
+      pointRadius: megaPeHistoryState.dates.length > 1 ? 0 : 5,
+      pointHoverRadius: megaPeHistoryState.dates.length > 1 ? 5 : 7,
+    });
+
+    if (note) {
+      const ratioText = Number.isFinite(megaPeHistoryState.currentRatio)
+        ? (megaPeHistoryState.currentRatio >= 100 ? megaPeHistoryState.currentRatio.toFixed(0) : megaPeHistoryState.currentRatio.toFixed(1)) + 'x P/E'
+        : '—';
+      note.textContent = 'CoinGecko market cap / MegaETH annualized revenue, shown from ' + megaPeHistoryState.startDay + '. '
+        + 'Current: ' + ratioText + ' using MCAP ' + fmtUSDCompact(megaPeHistoryState.currentMarketCap) + ' and revenue ' + fmtUSDCompact(megaPeHistoryState.currentAnnualizedRevenue) + '.';
+    }
+    markReady('panel-mega-pe');
+  }
+
+  function setMegaPeHistoryModel(model) {
+    megaPeHistoryState.loading = false;
+    if (!model) {
+      megaPeHistoryState.dates = [];
+      megaPeHistoryState.values = [];
+      megaPeHistoryState.startDay = MEGA_FLOAT_START_DAY;
+      megaPeHistoryState.currentRatio = null;
+      megaPeHistoryState.currentMarketCap = null;
+      megaPeHistoryState.currentAnnualizedRevenue = null;
+      megaPeHistoryState.note = 'MEGA P/E history unavailable right now.';
+      renderMegaPeHistoryPanel();
+      return;
+    }
+    megaPeHistoryState.dates = model.dates;
+    megaPeHistoryState.values = model.values;
+    megaPeHistoryState.startDay = model.startDay;
+    megaPeHistoryState.currentRatio = model.currentRatio;
+    megaPeHistoryState.currentMarketCap = model.currentMarketCap;
+    megaPeHistoryState.currentAnnualizedRevenue = model.currentAnnualizedRevenue;
+    megaPeHistoryState.note = 'MEGA P/E history ready.';
+    renderMegaPeHistoryPanel();
   }
 
   let megaHoldersRetryTimer = null;
@@ -3421,6 +4563,7 @@
   function renderPanel(key) {
     const s = chartState[key];
     if (!s) return;
+    syncPanelModeToggle(key);
     if (key === 'opium') {
       if (s.labels && s.labels.length) {
         renderOpiumBars(s.labels, s.values, s.colors, s.logos);
@@ -3646,6 +4789,7 @@
     const pUsdt0History = fetchTokenSupplyHistoryOnChain(USDT0_TOKEN_ADDRESS, 6);
     const pOpiumTvl    = fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug));
     const pMegaSnapshot = fetchMegaCommitmentSnapshot();
+    const pMegaMarketCapHistory = fetchMegaMarketCapHistory();
 
     pMegaSnapshot.then((snapshot) => {
       renderMegaFloatChart(snapshot, null);
@@ -3672,7 +4816,20 @@
       return fetchChainRevenueComparison(dailyYield, leaderboard, megaSeries);
     }).then((rows) => {
       renderChainRevenueBars(rows);
-    }).catch(e => { console.warn('chain revenue render failed', e); renderChainRevenueBars(null); });
+      Promise.all([Promise.resolve(rows), pMegaSnapshot.catch(() => null)])
+        .then(([chainRows, megaSnapshot]) => fetchChainPeRatioComparison(chainRows, megaSnapshot))
+        .then((peModel) => {
+          renderPeRatioBars(peModel);
+        })
+        .catch((e) => {
+          console.warn('chain P/E render failed', e);
+          renderPeRatioBars(null);
+        });
+    }).catch(e => {
+      console.warn('chain revenue render failed', e);
+      renderChainRevenueBars(null);
+      renderPeRatioBars(null);
+    });
 
     // Hydrate the first TVL card as soon as the fastest supply source lands.
     Promise.race([pUsdmLive, pTvl]).then((v) => {
@@ -3801,6 +4958,16 @@
       return (usdmDaily[i] + feeAvg) * 365;
     });
     const annualizedRunRate = annualizedSeries[annualizedSeries.length - 1] || 0;
+
+    Promise.all([pMegaMarketCapHistory, pMegaSnapshot.catch(() => null)])
+      .then(([megaMarketCapHistory, megaSnapshot]) => {
+        const model = buildMegaPeHistoryModel(megaMarketCapHistory, dates, dateKeys, annualizedSeries, megaSnapshot);
+        setMegaPeHistoryModel(model);
+      })
+      .catch((e) => {
+        console.warn('MEGA P/E history failed', e);
+        setMegaPeHistoryModel(null);
+      });
 
     // Cumulative running series
     const cumSeries = [];
@@ -4062,58 +5229,100 @@
     return `<img class="token-logo ${cls}" src="${LOGO_USDM}" alt="USDm" />`;
   };
 
-  // KPI cards as chart tabs
-  const TAB_META = {
-    revenue: { title: 'DAILY REVENUE', desc: 'USDm reserve yield vs MegaETH network fees, day by day since launch.', chart: 'revenueChart', key: 'revenue', logos: ['usdm'] },
-    cum:     { title: 'CUMULATIVE REVENUE', desc: 'Running total of daily revenue accumulated since Feb 9, 2026.',         chart: 'cumChart',     key: 'cum' },
-    annual:  { title: 'ANNUALIZED REVENUE', desc: 'Run-rate projection: 7-day rolling daily revenue × 365.',              chart: 'annualChart',  key: 'annual', logos: ['dollar'] },
-    tvl:     { title: 'USDM TVL',          desc: 'Circulating USDm market cap (CoinGecko / megausd) since launch.',        chart: 'tvlChart',     key: 'tvl', logos: ['usdm'] },
-    stables: { title: 'USDM vs USDT0',     desc: 'USDm market cap vs USDT0 supply on MegaETH, sourced from Blockscout.', chart: 'stablesChart', key: 'stables', logos: ['usdm', 'usdt0'] },
-    opium:   { title: 'FORECAST',          desc: 'Hypothetical annualized revenue if MegaETH had the DeFi TVL of other major chains.', chart: 'opiumChart', key: 'opium' },
-    chainrev:{ title: 'CHAIN REVENUE',     desc: "MegaETH's latest daily on-chain revenue (gas + USDm yield) ranked against DefiLlama's revenue/chains leaderboard, excluding Canton.", chart: 'chainRevBars', key: 'chainrev' },
+  // Category cards drive the stacked chart browser.
+  const CATEGORY_META = {
+    usdm: {
+      title: 'USDM',
+      desc: 'USDm TVL and direct USDm vs USDT0 share on MegaETH, stacked in one scroll.',
+      panels: ['tvl', 'stables'],
+    },
+    mega: {
+      title: 'MEGA',
+      desc: 'MEGA holder growth, committed vs free float history, and MEGA P/E since TGE stacked in one view.',
+      panels: ['mega-holders', 'mega-float', 'mega-pe'],
+    },
+    revenue: {
+      title: 'REVENUE',
+      desc: 'Daily, annualized, and cumulative revenue charts stacked in one view.',
+      panels: ['revenue', 'annual', 'cum'],
+    },
+    comparison: {
+      title: 'COMPARISON',
+      desc: 'Forecast scenarios, live chain rank, and chain P/E stacked in one view.',
+      panels: ['opium', 'chainrev', 'pe'],
+    },
   };
-  let activeTab = 'tvl';
-  function selectTab(target) {
-    activeTab = target;
-    document.querySelectorAll('#kpiTabs .card').forEach(c =>
-      c.classList.toggle('active', c.dataset.tab === target));
-    document.querySelectorAll('.panel').forEach(p =>
-      p.classList.toggle('active', p.dataset.panel === target));
-    const meta = TAB_META[target];
-    if (meta) {
-      const logoHTML = (meta.logos || []).map(k => logoImg(k, 'lg')).join('');
-      document.getElementById('chartTitle').innerHTML = logoHTML + '<span>' + meta.title + '</span>';
-      document.getElementById('chartDesc').textContent  = meta.desc;
-      // toggle visibility of the % switch
-      const tog = document.getElementById('modeToggle');
-      tog.classList.toggle('show', PERCENT_PANELS.has(target));
-      // sync toggle buttons to current mode of this panel
-      const m = chartState[target]?.mode || 'abs';
-      tog.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
-      // Re-render the panel after it becomes visible so Chart.js measures
-      // the now-visible canvas (charts created while display:none get a 0×0
-      // backing buffer and stay blank otherwise).
-      requestAnimationFrame(() => renderPanel(target));
+  let activeCategory = 'usdm';
+
+  function syncPanelModeToggle(key) {
+    document.querySelectorAll('.panel-mode-toggle[data-mode-target="' + key + '"] button').forEach((button) => {
+      button.classList.toggle('active', button.dataset.mode === (chartState[key]?.mode || 'abs'));
+    });
+  }
+
+  function renderCategory(category) {
+    const meta = CATEGORY_META[category];
+    if (!meta) return;
+    meta.panels.forEach((panelKey) => {
+      if (panelKey === 'mega-holders') {
+        renderMegaHoldersChart(megaHoldersState.historyByDay, megaHoldersState.currentHolders);
+        return;
+      }
+      if (panelKey === 'mega-float') {
+        renderMegaFloatPanel();
+        return;
+      }
+      if (panelKey === 'mega-pe') {
+        renderMegaPeHistoryPanel();
+        return;
+      }
+      renderPanel(panelKey);
+    });
+  }
+
+  function selectCategory(target, { scroll = true } = {}) {
+    activeCategory = target;
+    document.querySelectorAll('#kpiTabs .category-card').forEach((card) => {
+      card.classList.toggle('active', card.dataset.category === target);
+    });
+    document.querySelectorAll('.category-panel').forEach((panel) => {
+      panel.classList.toggle('active', panel.dataset.category === target);
+    });
+    const meta = CATEGORY_META[target];
+    if (!meta) return;
+    document.getElementById('chartTitle').innerHTML = '<span>' + meta.title + '</span>';
+    renderCategory(target);
+    requestAnimationFrame(() => requestAnimationFrame(() => renderCategory(target)));
+    if (scroll) {
+      const browser = document.getElementById('categoryBrowser');
+      browser?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
-  document.querySelectorAll('#kpiTabs .card').forEach(card => {
-    card.addEventListener('click', () => selectTab(card.dataset.tab));
+
+  document.querySelectorAll('#kpiTabs .category-card').forEach((card) => {
+    card.addEventListener('click', () => selectCategory(card.dataset.category));
     card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTab(card.dataset.tab); }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectCategory(card.dataset.category);
+      }
     });
   });
 
-  // Mode toggle (Absolute / Stacked / Percentage) — only active for multi-dataset panels
-  document.querySelectorAll('#modeToggle button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!PERCENT_PANELS.has(activeTab)) return;
-      const mode = btn.dataset.mode;
-      chartState[activeTab].mode = mode;
-      document.querySelectorAll('#modeToggle button').forEach(b =>
-        b.classList.toggle('active', b === btn));
-      renderPanel(activeTab);
+  document.querySelectorAll('.panel-mode-toggle').forEach((toggle) => {
+    const key = toggle.dataset.modeTarget;
+    toggle.querySelectorAll('button').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (!PERCENT_PANELS.has(key)) return;
+        chartState[key].mode = button.dataset.mode;
+        syncPanelModeToggle(key);
+        renderPanel(key);
+      });
     });
+    syncPanelModeToggle(key);
   });
+
+  selectCategory(activeCategory, { scroll: false });
 
   document.querySelectorAll('#megaFloatModeToggle button').forEach(btn => {
     btn.addEventListener('click', () => {
