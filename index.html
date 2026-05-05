@@ -1079,6 +1079,27 @@
     color: var(--green);
   }
   .mega-note strong { color: #fff; }
+  .usdm-flow-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .usdm-flow-caption {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .usdm-flow-chip {
+    padding: 4px 8px 3px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
 
   /* TABLE */
   .table-scroll { overflow-x: auto; }
@@ -2109,12 +2130,14 @@
     <div class="category-card active" data-category="usdm" role="button" tabindex="0">
       <div class="category-card-top">
         <div class="category-card-label"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />USDM</div>
-        <div class="category-card-count">2 charts</div>
+        <div class="category-card-count">4 charts</div>
       </div>
       <div class="category-card-primary" id="kpi-tvl">$ —</div>
       <div class="category-card-details">
         <span class="category-card-detail">USDm TVL</span>
         <span class="category-card-detail">USDm vs USDT0</span>
+        <span class="category-card-detail">Top Holder Concentration</span>
+        <span class="category-card-detail">Destination Apps</span>
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
@@ -2223,6 +2246,32 @@
           <div class="panel" data-panel="stables">
             <div class="chart-wrap"><canvas id="stablesChart"></canvas></div>
             <div class="note" id="stablesNote">USDT0 is sourced from MegaETH Blockscout. When transfer-history reconstruction is unavailable, the chart falls back to the live Blockscout supply snapshot.</div>
+          </div>
+        </article>
+
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />Top Holder Concentration</h3>
+              <div class="desc">Tracks the current biggest USDm holder and its share of total supply through time.</div>
+            </div>
+          </div>
+          <div class="panel" data-panel="usdm-concentration">
+            <div class="chart-wrap"><canvas id="usdmConcentrationChart"></canvas></div>
+            <div class="note" id="usdmConcentrationNote">Loading USDm holder concentration…</div>
+          </div>
+        </article>
+
+        <article class="category-chart-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" />Where USDm Goes</h3>
+              <div class="desc">A Sankey-style destination proxy built from DefiLlama app-level TVL shares on MegaETH.</div>
+            </div>
+          </div>
+          <div class="panel" data-panel="usdm-app-flow">
+            <div class="chart-wrap" style="height:auto;min-height:380px"><div id="usdmAppFlowProxy"></div></div>
+            <div class="note" id="usdmAppFlowNote">Loading USDm destination apps…</div>
           </div>
         </article>
       </div>
@@ -2508,6 +2557,16 @@
     if (value >= 1e6) return (Number(n) / 1e6).toFixed(value >= 10e6 ? 0 : 1).replace(/\.0$/, '') + 'M';
     if (value >= 1e3) return (Number(n) / 1e3).toFixed(value >= 10e3 ? 0 : 1).replace(/\.0$/, '') + 'K';
     return fmtNum(Math.round(Number(n) || 0));
+  };
+  const shortAddress = (addr) => {
+    const raw = String(addr || '');
+    return raw && raw.startsWith('0x') && raw.length > 10
+      ? raw.slice(0, 6) + '...' + raw.slice(-4)
+      : (raw || 'Unknown');
+  };
+  const truncateLabel = (text, max = 22) => {
+    const raw = String(text || '').trim();
+    return raw.length > max ? raw.slice(0, max - 1) + '…' : raw;
   };
   const isoDate = (d) => d.toISOString().slice(0, 10);
 
@@ -2934,6 +2993,143 @@
     } catch (e) {
       console.warn('Blockscout token snapshot fetch failed for', address, e);
       return null;
+    }
+  }
+
+  function addressDisplayName(addressObj) {
+    if (!addressObj) return null;
+    return String(
+      addressObj?.name
+      || addressObj?.implementations?.[0]?.name
+      || addressObj?.watchlist_names?.[0]?.display_name
+      || addressObj?.hash
+      || ''
+    ).trim() || null;
+  }
+
+  async function fetchTokenTopHolders(address, decimals, limit = 50) {
+    const cacheKey = 'token-top-holders:' + address.toLowerCase() + ':' + limit;
+
+    function restoreFromCache() {
+      const cached = cacheGet(cacheKey);
+      return Array.isArray(cached) && cached.length ? cached : null;
+    }
+
+    try {
+      const res = await fetch(`${BS_TOKEN(address)}/holders?items_count=${limit}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('blockscout token holders ' + res.status);
+      const j = await res.json();
+      const rows = (Array.isArray(j?.items) ? j.items : [])
+        .map((item) => ({
+          address: String(item?.address?.hash || '').trim(),
+          name: addressDisplayName(item?.address),
+          balance: fromBaseUnits(item?.value, decimals),
+          isContract: !!item?.address?.is_contract,
+        }))
+        .filter((row) => row.address && Number.isFinite(row.balance) && row.balance > 0);
+      if (rows.length) cacheSet(cacheKey, rows);
+      return rows.length ? rows : restoreFromCache();
+    } catch (e) {
+      console.warn('Blockscout token holders fetch failed for', address, e);
+      return restoreFromCache();
+    }
+  }
+
+  async function fetchTokenHolderBalanceHistoryOnChain(tokenAddress, holderAddress, decimals) {
+    const cacheKey = 'token-holder-history:' + tokenAddress.toLowerCase() + ':' + holderAddress.toLowerCase();
+    const PAGE = 1000;
+    const holderTopic = '0x' + holderAddress.toLowerCase().replace(/^0x/, '').padStart(64, '0');
+
+    function restoreFromCache() {
+      const cached = cacheGet(cacheKey);
+      return Array.isArray(cached) && cached.length ? new Map(cached) : null;
+    }
+
+    async function fetchLogs(extraQS) {
+      const out = [];
+      let fromBlock = 0;
+      for (let i = 0; i < 250; i++) {
+        const url = `https://megaeth.blockscout.com/api?module=logs&action=getLogs`
+          + `&fromBlock=${fromBlock}&toBlock=latest`
+          + `&address=${tokenAddress}&topic0=${ERC20_TRANSFER_TOPIC}`
+          + extraQS;
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error('token holder logs ' + res.status);
+        const j = await res.json();
+        const arr = Array.isArray(j?.result) ? j.result : [];
+        if (!arr.length) break;
+        out.push(...arr);
+        if (arr.length < PAGE) break;
+        const lastBlk = parseInt(arr[arr.length - 1].blockNumber, 16);
+        if (!Number.isFinite(lastBlk) || lastBlk + 1 <= fromBlock) break;
+        fromBlock = lastBlk + 1;
+      }
+      return out;
+    }
+
+    try {
+      const [outgoing, incoming] = await Promise.all([
+        fetchLogs(`&topic1=${holderTopic}&topic0_1_opr=and`),
+        fetchLogs(`&topic2=${holderTopic}&topic0_2_opr=and`),
+      ]);
+      const events = [
+        ...outgoing.map((log) => ({ log, sign: -1 })),
+        ...incoming.map((log) => ({ log, sign: 1 })),
+      ].sort((a, b) => {
+        const blockDiff = parseInt(a.log.blockNumber, 16) - parseInt(b.log.blockNumber, 16);
+        if (blockDiff !== 0) return blockDiff;
+        return parseInt(a.log.logIndex || '0x0', 16) - parseInt(b.log.logIndex || '0x0', 16);
+      });
+
+      const balancesByDay = new Map();
+      let balance = 0;
+      for (const event of events) {
+        const units = fromBaseUnits(event.log?.data, decimals);
+        if (!Number.isFinite(units)) continue;
+        balance = Math.max(0, balance + event.sign * units);
+        const ts = parseInt(event.log?.timeStamp, 16) * 1000;
+        if (Number.isFinite(ts) && ts > 0) {
+          balancesByDay.set(isoDate(new Date(ts)), balance);
+        }
+      }
+
+      if (balancesByDay.size) cacheSet(cacheKey, [...balancesByDay.entries()]);
+      return balancesByDay.size ? balancesByDay : restoreFromCache();
+    } catch (e) {
+      console.warn('Token holder history fetch failed for', tokenAddress, holderAddress, e);
+      return restoreFromCache();
+    }
+  }
+
+  async function fetchMegaETHProtocolTvlRows() {
+    const cacheKey = 'megaeth-protocol-tvl-rows:v1';
+
+    function restoreFromCache() {
+      const cached = cacheGet(cacheKey);
+      return Array.isArray(cached) && cached.length ? cached : null;
+    }
+
+    try {
+      const res = await corsFetch('https://api.llama.fi/protocols');
+      if (!res.ok) throw new Error('DL protocols ' + res.status);
+      const arr = await res.json();
+      const rows = (Array.isArray(arr) ? arr : [])
+        .map((protocol) => {
+          const chainTvls = protocol?.chainTvls || {};
+          const value = Number(chainTvls?.MegaETH || chainTvls?.Megaeth || 0);
+          return {
+            name: String(protocol?.name || '').trim(),
+            category: String(protocol?.category || '').trim(),
+            value,
+          };
+        })
+        .filter((row) => row.name && row.value > 0)
+        .sort((a, b) => b.value - a.value);
+      if (rows.length) cacheSet(cacheKey, rows);
+      return rows.length ? rows : restoreFromCache();
+    } catch (e) {
+      console.warn('DefiLlama MegaETH protocols fetch failed:', e);
+      return restoreFromCache();
     }
   }
 
@@ -4326,6 +4522,20 @@
     note: 'Loading MEGA P/E history…',
   };
 
+  const usdmConcentrationState = {
+    loading: true,
+    model: null,
+    note: 'Loading USDm holder concentration…',
+  };
+
+  const usdmAppFlowState = {
+    loading: true,
+    model: null,
+    note: 'Loading USDm destination apps…',
+  };
+
+  const USDM_APP_FLOW_COLORS = ['#FF8AA8', '#7EAAD4', '#90D79F', '#F5AF94', '#C586FF', '#6DD0A9', '#F3BA2F', '#E56B6F'];
+
   function renderMegaFloatPanel() {
     if (!megaFloatState.dates.length || !megaFloatState.datasets.length) return;
     const isPct = megaFloatState.mode === 'pct';
@@ -4505,6 +4715,210 @@
     megaPeHistoryState.currentAnnualizedRevenue = model.currentAnnualizedRevenue;
     megaPeHistoryState.note = 'MEGA P/E history ready.';
     renderMegaPeHistoryPanel();
+  }
+
+  function buildUsdmConcentrationModel(topHolders, holderHistory, supplyHistory, dates, dateKeys, fallbackSupplySeries, currentSupply = null) {
+    const topHolder = Array.isArray(topHolders) && topHolders.length ? topHolders[0] : null;
+    if (!topHolder?.address || !holderHistory?.size) return null;
+    const sortedHolderDays = [...holderHistory.keys()].sort();
+    if (!sortedHolderDays.length) return null;
+    const startIndex = dateKeys.findIndex((day) => day >= sortedHolderDays[0]);
+    if (startIndex < 0) return null;
+
+    const scopedDates = dates.slice(startIndex);
+    const scopedKeys = dateKeys.slice(startIndex);
+    const holderSeries = mapSeriesByDate(holderHistory, scopedKeys, 0);
+    const supplySeries = supplyHistory?.size
+      ? mapSeriesByDate(supplyHistory, scopedKeys, 0)
+      : fallbackSupplySeries.slice(startIndex);
+
+    const outDates = [];
+    const outValues = [];
+    for (let i = 0; i < scopedDates.length; i++) {
+      const supply = Number(supplySeries[i] || 0);
+      const balance = Number(holderSeries[i] || 0);
+      if (!(supply > 0)) continue;
+      outDates.push(scopedDates[i]);
+      outValues.push((balance / supply) * 100);
+    }
+    if (!outDates.length) return null;
+
+    const currentBalance = Number(topHolder.balance || holderSeries[holderSeries.length - 1] || 0);
+    const liveSupply = Number(currentSupply || supplySeries[supplySeries.length - 1] || 0);
+    return {
+      holderName: topHolder.name || shortAddress(topHolder.address),
+      currentBalance,
+      currentShare: currentBalance > 0 && liveSupply > 0 ? (currentBalance / liveSupply) * 100 : outValues[outValues.length - 1],
+      dates: outDates,
+      values: outValues,
+      startDay: scopedKeys[0],
+    };
+  }
+
+  function renderUsdmConcentrationPanel() {
+    const note = document.getElementById('usdmConcentrationNote');
+    const model = usdmConcentrationState.model;
+    if (!model?.dates?.length || !model?.values?.length) {
+      if (chartInstances.usdmConcentrationChart) {
+        chartInstances.usdmConcentrationChart.destroy();
+        delete chartInstances.usdmConcentrationChart;
+      }
+      if (note) note.textContent = usdmConcentrationState.note;
+      return;
+    }
+
+    makeLineChart('usdmConcentrationChart', [
+      { label: model.holderName + ' share of USDm supply', values: model.values, color: '#FF8AA8', fill: true }
+    ], model.dates, {
+      valueFormatter: (v) => Number(v).toFixed(2) + '%',
+      tickFormatter: (v) => Number(v).toFixed(Number(v) >= 10 ? 0 : 1) + '%',
+      pointRadius: model.dates.length > 1 ? 0 : 5,
+      pointHoverRadius: model.dates.length > 1 ? 5 : 7,
+    });
+
+    if (note) {
+      note.innerHTML = '<strong>' + model.holderName + '</strong> currently holds <strong>'
+        + fmtToken(model.currentBalance, 'USDm', 0)
+        + '</strong>, or <strong>' + model.currentShare.toFixed(2) + '%</strong> of live supply. '
+        + 'This tracks the <strong>current top holder address</strong> since <strong>' + model.startDay + '</strong>.';
+    }
+  }
+
+  function buildUsdmAppFlowModel(protocolRows, currentUsdmSupply) {
+    const liveSupply = Number(currentUsdmSupply || 0);
+    if (!(liveSupply > 0) || !Array.isArray(protocolRows) || !protocolRows.length) return null;
+
+    const rows = protocolRows.filter((row) => row.value > 0);
+    if (!rows.length) return null;
+    const totalTvl = rows.reduce((sum, row) => sum + row.value, 0);
+    if (!(totalTvl > 0)) return null;
+
+    const topRows = rows.slice(0, 7).map((row, index) => ({
+      ...row,
+      color: USDM_APP_FLOW_COLORS[index % USDM_APP_FLOW_COLORS.length],
+      share: row.value / totalTvl,
+      estimatedUsd: liveSupply * (row.value / totalTvl),
+    }));
+    const otherTvl = rows.slice(7).reduce((sum, row) => sum + row.value, 0);
+    if (otherTvl > 0) {
+      topRows.push({
+        name: 'Other Apps',
+        category: 'Long tail',
+        value: otherTvl,
+        color: '#9AA7C2',
+        share: otherTvl / totalTvl,
+        estimatedUsd: liveSupply * (otherTvl / totalTvl),
+      });
+    }
+
+    return {
+      sourceValue: liveSupply,
+      totalTvl,
+      rows: topRows,
+    };
+  }
+
+  function renderUsdmAppFlowPanel() {
+    const host = document.getElementById('usdmAppFlowProxy');
+    const note = document.getElementById('usdmAppFlowNote');
+    const model = usdmAppFlowState.model;
+    if (!host) return;
+    if (!model?.rows?.length) {
+      host.innerHTML = '<div class="note">USDm destination app proxy unavailable right now.</div>';
+      if (note) note.textContent = usdmAppFlowState.note;
+      return;
+    }
+
+    const rows = model.rows;
+    const width = 980;
+    const rowHeight = 42;
+    const height = Math.max(380, 96 + rows.length * rowHeight);
+    const sourceX = 24;
+    const sourceY = (height / 2) - 58;
+    const sourceWidth = 218;
+    const sourceHeight = 116;
+    const startX = sourceX + sourceWidth;
+    const targetLineX = 648;
+    const targetLineEndX = 824;
+    const labelX = targetLineX + 18;
+    const amountBoxX = 842;
+    const amountBoxWidth = 114;
+    const amountX = amountBoxX + amountBoxWidth - 12;
+    const topPad = 50;
+    const rowGap = rows.length > 1 ? (height - topPad * 2) / (rows.length - 1) : 0;
+    const sourceCenterY = sourceY + sourceHeight / 2;
+
+    const paths = rows.map((row, index) => {
+      const y = rows.length > 1 ? topPad + rowGap * index : height / 2;
+      const widthStroke = Math.max(1.2, Math.pow(Math.max(row.share, 0), 0.72) * 34 + 0.8);
+      const endX = targetLineX - 22;
+      const path = `M ${startX} ${sourceCenterY} C ${startX + 136} ${sourceCenterY}, ${endX - 120} ${y}, ${endX} ${y}`;
+      return {
+        y,
+        widthStroke,
+        trackStroke: Math.max(6, widthStroke + 7),
+        railStroke: Math.max(2, widthStroke * 0.18),
+        color: row.color,
+        path,
+        label: truncateLabel(row.name, 24),
+        cat: truncateLabel(row.category || 'Protocol', 16),
+        valueText: fmtUSDCompact(row.estimatedUsd),
+        shareText: (row.share * 100).toFixed(1) + '%',
+      };
+    });
+
+    host.innerHTML = `
+      <svg class="usdm-flow-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="USDm destination apps flow proxy">
+        <defs>
+          <filter id="usdm-flow-soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="5" result="blur"></feGaussianBlur>
+            <feMerge>
+              <feMergeNode in="blur"></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+          <linearGradient id="usdm-source-card" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgba(255,138,168,0.22)"></stop>
+            <stop offset="100%" stop-color="rgba(126,170,212,0.08)"></stop>
+          </linearGradient>
+          ${paths.map((row, index) => `
+            <linearGradient id="usdm-flow-grad-${index}" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="${row.color}" stop-opacity="0.95"></stop>
+              <stop offset="72%" stop-color="${row.color}" stop-opacity="0.62"></stop>
+              <stop offset="100%" stop-color="${row.color}" stop-opacity="0.22"></stop>
+            </linearGradient>
+          `).join('')}
+        </defs>
+        <rect x="0" y="0" width="${width}" height="${height}" rx="18" fill="rgba(255,255,255,0.012)" stroke="rgba(255,255,255,0.05)"></rect>
+        <path d="M ${startX + 8} ${sourceCenterY} C ${startX + 116} ${sourceCenterY}, ${targetLineX - 176} ${topPad}, ${targetLineX - 40} ${topPad}" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"></path>
+        <rect x="${sourceX}" y="${sourceY}" width="${sourceWidth}" height="${sourceHeight}" rx="16" fill="url(#usdm-source-card)" stroke="rgba(255,138,168,0.46)"></rect>
+        <circle cx="${sourceX + 26}" cy="${sourceY + 29}" r="7" fill="#FF8AA8" filter="url(#usdm-flow-soft-glow)"></circle>
+        <text x="${sourceX + 44}" y="${sourceY + 33}" fill="#DFD9D9" font-family="Courier New" font-size="11" letter-spacing="1.4">LIVE USDm SUPPLY</text>
+        <text x="${sourceX + 22}" y="${sourceY + 73}" fill="#FFFFFF" font-family="Oxanium, Helvetica Neue, sans-serif" font-size="34" font-weight="800">${fmtUSDCompact(model.sourceValue)}</text>
+        <text x="${sourceX + 22}" y="${sourceY + 96}" fill="#FFB6C8" font-family="Courier New" font-size="10" letter-spacing="1.1">MEGAETH DESTINATION MAP</text>
+        ${paths.map((row, index) => `
+          <rect x="${targetLineX - 8}" y="${row.y - 20}" width="${amountBoxX + amountBoxWidth - targetLineX + 8}" height="40" rx="12" fill="rgba(255,255,255,0.024)" stroke="rgba(255,255,255,0.055)"></rect>
+          <path d="${row.path}" fill="none" stroke="rgba(255,255,255,0.045)" stroke-width="${row.trackStroke}" stroke-linecap="round"></path>
+          <path d="${row.path}" fill="none" stroke="url(#usdm-flow-grad-${index})" stroke-width="${row.widthStroke}" stroke-linecap="round" filter="url(#usdm-flow-soft-glow)"></path>
+          <circle cx="${targetLineX}" cy="${row.y}" r="4.5" fill="${row.color}"></circle>
+          <line x1="${targetLineX + 10}" y1="${row.y}" x2="${targetLineEndX}" y2="${row.y}" stroke="${row.color}" stroke-width="${row.railStroke}" stroke-linecap="round"></line>
+          <rect x="${amountBoxX}" y="${row.y - 15}" width="${amountBoxWidth}" height="30" rx="9" fill="rgba(0,0,0,0.34)" stroke="rgba(255,255,255,0.08)"></rect>
+          <text x="${labelX}" y="${row.y - 5}" fill="#FFFFFF" font-family="Helvetica Neue, sans-serif" font-size="14" font-weight="800">${row.label}</text>
+          <text x="${labelX}" y="${row.y + 12}" fill="#DFD9D9" font-family="Courier New" font-size="10" letter-spacing="1.0">${row.cat} · ${row.shareText}</text>
+          <text x="${amountX}" y="${row.y + 6}" text-anchor="end" fill="#FFFFFF" font-family="Oxanium, Helvetica Neue, sans-serif" font-size="17" font-weight="800">${row.valueText}</text>
+        `).join('')}
+      </svg>
+      <div class="usdm-flow-caption">
+        <span class="usdm-flow-chip">Proxy scaled from current USDm supply</span>
+        <span class="usdm-flow-chip">Source: DefiLlama MegaETH protocol TVLs</span>
+      </div>
+    `;
+
+    if (note) {
+      const top = model.rows[0];
+      note.innerHTML = 'DefiLlama does <strong>not</strong> expose exact per-app USDm balances, so this uses each app\'s <strong>current MegaETH TVL share</strong> as a destination proxy and scales it to live USDm supply. '
+        + (top ? '<strong>' + top.name + '</strong> currently absorbs the largest share of that proxy at about <strong>' + (top.share * 100).toFixed(1) + '%</strong>.' : '');
+    }
   }
 
   let megaHoldersRetryTimer = null;
@@ -4785,6 +5199,9 @@
     const pEthHist   = fetchEthPriceHistory();
     const pBsFees    = fetchBlockscoutDailyFees();
     const pUsdmLive    = fetchTokenSupplyOnMegaETH(USDM_TOKEN_ADDRESS);
+    const pUsdmSupplyHistory = fetchTokenSupplyHistoryOnChain(USDM_TOKEN_ADDRESS, 18);
+    const pUsdmTopHolders = fetchTokenTopHolders(USDM_TOKEN_ADDRESS, 18, 50);
+    const pMegaEthProtocols = fetchMegaETHProtocolTvlRows();
     const pUsdt0Live   = fetchTokenSupplyOnMegaETH(USDT0_TOKEN_ADDRESS);
     const pUsdt0History = fetchTokenSupplyHistoryOnChain(USDT0_TOKEN_ADDRESS, 6);
     const pOpiumTvl    = fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug));
@@ -5111,6 +5528,41 @@
     }
     renderPanel('stables');
 
+    Promise.all([pUsdmTopHolders, pUsdmSupplyHistory, pUsdmLive.catch(() => null)])
+      .then(async ([topHolders, usdmSupplyHistory, usdmLiveNow]) => {
+        const topHolder = Array.isArray(topHolders) && topHolders.length ? topHolders[0] : null;
+        if (!topHolder?.address) throw new Error('USDm top holder missing');
+        const holderHistory = await fetchTokenHolderBalanceHistoryOnChain(USDM_TOKEN_ADDRESS, topHolder.address, 18);
+        const model = buildUsdmConcentrationModel(topHolders, holderHistory, usdmSupplyHistory, dates, dateKeys, mcapSeries, usdmLiveNow || usdmLast);
+        usdmConcentrationState.loading = false;
+        usdmConcentrationState.model = model;
+        usdmConcentrationState.note = model ? 'USDm holder concentration ready.' : 'USDm holder concentration unavailable right now.';
+        renderUsdmConcentrationPanel();
+      })
+      .catch((e) => {
+        console.warn('USDm concentration chart failed', e);
+        usdmConcentrationState.loading = false;
+        usdmConcentrationState.model = null;
+        usdmConcentrationState.note = 'USDm holder concentration unavailable right now.';
+        renderUsdmConcentrationPanel();
+      });
+
+    Promise.all([pMegaEthProtocols, pUsdmLive.catch(() => null)])
+      .then(([protocolRows, usdmLiveNow]) => {
+        const model = buildUsdmAppFlowModel(protocolRows, usdmLiveNow || usdmLast);
+        usdmAppFlowState.loading = false;
+        usdmAppFlowState.model = model;
+        usdmAppFlowState.note = model ? 'USDm destination apps ready.' : 'USDm destination apps unavailable right now.';
+        renderUsdmAppFlowPanel();
+      })
+      .catch((e) => {
+        console.warn('USDm destination app flow failed', e);
+        usdmAppFlowState.loading = false;
+        usdmAppFlowState.model = null;
+        usdmAppFlowState.note = 'USDm destination apps unavailable right now.';
+        renderUsdmAppFlowPanel();
+      });
+
     // ------------------------------------------------------------------
     // OPIUM MATH: hypothetical annualized revenue if MegaETH had
     // the stables TVL of other major chains. Fee component stays at
@@ -5234,7 +5686,7 @@
     usdm: {
       title: 'USDM',
       desc: 'USDm TVL and direct USDm vs USDT0 share on MegaETH, stacked in one scroll.',
-      panels: ['tvl', 'stables'],
+      panels: ['tvl', 'stables', 'usdm-concentration', 'usdm-app-flow'],
     },
     mega: {
       title: 'MEGA',
@@ -5266,6 +5718,14 @@
     meta.panels.forEach((panelKey) => {
       if (panelKey === 'mega-holders') {
         renderMegaHoldersChart(megaHoldersState.historyByDay, megaHoldersState.currentHolders);
+        return;
+      }
+      if (panelKey === 'usdm-concentration') {
+        renderUsdmConcentrationPanel();
+        return;
+      }
+      if (panelKey === 'usdm-app-flow') {
+        renderUsdmAppFlowPanel();
         return;
       }
       if (panelKey === 'mega-float') {
