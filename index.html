@@ -1735,6 +1735,10 @@
   }
   .category-card-primary-suffix {
     flex-shrink: 0;
+    max-width: 9.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-family: 'Helvetica Neue', system-ui, sans-serif;
     font-size: 0.42em;
     font-weight: 700;
@@ -1779,6 +1783,17 @@
     text-transform: uppercase;
     line-height: 1.1;
     opacity: 0.88;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  }
+  .category-card-detail:hover,
+  .category-card-detail:focus-visible {
+    outline: none;
+    color: #fff;
+    border-color: rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.06);
+    transform: translateY(-1px);
   }
   .category-card-stats {
     display: grid;
@@ -2148,10 +2163,10 @@
       </div>
       <div class="category-card-primary" id="kpi-tvl">$ —</div>
       <div class="category-card-details">
-        <span class="category-card-detail">USDm TVL</span>
-        <span class="category-card-detail">USDm vs USDT0</span>
-        <span class="category-card-detail">Top Holder Concentration</span>
-        <span class="category-card-detail">Destination Apps</span>
+        <span class="category-card-detail" data-chart-key="tvl" role="button" tabindex="0">USDm TVL</span>
+        <span class="category-card-detail" data-chart-key="stables" role="button" tabindex="0">USDm vs USDT0</span>
+        <span class="category-card-detail" data-chart-key="concentration" role="button" tabindex="0">Top Holder Concentration</span>
+        <span class="category-card-detail" data-chart-key="appflow" role="button" tabindex="0">Destination Apps</span>
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
@@ -2168,9 +2183,9 @@
       </div>
       <div class="category-card-primary" id="kpi-mega-holders">—</div>
       <div class="category-card-details">
-        <span class="category-card-detail">MEGA Holders</span>
-        <span class="category-card-detail">Committed vs Free Float</span>
-        <span class="category-card-detail">MEGA P/E</span>
+        <span class="category-card-detail" data-chart-key="holders" role="button" tabindex="0">MEGA Holders</span>
+        <span class="category-card-detail" data-chart-key="float" role="button" tabindex="0">Committed vs Free Float</span>
+        <span class="category-card-detail" data-chart-key="pe" role="button" tabindex="0">MEGA P/E</span>
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
@@ -2187,9 +2202,9 @@
       </div>
       <div class="category-card-primary" id="kpi-daily">$ —</div>
       <div class="category-card-details">
-        <span class="category-card-detail">Daily Revenue</span>
-        <span class="category-card-detail">Annualized Revenue</span>
-        <span class="category-card-detail">Cumulative Revenue</span>
+        <span class="category-card-detail" data-chart-key="daily" role="button" tabindex="0">Daily Revenue</span>
+        <span class="category-card-detail" data-chart-key="annual" role="button" tabindex="0">Annualized Revenue</span>
+        <span class="category-card-detail" data-chart-key="cumulative" role="button" tabindex="0">Cumulative Revenue</span>
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
@@ -2210,9 +2225,9 @@
       </div>
       <div class="category-card-primary" id="kpi-rank">—</div>
       <div class="category-card-details">
-        <span class="category-card-detail">Forecast</span>
-        <span class="category-card-detail">Chain Revenue</span>
-        <span class="category-card-detail">P/E Ratio</span>
+        <span class="category-card-detail" data-chart-key="forecast" role="button" tabindex="0">Forecast</span>
+        <span class="category-card-detail" data-chart-key="rank" role="button" tabindex="0">Chain Revenue</span>
+        <span class="category-card-detail" data-chart-key="pe" role="button" tabindex="0">P/E Ratio</span>
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
@@ -4284,21 +4299,58 @@
     }, CATEGORY_PRIMARY_ROTATION_TICK_MS);
   }
 
+  function fitCategoryPrimaryMain(mainText, suffix = '') {
+    const raw = String(mainText || '—').trim();
+    if (!raw) return '—';
+    const maxLen = suffix ? 8 : 10;
+    if (raw.length <= maxLen) return raw;
+    if (/^#\d+$/i.test(raw)) return raw;
+
+    if (/^\$/.test(raw)) {
+      const amount = Number(raw.replace(/[^0-9.-]/g, ''));
+      if (Number.isFinite(amount)) return fmtUSDCompact(amount);
+    }
+
+    if (/^-?[0-9][0-9,]*([.][0-9]+)?$/.test(raw)) {
+      const amount = Number(raw.replace(/,/g, ''));
+      if (Number.isFinite(amount)) return fmtTokenCompact(amount);
+    }
+
+    if (/^-?[0-9][0-9,.]*%$/.test(raw)) {
+      const amount = Number(raw.replace(/[,%]/g, ''));
+      if (Number.isFinite(amount)) {
+        const decimals = amount >= 100 ? 0 : amount >= 10 ? 1 : 2;
+        return amount.toFixed(decimals).replace(/\.0+$|(\.\d*[1-9])0+$/, '$1') + '%';
+      }
+    }
+
+    if (/^-?[0-9][0-9,.]*x$/i.test(raw)) {
+      const amount = Number(raw.replace(/[x,]/gi, ''));
+      if (Number.isFinite(amount)) return fmtRatioCompact(amount);
+    }
+
+    return raw.length > maxLen ? raw.slice(0, maxLen - 1) + '…' : raw;
+  }
+
   function setCategoryPrimary(id, mainText, suffix = '', animate = false) {
     const el = document.getElementById(id);
     if (!el) return;
     const main = String(mainText || '—');
     const tail = String(suffix || '').trim();
+    const fittedMain = fitCategoryPrimaryMain(main, tail);
     const previousMain = el.querySelector('.category-card-primary-main')?.textContent || '';
     const previousTail = el.querySelector('.category-card-primary-suffix')?.textContent || '';
     el.innerHTML = '<span class="category-card-primary-main"></span>'
       + (tail ? '<span class="category-card-primary-suffix"></span>' : '');
     const mainEl = el.querySelector('.category-card-primary-main');
     const suffixEl = el.querySelector('.category-card-primary-suffix');
-    if (mainEl) mainEl.textContent = main;
+    if (mainEl) {
+      mainEl.textContent = fittedMain;
+      mainEl.title = fittedMain !== main ? main : '';
+    }
     if (suffixEl) suffixEl.textContent = tail;
     el.setAttribute('aria-label', tail ? (main + ' ' + tail) : main);
-    const didChange = previousMain !== main || previousTail !== tail;
+    const didChange = previousMain !== fittedMain || previousTail !== tail;
     if (animate && didChange && el.dataset.primaryHydrated === '1') {
       el.classList.remove('is-rotating');
       void el.offsetWidth;
@@ -5855,6 +5907,29 @@
       panels: ['opium', 'chainrev', 'pe'],
     },
   };
+  const CATEGORY_CARD_CHART_TARGETS = {
+    usdm: {
+      tvl: '[data-panel="tvl"]',
+      stables: '[data-panel="stables"]',
+      concentration: '[data-panel="usdm-concentration"]',
+      appflow: '[data-panel="usdm-app-flow"]',
+    },
+    mega: {
+      holders: '#mega-holders-card',
+      float: '#mega-float-card',
+      pe: '#mega-pe-history-card',
+    },
+    revenue: {
+      daily: '[data-panel="revenue"]',
+      annual: '[data-panel="annual"]',
+      cumulative: '[data-panel="cum"]',
+    },
+    comparison: {
+      forecast: '[data-panel="opium"]',
+      rank: '[data-panel="chainrev"]',
+      pe: '[data-panel="pe"]',
+    },
+  };
   let activeCategory = 'usdm';
 
   function syncPanelModeToggle(key) {
@@ -5891,6 +5966,24 @@
     });
   }
 
+  function jumpToCategoryChart(category, chartKey) {
+    const selector = CATEGORY_CARD_CHART_TARGETS?.[category]?.[chartKey];
+    if (!selector) {
+      selectCategory(category);
+      return;
+    }
+    selectCategory(category);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const panel = document.querySelector('.category-panel[data-category="' + category + '"]');
+      const target = selector.startsWith('#')
+        ? document.querySelector(selector)
+        : panel?.querySelector(selector);
+      const anchor = target?.closest('.category-chart-card, .mega-card') || target;
+      if (!anchor) return;
+      anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+  }
+
   function selectCategory(target, { scroll = true } = {}) {
     activeCategory = target;
     document.querySelectorAll('#kpiTabs .category-card').forEach((card) => {
@@ -5917,6 +6010,27 @@
         e.preventDefault();
         selectCategory(card.dataset.category);
       }
+    });
+  });
+
+  document.querySelectorAll('#kpiTabs .category-card-detail').forEach((detail) => {
+    const trigger = () => {
+      const card = detail.closest('.category-card');
+      const category = card?.dataset.category;
+      const chartKey = detail.dataset.chartKey;
+      if (!category || !chartKey) return;
+      jumpToCategoryChart(category, chartKey);
+    };
+    detail.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      trigger();
+    });
+    detail.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      e.stopPropagation();
+      trigger();
     });
   });
 
