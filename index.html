@@ -1743,6 +1743,20 @@
     color: var(--muted);
     opacity: 0.88;
   }
+  .category-card-primary.is-rotating .category-card-primary-main,
+  .category-card-primary.is-rotating .category-card-primary-suffix {
+    animation: categoryPrimarySwap 420ms cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes categoryPrimarySwap {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
   .category-card[data-category="usdm"] .category-card-primary { color: var(--pink); text-shadow: 0 0 14px rgba(255,138,168,0.24); }
   .category-card[data-category="revenue"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
   .category-card[data-category="comparison"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
@@ -2557,6 +2571,12 @@
     if (value >= 1e6) return (Number(n) / 1e6).toFixed(value >= 10e6 ? 0 : 1).replace(/\.0$/, '') + 'M';
     if (value >= 1e3) return (Number(n) / 1e3).toFixed(value >= 10e3 ? 0 : 1).replace(/\.0$/, '') + 'K';
     return fmtNum(Math.round(Number(n) || 0));
+  };
+  const fmtRatioCompact = (n) => {
+    const value = Number(n);
+    if (!Number.isFinite(value)) return '—';
+    const decimals = value >= 100 ? 0 : value >= 10 ? 1 : 2;
+    return value.toFixed(decimals).replace(/\.0+$|(\.\d*[1-9])0+$/, '$1') + 'x';
   };
   const shortAddress = (addr) => {
     const raw = String(addr || '');
@@ -3778,6 +3798,7 @@
     const note = document.getElementById('peRatioNote');
     if (!host) return;
     if (!model || !Array.isArray(model.rows) || !model.rows.length) {
+      setCategoryPrimarySource('kpi-rank', 'pe', null);
       host.innerHTML = '<div class="note">P/E ratio comparison unavailable right now.</div>';
       if (note) note.textContent = 'Market cap or annualized revenue data unavailable for the visible chain set.';
       markReady('panel-pe');
@@ -3822,6 +3843,8 @@
       }
       note.textContent = parts.join(' ');
     }
+    const megaRow = model.rows.find((row) => row.isBase);
+    setCategoryPrimarySource('kpi-rank', 'pe', megaRow ? fmtRatioCompact(megaRow.ratio) : null, 'MegaETH P/E');
     markReady('panel-pe');
   }
 
@@ -4029,6 +4052,7 @@
     const summary = document.getElementById('chainRevSummary');
     if (!host) return;
     if (!rows || rows.length === 0) {
+      setCategoryPrimarySource('kpi-rank', 'rank', null);
       host.innerHTML = '<div class="note">Live chain revenue comparison is temporarily unavailable.</div>';
       if (summary) summary.style.display = 'none';
       markReady('kpi-rank');
@@ -4068,7 +4092,7 @@
       summary.style.display = '';
       if (megaRank == null) {
         summary.innerHTML = 'MegaETH revenue feed unavailable on DefiLlama right now.';
-        if (rankEl) setCategoryPrimary('kpi-rank', '—');
+        if (rankEl) setCategoryPrimarySource('kpi-rank', 'rank', null);
       } else {
         const ord = (n) => {
           const s = ['th','st','nd','rd'], v = n % 100;
@@ -4079,7 +4103,7 @@
           ? ` MegaETH daily = <strong>${fmtUSD(mega.value)}</strong> (gas ${fmtUSD(mega.gas)} + USDm yield ${fmtUSD(mega.yield)}).`
           : '';
         summary.innerHTML = `MegaETH ranks <strong>${ord(megaRank)} of ${total}</strong> on DefiLlama's daily <strong>revenue/chains</strong> leaderboard (Canton excluded).${breakdown}`;
-        if (rankEl) setCategoryPrimary('kpi-rank', `#${megaRank}`, 'Chain Revenue');
+        if (rankEl) setCategoryPrimarySource('kpi-rank', 'rank', `#${megaRank}`, 'Chain Revenue');
       }
     }
     markReady('kpi-rank');
@@ -4212,22 +4236,133 @@
 
   updateLoader('cards + charts in parallel');
 
-  function setCategoryPrimary(id, mainText, suffix = '') {
+  const CATEGORY_PRIMARY_ROTATION_MS = 5600;
+  const CATEGORY_PRIMARY_ROTATION_TICK_MS = 700;
+  const CATEGORY_PRIMARY_ROTATION_OFFSETS = {
+    'kpi-tvl': 0,
+    'kpi-mega-holders': 1400,
+    'kpi-daily': 2800,
+    'kpi-rank': 4200,
+  };
+  const CATEGORY_PRIMARY_SOURCE_ORDER = {
+    'kpi-tvl': ['tvl', 'stables', 'concentration', 'appflow'],
+    'kpi-mega-holders': ['holders', 'float', 'pe'],
+    'kpi-daily': ['daily', 'annual', 'cumulative'],
+    'kpi-rank': ['forecast', 'rank', 'pe'],
+  };
+  const categoryPrimarySources = {};
+  const categoryPrimaryRotations = {};
+  let categoryPrimaryRotationTimer = null;
+
+  function normalizeCategoryPrimaryEntries(entries) {
+    const seen = new Set();
+    return (Array.isArray(entries) ? entries : [])
+      .map((entry) => ({
+        main: String(entry?.main ?? '').trim(),
+        suffix: String(entry?.suffix ?? '').trim(),
+      }))
+      .filter((entry) => entry.main)
+      .filter((entry) => {
+        const key = entry.main + '|' + entry.suffix;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+  }
+
+  function ensureCategoryPrimaryRotationTimer() {
+    if (categoryPrimaryRotationTimer) return;
+    categoryPrimaryRotationTimer = setInterval(() => {
+      const now = Date.now();
+      Object.entries(categoryPrimaryRotations).forEach(([id, state]) => {
+        if (!state || !Array.isArray(state.entries) || state.entries.length <= 1) return;
+        if (now < state.nextSwapAt) return;
+        state.index = (state.index + 1) % state.entries.length;
+        state.nextSwapAt = now + CATEGORY_PRIMARY_ROTATION_MS;
+        renderCategoryPrimaryRotation(id, true);
+      });
+    }, CATEGORY_PRIMARY_ROTATION_TICK_MS);
+  }
+
+  function setCategoryPrimary(id, mainText, suffix = '', animate = false) {
     const el = document.getElementById(id);
     if (!el) return;
     const main = String(mainText || '—');
     const tail = String(suffix || '').trim();
+    const previousMain = el.querySelector('.category-card-primary-main')?.textContent || '';
+    const previousTail = el.querySelector('.category-card-primary-suffix')?.textContent || '';
     el.innerHTML = '<span class="category-card-primary-main"></span>'
       + (tail ? '<span class="category-card-primary-suffix"></span>' : '');
     const mainEl = el.querySelector('.category-card-primary-main');
     const suffixEl = el.querySelector('.category-card-primary-suffix');
     if (mainEl) mainEl.textContent = main;
     if (suffixEl) suffixEl.textContent = tail;
+    el.setAttribute('aria-label', tail ? (main + ' ' + tail) : main);
+    const didChange = previousMain !== main || previousTail !== tail;
+    if (animate && didChange && el.dataset.primaryHydrated === '1') {
+      el.classList.remove('is-rotating');
+      void el.offsetWidth;
+      el.classList.add('is-rotating');
+      if (el.__primaryAnimTimer) clearTimeout(el.__primaryAnimTimer);
+      el.__primaryAnimTimer = setTimeout(() => el.classList.remove('is-rotating'), 460);
+    }
+    el.dataset.primaryHydrated = '1';
+  }
+
+  function renderCategoryPrimaryRotation(id, animate = false) {
+    const state = categoryPrimaryRotations[id];
+    if (!state || !Array.isArray(state.entries) || !state.entries.length) {
+      setCategoryPrimary(id, '—', '', animate);
+      return;
+    }
+    const entry = state.entries[state.index] || state.entries[0];
+    setCategoryPrimary(id, entry.main, entry.suffix, animate);
+  }
+
+  function setCategoryPrimaryRotation(id, entries) {
+    const normalized = normalizeCategoryPrimaryEntries(entries);
+    const rotation = categoryPrimaryRotations[id] || (categoryPrimaryRotations[id] = {
+      entries: [],
+      index: 0,
+      nextSwapAt: 0,
+    });
+    const current = rotation.entries[rotation.index];
+    const currentKey = current ? (current.main + '|' + current.suffix) : '';
+    rotation.entries = normalized.length ? normalized : [{ main: '—', suffix: '' }];
+    const currentIndex = rotation.entries.findIndex((entry) => (entry.main + '|' + entry.suffix) === currentKey);
+    rotation.index = currentIndex >= 0 ? currentIndex : 0;
+    if (!rotation.nextSwapAt) {
+      rotation.nextSwapAt = Date.now() + CATEGORY_PRIMARY_ROTATION_MS + (CATEGORY_PRIMARY_ROTATION_OFFSETS[id] || 0);
+    }
+    renderCategoryPrimaryRotation(id, false);
+    ensureCategoryPrimaryRotationTimer();
+  }
+
+  function setCategoryPrimarySource(id, sourceKey, mainText, suffix = '') {
+    const bucket = categoryPrimarySources[id] || (categoryPrimarySources[id] = {});
+    if (mainText == null || mainText === '') {
+      delete bucket[sourceKey];
+    } else {
+      bucket[sourceKey] = {
+        main: String(mainText),
+        suffix: String(suffix || '').trim(),
+      };
+    }
+    const order = CATEGORY_PRIMARY_SOURCE_ORDER[id] || Object.keys(bucket);
+    setCategoryPrimaryRotation(id, order.map((key) => bucket[key]).filter(Boolean));
   }
 
   function renderKPIs(tvl, daysSinceLaunch, dailyRev, cumRev, annualRev, usdmShare) {
-    setCategoryPrimary('kpi-tvl', tvl != null ? fmtUSDFit(tvl) : '$ —');
-    setCategoryPrimary('kpi-daily', fmtUSDFit(dailyRev));
+    setCategoryPrimarySource('kpi-tvl', 'tvl', tvl != null ? fmtUSDFit(tvl) : '$ —', 'USDm TVL');
+    setCategoryPrimarySource(
+      'kpi-tvl',
+      'stables',
+      (usdmShare != null && isFinite(usdmShare)) ? (usdmShare * 100).toFixed(1) + '%' : null,
+      'USDm vs USDT0'
+    );
+    setCategoryPrimarySource('kpi-daily', 'daily', fmtUSDFit(dailyRev), 'Daily Revenue');
+    setCategoryPrimarySource('kpi-daily', 'annual', fmtUSDFit(annualRev), 'Annualized Revenue');
+    setCategoryPrimarySource('kpi-daily', 'cumulative', fmtUSDFit(cumRev), 'Cumulative Revenue');
     const annEl = document.getElementById('kpi-annual');
     if (annEl) annEl.textContent = fmtUSDFit(annualRev);
     document.getElementById('kpi-cum').textContent   = fmtUSDFit(cumRev);
@@ -4451,20 +4586,29 @@
   };
 
   function renderMegaCategorySummary() {
-    const holdersEl = document.getElementById('kpi-mega-holders');
     const splitEl = document.getElementById('kpi-mega-split');
-    if (holdersEl) {
-      setCategoryPrimary(
-        'kpi-mega-holders',
-        Number.isFinite(megaSummaryState.holdersCount)
-          ? fmtNum(Math.round(megaSummaryState.holdersCount))
-          : '—',
-        Number.isFinite(megaSummaryState.holdersCount) ? 'holders' : ''
-      );
-    }
+    const holdersCount = Number.isFinite(megaSummaryState.holdersCount)
+      ? fmtNum(Math.round(megaSummaryState.holdersCount))
+      : null;
+    const circulating = Number(megaSummaryState.circulatingSupply);
+    const committed = Number(megaSummaryState.committed);
+    const committedShare = circulating > 0 && Number.isFinite(committed)
+      ? (committed / circulating) * 100
+      : null;
+    setCategoryPrimarySource('kpi-mega-holders', 'holders', holdersCount, 'Holders');
+    setCategoryPrimarySource(
+      'kpi-mega-holders',
+      'float',
+      Number.isFinite(committedShare) ? committedShare.toFixed(1) + '%' : null,
+      'Committed Share'
+    );
+    setCategoryPrimarySource(
+      'kpi-mega-holders',
+      'pe',
+      Number.isFinite(megaPeHistoryState.currentRatio) ? fmtRatioCompact(megaPeHistoryState.currentRatio) : null,
+      'MEGA P/E'
+    );
     if (splitEl) {
-      const circulating = Number(megaSummaryState.circulatingSupply);
-      const committed = Number(megaSummaryState.committed);
       splitEl.textContent = circulating > 0 && Number.isFinite(committed)
         ? ((committed / circulating) * 100).toFixed(1) + '% committed'
         : '—';
@@ -4704,6 +4848,7 @@
       megaPeHistoryState.currentMarketCap = null;
       megaPeHistoryState.currentAnnualizedRevenue = null;
       megaPeHistoryState.note = 'MEGA P/E history unavailable right now.';
+      renderMegaCategorySummary();
       renderMegaPeHistoryPanel();
       return;
     }
@@ -4714,6 +4859,7 @@
     megaPeHistoryState.currentMarketCap = model.currentMarketCap;
     megaPeHistoryState.currentAnnualizedRevenue = model.currentAnnualizedRevenue;
     megaPeHistoryState.note = 'MEGA P/E history ready.';
+    renderMegaCategorySummary();
     renderMegaPeHistoryPanel();
   }
 
@@ -4759,6 +4905,7 @@
     const note = document.getElementById('usdmConcentrationNote');
     const model = usdmConcentrationState.model;
     if (!model?.dates?.length || !model?.values?.length) {
+      setCategoryPrimarySource('kpi-tvl', 'concentration', null);
       if (chartInstances.usdmConcentrationChart) {
         chartInstances.usdmConcentrationChart.destroy();
         delete chartInstances.usdmConcentrationChart;
@@ -4782,6 +4929,7 @@
         + '</strong>, or <strong>' + model.currentShare.toFixed(2) + '%</strong> of live supply. '
         + 'This tracks the <strong>current top holder address</strong> since <strong>' + model.startDay + '</strong>.';
     }
+    setCategoryPrimarySource('kpi-tvl', 'concentration', model.currentShare.toFixed(1) + '%', 'Top Holder');
   }
 
   function buildUsdmAppFlowModel(protocolRows, currentUsdmSupply) {
@@ -4824,6 +4972,7 @@
     const model = usdmAppFlowState.model;
     if (!host) return;
     if (!model?.rows?.length) {
+      setCategoryPrimarySource('kpi-tvl', 'appflow', null);
       host.innerHTML = '<div class="note">USDm destination app proxy unavailable right now.</div>';
       if (note) note.textContent = usdmAppFlowState.note;
       return;
@@ -4919,6 +5068,8 @@
       note.innerHTML = 'DefiLlama does <strong>not</strong> expose exact per-app USDm balances, so this uses each app\'s <strong>current MegaETH TVL share</strong> as a destination proxy and scales it to live USDm supply. '
         + (top ? '<strong>' + top.name + '</strong> currently absorbs the largest share of that proxy at about <strong>' + (top.share * 100).toFixed(1) + '%</strong>.' : '');
     }
+    const top = model.rows[0];
+    setCategoryPrimarySource('kpi-tvl', 'appflow', top ? fmtUSDFit(top.estimatedUsd) : null, top ? truncateLabel(top.name, 14) : '');
   }
 
   let megaHoldersRetryTimer = null;
@@ -5251,8 +5402,7 @@
     // Hydrate the first TVL card as soon as the fastest supply source lands.
     Promise.race([pUsdmLive, pTvl]).then((v) => {
       if (v == null) return;
-      const tvlEl = document.getElementById('kpi-tvl');
-      if (tvlEl) tvlEl.textContent = fmtUSDFit(v);
+      setCategoryPrimarySource('kpi-tvl', 'tvl', fmtUSDFit(v), 'USDm TVL');
       markReady('kpi-tvl');
     }).catch((e) => console.warn('early TVL KPI failed', e));
 
@@ -5601,6 +5751,7 @@
     if (opiumKpiEl) {
       const target = opiumValues.length > 1 ? Math.max(...opiumValues.slice(1)) : null;
       opiumKpiEl.textContent = target != null ? fmtUSDFit(target) : '$ —';
+      setCategoryPrimarySource('kpi-rank', 'forecast', target != null ? fmtUSDFit(target) : null, 'Forecast');
       markReady('kpi-opium');
     }
     const opiumKpiSub = document.querySelector('.kpi-opium .kpi-sub');
