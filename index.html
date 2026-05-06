@@ -2717,7 +2717,9 @@
   // Maximum age (ms) we'll accept for a CoinGecko response. Some CORS proxies
   // serve cached snapshots for hours/days; anything older than this is rejected
   // so Promise.any() falls through to a fresher source.
-  const FRESH_MAX_AGE_MS = 6 * 60 * 60 * 1000; // 6h
+  const MINUTE_MS = 60 * 1000;
+  const HOUR_MS = 60 * MINUTE_MS;
+  const FRESH_MAX_AGE_MS = 6 * HOUR_MS;
 
   // -------- LOCAL CACHE (defends against CoinGecko rate-limits) --------
   // CoinGecko's free tier rate-limits to ~10-30 req/min. After 2-3 refreshes
@@ -2725,17 +2727,53 @@
   // falls back to a flat "current TVL" line which looks like the TVL has been
   // stable for months. Cache the last *good* response per endpoint so we can
   // still draw the real series even when CG is throttling us.
-  const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
-  function cacheGet(key) {
+  const CACHE_TTL_MS = 24 * HOUR_MS;
+  const CACHE_POLICY = [
+    {
+      pattern: /^(usdm-tvl|usdm-apy-live|eth-price-live|blockscout-stats|blockscout-daily-fees|token-supply-live:|token-snapshot:|address-token-balance:)/,
+      ttlMs: 5 * MINUTE_MS,
+    },
+    {
+      pattern: /^(usdm-history|mega-marketcap-history-v2|defillama-chain-fees:megaeth|eth-price-history|all-stables-on-megaeth|growthepie:megaeth|chain-revenue-leaderboard|chain-fees-series:|chain-tvl-latest:|chain-marketcap:|megaeth-protocol-tvl-rows:v1)/,
+      ttlMs: 30 * MINUTE_MS,
+    },
+    {
+      pattern: /^(token-top-holders:|token-holder-history:|mega-commitment-history:v2)/,
+      ttlMs: 2 * HOUR_MS,
+    },
+    {
+      pattern: /^(mega-holders-history:v2|token-supply-history:)/,
+      ttlMs: 12 * HOUR_MS,
+    },
+  ];
+
+  function cacheMaxAgeMs(key) {
+    const raw = String(key || '');
+    const match = CACHE_POLICY.find((entry) => entry.pattern.test(raw));
+    return match?.ttlMs || CACHE_TTL_MS;
+  }
+
+  function cacheReadEntry(key) {
     try {
       const raw = localStorage.getItem('mfcache:' + key);
       if (!raw) return null;
       const obj = JSON.parse(raw);
       if (!obj || typeof obj.t !== 'number') return null;
-      if (Date.now() - obj.t > CACHE_TTL_MS) return null;
-      return obj.v;
+      return obj;
     } catch { return null; }
   }
+
+  function cachePeek(key) {
+    return cacheReadEntry(key)?.v ?? null;
+  }
+
+  function cacheGet(key, maxAgeMs = cacheMaxAgeMs(key)) {
+    const obj = cacheReadEntry(key);
+    if (!obj) return null;
+    if (Date.now() - obj.t > maxAgeMs) return null;
+    return obj.v;
+  }
+
   function cacheSet(key, value) {
     try { localStorage.setItem('mfcache:' + key, JSON.stringify({ t: Date.now(), v: value })); }
     catch { /* quota / private mode — ignore */ }
@@ -2743,6 +2781,11 @@
 
   // -------- LIVE BUIDL APY (drives USDm yield) --------
   async function fetchUSDmAPY() {
+    const cacheKey = 'usdm-apy-live';
+    const cached = cacheGet(cacheKey);
+    if (cached && Number(cached?.buidl) > 0 && Number(cached?.usdm) > 0) {
+      return { buidl: Number(cached.buidl), usdm: Number(cached.usdm) };
+    }
     // rwa.xyz JSON API is gated (401), but their public /treasuries page
     // contains BUIDL's 7D APY in plain HTML. Scrape via CORS proxy and
     // extract the first percentage that follows the 'BUIDL' ticker.
@@ -2761,10 +2804,15 @@
         throw new Error('implausible BUIDL APY: ' + m[1]);
       }
       const usdm = USDM_COMPOSITION * buidl;
+      cacheSet(cacheKey, { buidl, usdm });
       console.info(`[megafees] BUIDL 7D APY=${(buidl*100).toFixed(2)}% → USDm APY=${(usdm*100).toFixed(2)}%`);
       return { buidl, usdm };
     } catch (e) {
       console.warn('[megafees] BUIDL APY fetch failed, fallback:', e.message);
+      const stale = cachePeek(cacheKey);
+      if (stale && Number(stale?.buidl) > 0 && Number(stale?.usdm) > 0) {
+        return { buidl: Number(stale.buidl), usdm: Number(stale.usdm) };
+      }
       return { buidl: BUIDL_APY_FALLBACK, usdm: USDM_COMPOSITION * BUIDL_APY_FALLBACK };
     }
   }
@@ -2798,6 +2846,9 @@
 
   async function fetchUSDmTVL() {
     // CoinGecko: market cap of USDm == circulating supply * peg ($1) ≈ TVL
+    const cacheKey = 'usdm-tvl';
+    const cachedFresh = cacheGet(cacheKey);
+    if (cachedFresh != null) return cachedFresh;
     try {
       const res = await corsFetch(CG_USDM_API, null, (j) => {
         // Accept only if last_updated is recent (proxies sometimes serve stale snapshots).
@@ -2810,13 +2861,13 @@
       const j = await res.json();
       const mcap = j?.market_data?.market_cap?.usd;
       if (typeof mcap === 'number' && mcap > 0) {
-        cacheSet('usdm-tvl', mcap);
+        cacheSet(cacheKey, mcap);
         return mcap;
       }
     } catch (e) {
       console.warn('CoinGecko USDm fetch failed:', e);
     }
-    const cached = cacheGet('usdm-tvl');
+    const cached = cachePeek(cacheKey);
     if (cached != null) {
       console.info('[megafees] using cached USDm TVL:', cached);
       return cached;
@@ -2840,6 +2891,9 @@
       const age = Date.now() - lastTs;
       return age >= 0 && age < FRESH_MAX_AGE_MS;
     };
+    const cacheKey = 'usdm-history';
+    const cachedFresh = cacheGet(cacheKey);
+    if (Array.isArray(cachedFresh) && cachedFresh.length) return cachedFresh;
     try {
       const res = await corsFetch(CG_USDM_HISTORY, null, validate);
       if (!res.ok) {
@@ -2848,17 +2902,17 @@
         if (!r2.ok) throw new Error('CG history ' + res.status + '/' + r2.status);
         const j2 = await r2.json();
         const arr2 = Array.isArray(j2?.market_caps) ? j2.market_caps : null;
-        if (arr2) cacheSet('usdm-history', arr2);
+        if (arr2) cacheSet(cacheKey, arr2);
         return arr2;
       }
       const j = await res.json();
       const arr = Array.isArray(j?.market_caps) ? j.market_caps : null;
-      if (arr) cacheSet('usdm-history', arr);
+      if (arr) cacheSet(cacheKey, arr);
       return arr;
     } catch (e) {
       console.warn('CoinGecko USDm history fetch failed:', e);
     }
-    const cached = cacheGet('usdm-history');
+    const cached = cachePeek(cacheKey);
     if (cached) {
       console.info('[megafees] using cached USDm history (' + cached.length + ' points)');
       return cached;
@@ -2887,6 +2941,9 @@
       `https://api.coingecko.com/api/v3/coins/${CG_MEGA_ID}/market_chart?vs_currency=usd&days=30`,
     ];
 
+    const cachedFresh = cacheGet(cacheKey);
+    if (validate({ market_caps: cachedFresh })) return cachedFresh;
+
     try {
       for (const url of urls) {
         const res = await corsFetch(url, null, validate);
@@ -2903,7 +2960,7 @@
       console.warn('CoinGecko MEGA market cap history fetch failed:', e);
     }
 
-    const cached = cacheGet(cacheKey);
+    const cached = cachePeek(cacheKey);
     if (validate({ market_caps: cached })) {
       console.info('[megafees] using cached MEGA market cap history (' + cached.length + ' points)');
       return cached;
@@ -2925,10 +2982,13 @@
     const denom    = Math.pow(10, decimals);
     const cacheKey = 'token-supply-history:' + address.toLowerCase();
 
-    function restoreFromCache() {
-      const cached = cacheGet(cacheKey);
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
       return Array.isArray(cached) && cached.length ? new Map(cached) : null;
     }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
 
     async function fetchAllLogs(extraQS) {
       const out = [];
@@ -2982,30 +3042,40 @@
         supplyByDay.set(d, Math.max(0, acc));
       }
       if (supplyByDay.size) cacheSet(cacheKey, [...supplyByDay.entries()]);
-      return supplyByDay.size ? supplyByDay : restoreFromCache();
+      return supplyByDay.size ? supplyByDay : restoreFromCache(true);
     } catch (e) {
       console.warn('on-chain supply history failed for', address, e);
-      return restoreFromCache();
+      return restoreFromCache(true);
     }
   }
 
   async function fetchTokenSupplyOnMegaETH(address) {
     // MegaETH Blockscout v2: /tokens/{address} returns total_supply (base units),
     // decimals, and circulating_market_cap. We assume 1:1 USD peg.
+    const cacheKey = 'token-supply-live:' + address.toLowerCase();
+    const cachedFresh = cacheGet(cacheKey);
+    if (cachedFresh != null) return cachedFresh;
     try {
       const res = await fetch(BS_TOKEN(address));
       if (!res.ok) throw new Error('blockscout token ' + res.status);
       const j = await res.json();
       const decimals = Number(j?.decimals);
       const supply = fromBaseUnits(j?.total_supply, decimals);
-      return Number.isFinite(supply) ? supply : null;
+      if (Number.isFinite(supply)) {
+        cacheSet(cacheKey, supply);
+        return supply;
+      }
     } catch (e) {
       console.warn('Blockscout token supply fetch failed for', address, e);
-      return null;
     }
+    const cached = cachePeek(cacheKey);
+    return cached != null ? Number(cached) : null;
   }
 
   async function fetchTokenSnapshotOnMegaETH(address) {
+    const cacheKey = 'token-snapshot:' + address.toLowerCase();
+    const cachedFresh = cacheGet(cacheKey);
+    if (cachedFresh && typeof cachedFresh === 'object') return cachedFresh;
     try {
       const res = await fetch(BS_TOKEN(address));
       if (!res.ok) throw new Error('blockscout token ' + res.status);
@@ -3016,7 +3086,7 @@
       const marketCap = Number(j?.circulating_market_cap);
       const price = Number(j?.exchange_rate);
       const circulatingSupply = marketCap > 0 && price > 0 ? marketCap / price : null;
-      return {
+      const snapshot = {
         address,
         decimals,
         totalSupply: Number.isFinite(totalSupply) ? totalSupply : null,
@@ -3025,9 +3095,12 @@
         price: price > 0 ? price : null,
         circulatingSupply: circulatingSupply > 0 ? circulatingSupply : null,
       };
+      cacheSet(cacheKey, snapshot);
+      return snapshot;
     } catch (e) {
       console.warn('Blockscout token snapshot fetch failed for', address, e);
-      return null;
+      const cached = cachePeek(cacheKey);
+      return cached && typeof cached === 'object' ? cached : null;
     }
   }
 
@@ -3045,10 +3118,13 @@
   async function fetchTokenTopHolders(address, decimals, limit = 50) {
     const cacheKey = 'token-top-holders:' + address.toLowerCase() + ':' + limit;
 
-    function restoreFromCache() {
-      const cached = cacheGet(cacheKey);
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
       return Array.isArray(cached) && cached.length ? cached : null;
     }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
 
     try {
       const res = await fetch(`${BS_TOKEN(address)}/holders?items_count=${limit}`, { cache: 'no-store' });
@@ -3063,10 +3139,10 @@
         }))
         .filter((row) => row.address && Number.isFinite(row.balance) && row.balance > 0);
       if (rows.length) cacheSet(cacheKey, rows);
-      return rows.length ? rows : restoreFromCache();
+      return rows.length ? rows : restoreFromCache(true);
     } catch (e) {
       console.warn('Blockscout token holders fetch failed for', address, e);
-      return restoreFromCache();
+      return restoreFromCache(true);
     }
   }
 
@@ -3075,10 +3151,13 @@
     const PAGE = 1000;
     const holderTopic = '0x' + holderAddress.toLowerCase().replace(/^0x/, '').padStart(64, '0');
 
-    function restoreFromCache() {
-      const cached = cacheGet(cacheKey);
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
       return Array.isArray(cached) && cached.length ? new Map(cached) : null;
     }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
 
     async function fetchLogs(extraQS) {
       const out = [];
@@ -3129,20 +3208,23 @@
       }
 
       if (balancesByDay.size) cacheSet(cacheKey, [...balancesByDay.entries()]);
-      return balancesByDay.size ? balancesByDay : restoreFromCache();
+      return balancesByDay.size ? balancesByDay : restoreFromCache(true);
     } catch (e) {
       console.warn('Token holder history fetch failed for', tokenAddress, holderAddress, e);
-      return restoreFromCache();
+      return restoreFromCache(true);
     }
   }
 
   async function fetchMegaETHProtocolTvlRows() {
     const cacheKey = 'megaeth-protocol-tvl-rows:v1';
 
-    function restoreFromCache() {
-      const cached = cacheGet(cacheKey);
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
       return Array.isArray(cached) && cached.length ? cached : null;
     }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
 
     try {
       const res = await corsFetch('https://api.llama.fi/protocols');
@@ -3161,28 +3243,38 @@
         .filter((row) => row.name && row.value > 0)
         .sort((a, b) => b.value - a.value);
       if (rows.length) cacheSet(cacheKey, rows);
-      return rows.length ? rows : restoreFromCache();
+      return rows.length ? rows : restoreFromCache(true);
     } catch (e) {
       console.warn('DefiLlama MegaETH protocols fetch failed:', e);
-      return restoreFromCache();
+      return restoreFromCache(true);
     }
   }
 
   async function fetchAddressTokenBalanceOnMegaETH(address, tokenAddress) {
+    const cacheKey = 'address-token-balance:' + address.toLowerCase() + ':' + tokenAddress.toLowerCase();
+    const cachedFresh = cacheGet(cacheKey);
+    if (cachedFresh != null) return cachedFresh;
     try {
       const res = await fetch(BS_ADDRESS_TOKENS(address));
       if (!res.ok) throw new Error('blockscout address tokens ' + res.status);
       const j = await res.json();
       const items = Array.isArray(j?.items) ? j.items : [];
       const row = items.find((item) => item?.token?.address_hash?.toLowerCase() === tokenAddress.toLowerCase());
-      if (!row) return 0;
+      if (!row) {
+        cacheSet(cacheKey, 0);
+        return 0;
+      }
       const decimals = Number(row?.token?.decimals);
       const value = fromBaseUnits(row?.value, decimals);
-      return Number.isFinite(value) ? value : 0;
+      if (Number.isFinite(value)) {
+        cacheSet(cacheKey, value);
+        return value;
+      }
     } catch (e) {
       console.warn('Blockscout address token balance fetch failed for', address, tokenAddress, e);
-      return null;
     }
+    const cached = cachePeek(cacheKey);
+    return cached != null ? Number(cached) : null;
   }
 
   async function fetchBundledMegaHoldersHistory() {
@@ -3250,15 +3342,18 @@
   async function fetchMegaHoldersHistoryOnChain() {
     const cacheKey = 'mega-holders-history:v2';
 
-    async function restoreFallback() {
-      const cached = cacheGet(cacheKey);
+    async function restoreFallback(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
       if (Array.isArray(cached) && cached.length) return new Map(cached);
       return fetchBundledMegaHoldersHistory();
     }
 
+    const cachedFresh = await restoreFallback();
+    if (cachedFresh) return cachedFresh;
+
     try {
       const logs = await fetchMegaTransferLogs();
-      if (!logs.length) return await restoreFallback();
+      if (!logs.length) return await restoreFallback(true);
 
       const balances = new Map();
       const holdersByDay = new Map();
@@ -3287,18 +3382,18 @@
       }
 
       if (holdersByDay.size) cacheSet(cacheKey, [...holdersByDay.entries()]);
-      return holdersByDay.size ? holdersByDay : await restoreFallback();
+      return holdersByDay.size ? holdersByDay : await restoreFallback(true);
     } catch (e) {
       console.warn('MEGA holders history fetch failed:', e);
-      return await restoreFallback();
+      return await restoreFallback(true);
     }
   }
 
   async function fetchMegaCommitmentHistoryOnChain(snapshot) {
     const cacheKey = 'mega-commitment-history:v2';
 
-    function restoreFromCache() {
-      const cached = cacheGet(cacheKey);
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
       if (
         cached
         && Array.isArray(cached?.dates)
@@ -3313,8 +3408,11 @@
       return null;
     }
 
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
+
     if (!(snapshot?.circulatingSupply > 0) || !(snapshot?.committed >= 0)) {
-      return restoreFromCache();
+      return restoreFromCache(true);
     }
 
     try {
@@ -3411,7 +3509,7 @@
       return out;
     } catch (e) {
       console.warn('MEGA commitment history fetch failed:', e);
-      return restoreFromCache();
+      return restoreFromCache(true);
     }
   }
 
@@ -3437,13 +3535,19 @@
   }
 
   async function fetchBlockscoutStats() {
+    const cacheKey = 'blockscout-stats';
+    const cachedFresh = cacheGet(cacheKey);
+    if (cachedFresh && typeof cachedFresh === 'object') return cachedFresh;
     try {
       const res = await fetch(BS_STATS);
       if (!res.ok) throw new Error('blockscout stats ' + res.status);
-      return await res.json();
+      const json = await res.json();
+      cacheSet(cacheKey, json);
+      return json;
     } catch (e) {
       console.warn('Blockscout stats fetch failed:', e);
-      return null;
+      const cached = cachePeek(cacheKey);
+      return cached && typeof cached === 'object' ? cached : null;
     }
   }
 
@@ -3452,6 +3556,15 @@
     // (`txnsFee`) plus the rolling 24h counter shown on /stats (`txnsFee24h`).
     // We use the daily series for history and override today's slot with the
     // live 24h counter so the dashboard matches the headline Blockscout stat.
+    const cacheKey = 'blockscout-daily-fees';
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
+      return Array.isArray(cached) && cached.length ? new Map(cached) : null;
+    }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
+
     try {
       const from = isoDate(MAINNET_LAUNCH);
       const to = isoDate(new Date());
@@ -3500,10 +3613,11 @@
         });
       }
 
-      return map;
+      if (map.size) cacheSet(cacheKey, [...map.entries()]);
+      return map.size ? map : restoreFromCache(true);
     } catch (e) {
       console.warn('Blockscout fees compute failed:', e);
-      return null;
+      return restoreFromCache(true);
     }
   }
 
@@ -3511,6 +3625,15 @@
     // DefiLlama exposes MegaETH as a "chain" with its own daily fees feed,
     // sourced from the Blockscout adapter and updated daily. We now use it
     // only as a fallback when Blockscout's native stats-service is unavailable.
+    const cacheKey = 'defillama-chain-fees:megaeth';
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
+      return Array.isArray(cached) && cached.length ? new Map(cached) : null;
+    }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
+
     try {
       const res = await corsFetch(DL_FEES_MEGAETH);
       if (!res.ok) throw new Error('DL chain fees ' + res.status);
@@ -3521,16 +3644,26 @@
         if (typeof ts !== 'number') continue;
         map.set(isoDate(new Date(ts * 1000)), Number(usd) || 0);
       }
-      return map;
+      if (map.size) cacheSet(cacheKey, [...map.entries()]);
+      return map.size ? map : restoreFromCache(true);
     } catch (e) {
       console.warn('DefiLlama chain fees fetch failed:', e);
-      return null;
+      return restoreFromCache(true);
     }
   }
 
   async function fetchEthPriceHistory() {
     // Blockscout daily ETH closing price — used to convert DefiLlama's
     // USD-only fee series back into ETH for the table.
+    const cacheKey = 'eth-price-history';
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
+      return Array.isArray(cached) && cached.length ? new Map(cached) : null;
+    }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
+
     try {
       const res = await fetch(BS_CHART_MKT);
       if (!res.ok) throw new Error('BS market ' + res.status);
@@ -3539,15 +3672,25 @@
       for (const row of (j?.chart_data || [])) {
         map.set(row.date, Number(row.closing_price) || 0);
       }
-      return map;
+      if (map.size) cacheSet(cacheKey, [...map.entries()]);
+      return map.size ? map : restoreFromCache(true);
     } catch (e) {
       console.warn('Blockscout ETH price history fetch failed:', e);
-      return null;
+      return restoreFromCache(true);
     }
   }
 
   async function fetchAllStablesOnMegaETH() {
     // DefiLlama: total stablecoin circulating on MegaETH, daily
+    const cacheKey = 'all-stables-on-megaeth';
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
+      return Array.isArray(cached) && cached.length ? new Map(cached) : null;
+    }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
+
     try {
       const res = await corsFetch(DL_ALL_ON_MEGAETH);
       if (!res.ok) throw new Error('DL all-megaeth ' + res.status);
@@ -3558,10 +3701,11 @@
         const v = Number(row.totalCirculatingUSD?.peggedUSD ?? row.totalCirculating?.peggedUSD ?? 0);
         map.set(isoDate(new Date(ts)), v);
       }
-      return map;
+      if (map.size) cacheSet(cacheKey, [...map.entries()]);
+      return map.size ? map : restoreFromCache(true);
     } catch (e) {
       console.warn('DefiLlama all-stables-on-MegaETH fetch failed:', e);
-      return null;
+      return restoreFromCache(true);
     }
   }
 
@@ -3580,14 +3724,19 @@
     // NOTE: this is DeFi TVL, NOT stablecoin circulating supply (which is
     // 2-3× larger and dominated by passive bridged USDT/USDC).
     const cachePrefix = 'chain-tvl-latest:';
-    function restoreFromCache() {
+    function restoreFromCache(allowStale = false) {
       const out = new Map();
       for (const slug of slugs) {
-        const cached = Number(cacheGet(cachePrefix + slug.toLowerCase()) || 0);
+        const cacheKey = cachePrefix + slug.toLowerCase();
+        const cached = Number((allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey)) || 0);
         if (cached > 0) out.set(slug, cached);
       }
       return out.size ? out : null;
     }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh && slugs.every((slug) => cachedFresh.has(slug))) return cachedFresh;
+
     try {
       const res = await corsFetch('https://api.llama.fi/v2/chains');
       if (!res.ok) throw new Error('DL v2/chains ' + res.status);
@@ -3607,10 +3756,10 @@
         const cached = Number(cacheGet(cacheKey) || 0);
         if (cached > 0) out.set(slug, cached);
       }
-      return out.size ? out : restoreFromCache();
+      return out.size ? out : restoreFromCache(true);
     } catch (e) {
       console.warn('chains TVL fetch failed:', e);
-      return restoreFromCache();
+      return restoreFromCache(true);
     }
   }
 
@@ -3705,6 +3854,9 @@
 
     if (!labels.length) return null;
 
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh && labels.every((label) => cachedFresh.has(label))) return cachedFresh;
+
     try {
       const res = await corsFetch('https://api.llama.fi/v2/chains');
       if (!res.ok) throw new Error('DL v2/chains ' + res.status);
@@ -3764,7 +3916,20 @@
       return out.size ? out : restoreFromCache();
     } catch (e) {
       console.warn('chain market cap fetch failed:', e);
-      return restoreFromCache();
+      const stale = new Map();
+      for (const label of labels) {
+        const cached = cachePeek(cachePrefix + label.toLowerCase());
+        if (cached && Number(cached.marketCap) > 0) stale.set(label, cached);
+      }
+      if (!stale.has('MegaETH') && Number(megaSnapshot?.marketCap) > 0) {
+        stale.set('MegaETH', {
+          marketCap: Number(megaSnapshot.marketCap),
+          source: 'Blockscout',
+          geckoId: 'megaeth',
+          note: '',
+        });
+      }
+      return stale.size ? stale : null;
     }
   }
 
@@ -3951,10 +4116,12 @@
 
   async function fetchRevenueChainsLeaderboard() {
     const cacheKey = 'chain-revenue-leaderboard';
-    function restoreFromCache() {
-      const cached = cacheGet(cacheKey);
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
       return Array.isArray(cached) && cached.length ? cached : null;
     }
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
     try {
       const rows = await Promise.any([
         (async () => {
@@ -3975,10 +4142,10 @@
         })(),
       ]);
       if (rows.length) cacheSet(cacheKey, rows);
-      return rows.length ? rows : restoreFromCache();
+      return rows.length ? rows : restoreFromCache(true);
     } catch (e) {
       console.warn('chain revenue leaderboard fetch failed:', e);
-      return restoreFromCache();
+      return restoreFromCache(true);
     }
   }
 
@@ -3988,10 +4155,12 @@
     // proxy requests (9 chains × 4 attempts) → proxy rate-limits → missing bars.
     const url = `https://api.llama.fi/summary/fees/${encodeURIComponent(slug)}?dataType=dailyFees`;
     const cacheKey = 'chain-fees-series:' + slug.toLowerCase();
-    function restoreFromCache() {
-      const cached = cacheGet(cacheKey);
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
       return Array.isArray(cached) && cached.length ? cached : null;
     }
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
     // Try direct first (no cache-busting needed, llama.fi is always fresh).
     const tryDirect = async () => {
       const ctrl = new AbortController();
@@ -4019,13 +4188,13 @@
       }
     }
     const arr = j?.totalDataChart || [];
-    if (!Array.isArray(arr) || arr.length === 0) return restoreFromCache();
+    if (!Array.isArray(arr) || arr.length === 0) return restoreFromCache(true);
     const series = arr
       .filter(p => Array.isArray(p) && typeof p[0] === 'number' && Number.isFinite(Number(p[1])))
       .map(([ts, v]) => [ts * 1000, Number(v)])
       .sort((a, b) => a[0] - b[0]);
     if (series.length) cacheSet(cacheKey, series);
-    return series.length ? series : restoreFromCache();
+    return series.length ? series : restoreFromCache(true);
   }
 
   async function fetchChainRevenueComparison(megaExtraDaily = 0, leaderboard = null, megaSeriesInput = null) {
@@ -4149,6 +4318,19 @@
     // for MegaETH. growthepie.xyz publishes a continuous daily series since
     // ~Nov 2025 with no gaps, which still makes it useful as a fee fallback
     // and as the richer historical source for stablecoin supply on MegaETH.
+    const cacheKey = 'growthepie:megaeth';
+    function restoreFromCache(allowStale = false) {
+      const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
+      if (!cached || !Array.isArray(cached?.fees) || !Array.isArray(cached?.stables)) return null;
+      return {
+        fees: new Map(cached.fees),
+        stables: new Map(cached.stables),
+      };
+    }
+
+    const cachedFresh = restoreFromCache();
+    if (cachedFresh) return cachedFresh;
+
     try {
       const res = await corsFetch(GP_MEGAETH);
       if (!res.ok) throw new Error('growthepie ' + res.status);
@@ -4166,23 +4348,38 @@
         const usd = Number(row[1]) || 0;
         if (ts > 0) stables.set(isoDate(new Date(ts)), usd);
       }
-      return { fees, stables };
+      const out = { fees, stables };
+      if (fees.size || stables.size) {
+        cacheSet(cacheKey, {
+          fees: [...fees.entries()],
+          stables: [...stables.entries()],
+        });
+      }
+      return (fees.size || stables.size) ? out : (restoreFromCache(true) || { fees: null, stables: null });
     } catch (e) {
       console.warn('growthepie fetch failed:', e);
-      return { fees: null, stables: null };
+      return restoreFromCache(true) || { fees: null, stables: null };
     }
   }
 
   async function fetchEthPrice() {
+    const cacheKey = 'eth-price-live';
+    const cachedFresh = cacheGet(cacheKey);
+    if (cachedFresh != null) return Number(cachedFresh) || 3000;
     try {
       const res = await corsFetch(ETH_PRICE_API);
       if (!res.ok) throw new Error('eth price ' + res.status);
       const j = await res.json();
-      return j.ethereum?.usd ?? 3000;
+      const value = Number(j?.ethereum?.usd);
+      if (value > 0) {
+        cacheSet(cacheKey, value);
+        return value;
+      }
     } catch (e) {
       console.warn('ETH price fetch failed:', e);
-      return 3000;
     }
+    const cached = cachePeek(cacheKey);
+    return cached != null ? (Number(cached) || 3000) : 3000;
   }
 
   // -------- RENDER --------
@@ -4637,6 +4834,15 @@
     freeFloat: null,
   };
 
+  function mergeMegaHoldersHistoryWithSnapshot(historyByDay, currentHolders) {
+    if (!historyByDay || !historyByDay.size) return null;
+    const merged = new Map(historyByDay);
+    if (Number.isFinite(currentHolders) && currentHolders >= 0) {
+      merged.set(isoDate(new Date()), currentHolders);
+    }
+    return merged;
+  }
+
   function renderMegaCategorySummary() {
     const splitEl = document.getElementById('kpi-mega-split');
     const holdersCount = Number.isFinite(megaSummaryState.holdersCount)
@@ -4669,9 +4875,10 @@
 
   function renderMegaHoldersChart(historyByDay, currentHolders) {
     const note = document.getElementById('megaHoldersNote');
-    megaHoldersState.historyByDay = historyByDay && historyByDay.size ? new Map(historyByDay) : null;
+    const mergedHistory = mergeMegaHoldersHistoryWithSnapshot(historyByDay, currentHolders);
+    megaHoldersState.historyByDay = mergedHistory && mergedHistory.size ? new Map(mergedHistory) : null;
     megaHoldersState.currentHolders = Number.isFinite(currentHolders) ? currentHolders : null;
-    if (!historyByDay || !historyByDay.size) {
+    if (!mergedHistory || !mergedHistory.size) {
       if (Number.isFinite(currentHolders)) {
         megaSummaryState.holdersCount = currentHolders;
         renderMegaCategorySummary();
@@ -4680,14 +4887,14 @@
       markReady('panel-mega-holders');
       return;
     }
-    const sortedDays = [...historyByDay.keys()].sort();
+    const sortedDays = [...mergedHistory.keys()].sort();
     const visibleStartDay = MEGA_FLOAT_START_DAY;
     const filteredDays = sortedDays.filter((day) => day >= visibleStartDay);
     const firstVisibleDay = filteredDays[0] || sortedDays[sortedDays.length - 1];
     const start = new Date(firstVisibleDay + 'T00:00:00Z');
     const dates = buildDateSeries(start, new Date());
     const dateKeys = dates.map((d) => isoDate(d));
-    const values = mapSeriesByDate(historyByDay, dateKeys, 0);
+    const values = mapSeriesByDate(mergedHistory, dateKeys, 0);
     const latest = Number.isFinite(currentHolders) ? currentHolders : values[values.length - 1];
     makeLineChart('megaHoldersChart', [
       { label: 'MEGA holders', values, color: '#7EAAD4', fill: true }
@@ -4697,7 +4904,9 @@
     });
     megaSummaryState.holdersCount = Number.isFinite(latest) ? latest : megaSummaryState.holdersCount;
     renderMegaCategorySummary();
-    if (note) note.textContent = 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.';
+    if (note) note.textContent = Number.isFinite(currentHolders)
+      ? 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Today\'s slot is refreshed from the live token snapshot. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.'
+      : 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.';
     markReady('panel-mega-holders');
   }
 
@@ -5130,6 +5339,19 @@
       clearTimeout(megaHoldersRetryTimer);
       megaHoldersRetryTimer = null;
     }
+    const hasRenderedHistory = !!(megaHoldersState.historyByDay && megaHoldersState.historyByDay.size);
+    if (attempt === 0 && hasRenderedHistory) {
+      Promise.all([fetchMegaHoldersHistoryOnChain(), snapshotPromise]).then(([historyByDay, snapshot]) => {
+        if (historyByDay && historyByDay.size) {
+          renderMegaHoldersChart(historyByDay, snapshot?.holdersCount ?? null);
+          return;
+        }
+        if (Number.isFinite(snapshot?.holdersCount)) {
+          renderMegaHoldersChart(megaHoldersState.historyByDay, snapshot.holdersCount);
+        }
+      }).catch(() => null);
+      return;
+    }
     const note = document.getElementById('megaHoldersNote');
     const delay = attempt === 0 ? 4000 : 12000 * attempt;
     if (attempt === 0) {
@@ -5137,7 +5359,9 @@
         if (!bundledHistory || !bundledHistory.size || chartInstances.megaHoldersChart) return;
         renderMegaHoldersChart(bundledHistory, snapshot?.holdersCount ?? null);
         const bundledNote = document.getElementById('megaHoldersNote');
-        if (bundledNote) bundledNote.textContent = 'Blockscout holders snapshot bundled with the site, shown from ' + MEGA_FLOAT_START_DAY + '. Live refresh running in background…';
+        if (bundledNote) bundledNote.textContent = Number.isFinite(snapshot?.holdersCount)
+          ? 'Bundled MEGA holders history shown from ' + MEGA_FLOAT_START_DAY + ', with today\'s slot refreshed from the live Blockscout token snapshot. Full backfill is still running in the background…'
+          : 'Bundled MEGA holders history shown from ' + MEGA_FLOAT_START_DAY + '. Full backfill is still running in the background…';
       }).catch(() => null);
     }
     if (note) note.textContent = attempt === 0
@@ -5867,12 +6091,43 @@
     setTimeout(() => ov.remove(), 600);
   }
 
-  main()
-    .catch((err) => {
-      console.error('[megaeth] main() failed:', err);
-      setLoadStatus('Some feeds failed · showing available data');
-      setTimeout(hideLoader, 900);
-    });
+  let mainRunPromise = null;
+  let lastMainRunStartedAt = 0;
+  const DASHBOARD_REFRESH_MS = 5 * MINUTE_MS;
+  const DASHBOARD_RESUME_MIN_GAP_MS = 45 * 1000;
+
+  function runMain() {
+    if (mainRunPromise) return mainRunPromise;
+    lastMainRunStartedAt = Date.now();
+    mainRunPromise = main()
+      .catch((err) => {
+        console.error('[megaeth] main() failed:', err);
+        setLoadStatus('Some feeds failed · showing available data');
+        setTimeout(hideLoader, 900);
+      })
+      .finally(() => {
+        mainRunPromise = null;
+      });
+    return mainRunPromise;
+  }
+
+  function scheduleDashboardRefresh() {
+    const refreshIfVisible = () => {
+      if (document.visibilityState === 'hidden') return;
+      runMain();
+    };
+
+    setInterval(refreshIfVisible, DASHBOARD_REFRESH_MS);
+    const resumeHandler = () => {
+      if (document.visibilityState === 'hidden') return;
+      if (Date.now() - lastMainRunStartedAt < DASHBOARD_RESUME_MIN_GAP_MS) return;
+      refreshIfVisible();
+    };
+    document.addEventListener('visibilitychange', resumeHandler);
+    window.addEventListener('focus', resumeHandler);
+  }
+
+  runMain();
 
   // -------- BRAND ASSETS (token logos, used in chart headers etc.) --------
   const LOGO_USDM  = 'https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136';
@@ -6058,8 +6313,9 @@
     });
   });
 
-  // Auto-refresh daily
-  setInterval(main, 24 * 60 * 60 * 1000);
+  // Refresh the dashboard while visible; per-dataset cache TTLs decide which
+  // feeds actually hit the network on each pass.
+  scheduleDashboardRefresh();
 </script>
 </body>
 </html>
