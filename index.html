@@ -1906,15 +1906,21 @@
   }
   .leaderboard-summary {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: 1.15fr 1.15fr repeat(2, minmax(0, 0.85fr));
     gap: 12px;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
   .leaderboard-metric {
     min-width: 0;
-    padding: 14px 12px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.02);
+    padding: 16px 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.024);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.025);
+  }
+  .leaderboard-metric.primary {
+    border-color: rgba(109,208,169,0.30);
+    background: linear-gradient(180deg, rgba(109,208,169,0.08), rgba(255,255,255,0.018));
   }
   .leaderboard-metric-label {
     color: var(--muted);
@@ -1925,10 +1931,10 @@
     opacity: 0.82;
   }
   .leaderboard-metric-value {
-    margin-top: 8px;
+    margin-top: 9px;
     color: var(--text);
     font-family: var(--mono);
-    font-size: clamp(18px, 2vw, 27px);
+    font-size: clamp(18px, 2.1vw, 30px);
     font-weight: 800;
     line-height: 1.05;
     white-space: nowrap;
@@ -1944,10 +1950,11 @@
     align-items: center;
     justify-content: space-between;
     gap: 14px;
-    margin: 0 0 18px;
-    padding: 12px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.018);
+    margin: 0 0 10px;
+    padding: 12px 14px;
+    border: 1px solid rgba(109,208,169,0.18);
+    border-radius: 8px;
+    background: rgba(109,208,169,0.035);
   }
   .leaderboard-scenario-copy {
     min-width: 0;
@@ -1965,14 +1972,16 @@
     gap: 4px;
     padding: 4px;
     border: 1px solid var(--border-strong);
+    border-radius: 8px;
     background: rgba(144,215,159,0.04);
     font-family: var(--mono);
   }
   .leaderboard-scenario-toggle button {
     border: 0;
+    border-radius: 6px;
     background: transparent;
     color: var(--muted);
-    padding: 8px 13px;
+    padding: 9px 14px;
     font-family: inherit;
     font-size: 11px;
     letter-spacing: 0.12em;
@@ -1988,29 +1997,40 @@
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
-    margin: -4px 0 18px;
+    margin: 0 0 18px;
   }
   .leaderboard-scenario-card {
+    appearance: none;
+    width: 100%;
+    text-align: left;
     border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
     background: rgba(255,255,255,0.018);
-    padding: 11px 10px;
+    color: inherit;
+    padding: 13px 12px;
     font-family: var(--mono);
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
   }
-  .leaderboard-scenario-card.active { border-color: rgba(109,208,169,0.55); box-shadow: inset 0 0 18px rgba(109,208,169,0.06); }
+  .leaderboard-scenario-card:hover { border-color: rgba(109,208,169,0.34); background: rgba(109,208,169,0.045); transform: translateY(-1px); }
+  .leaderboard-scenario-card.active { border-color: rgba(109,208,169,0.64); background: rgba(109,208,169,0.075); box-shadow: inset 0 0 20px rgba(109,208,169,0.055), 0 0 0 1px rgba(109,208,169,0.10); }
   .leaderboard-scenario-name { color: var(--green-2); font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
-  .leaderboard-scenario-line { margin-top: 7px; display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 10px; }
+  .leaderboard-scenario-primary { margin-top: 9px; color: var(--text); font-size: clamp(19px, 1.8vw, 26px); font-weight: 900; line-height: 1.05; }
+  .leaderboard-scenario-sub { margin-top: 4px; color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .leaderboard-scenario-line { margin-top: 8px; display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 10px; }
   .leaderboard-scenario-line strong { color: var(--text); font-weight: 800; text-align: right; }
   .leaderboard-simulator {
     display: grid;
-    grid-template-columns: minmax(260px, 1.2fr) minmax(260px, 1fr);
-    gap: 18px;
+    grid-template-columns: minmax(300px, 1.15fr) minmax(260px, 0.85fr);
+    gap: 12px;
     margin-top: 18px;
   }
   .leaderboard-control,
   .leaderboard-farmer {
     min-width: 0;
     padding: 16px;
-    border: 1px solid var(--border);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
     background: rgba(255,255,255,0.018);
   }
   .leaderboard-control-head {
@@ -2029,9 +2049,10 @@
     text-transform: uppercase;
   }
   .leaderboard-input {
-    width: 148px;
+    width: 168px;
     min-width: 0;
     border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 6px;
     background: rgba(0,0,0,0.22);
     color: var(--text);
     padding: 9px 10px;
@@ -2053,8 +2074,9 @@
   }
   .leaderboard-sim-pill {
     min-width: 0;
-    padding: 11px 10px;
+    padding: 12px 10px;
     border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
     background: rgba(255,255,255,0.018);
   }
   .leaderboard-sim-label {
@@ -2092,6 +2114,7 @@
   .leaderboard-threshold-track {
     height: 9px;
     border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
     background: rgba(255,255,255,0.025);
     overflow: hidden;
   }
@@ -2103,11 +2126,65 @@
   }
   .leaderboard-threshold-points { color: var(--muted); text-align: right; }
   .leaderboard-table-wrap { margin-top: 12px; }
+  #leaderboardTable th:not(:nth-child(2)),
+  #leaderboardTable td:not(:nth-child(2)) { text-align: right; }
+  #leaderboardTable th:first-child,
+  #leaderboardTable td:first-child { text-align: left; }
+  #leaderboardTable tbody tr { transition: background 0.16s ease; }
+  #leaderboardTable tbody tr:hover { background: rgba(109,208,169,0.035); }
   #leaderboardTable tbody td:first-child { color: var(--green-2); font-weight: 800; }
+  #leaderboardTable .leaderboard-rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    padding: 4px 7px;
+    border: 1px solid rgba(109,208,169,0.22);
+    border-radius: 999px;
+    background: rgba(109,208,169,0.055);
+    color: var(--green-2);
+  }
   #leaderboardTable .leaderboard-user { color: var(--text); }
   #leaderboardTable .leaderboard-recent { color: var(--pink); }
   #leaderboardTable .leaderboard-total { color: var(--green); font-weight: 800; }
   #leaderboardTable .leaderboard-projected { color: var(--blue); }
+  #terminalLeaderboardNote.leaderboard-assumptions {
+    margin-top: 12px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+    font-family: var(--mono);
+  }
+  .leaderboard-assumption {
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.018);
+  }
+  .leaderboard-assumption span {
+    display: block;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.78;
+  }
+  .leaderboard-assumption strong {
+    display: block;
+    margin-top: 5px;
+    color: var(--text);
+    font-size: 11px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .leaderboard-assumption.warn strong { color: var(--peach); }
   @media (max-width: 1120px) {
     .category-cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2170,6 +2247,9 @@
     .leaderboard-simulator {
       grid-template-columns: 1fr;
     }
+    #terminalLeaderboardNote.leaderboard-assumptions {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
     .category-chart-head {
       gap: 12px;
       margin-bottom: 12px;
@@ -2227,6 +2307,9 @@
     .leaderboard-threshold {
       grid-template-columns: 64px 1fr 70px;
       font-size: 10px;
+    }
+    #terminalLeaderboardNote.leaderboard-assumptions {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
@@ -2709,25 +2792,25 @@
           <div class="category-chart-head">
             <div class="category-chart-copy">
               <h3><span class="token-logo rank">#</span>Terminal Points</h3>
-              <div class="desc">All-time Terminal leaderboard totals, recent points, campaign projection, and MEGA per point assumptions.</div>
+              <div class="desc">Projected campaign points and implied MEGA per point from the live Terminal weekly distribution.</div>
             </div>
           </div>
           <div class="leaderboard-summary">
-            <div class="leaderboard-metric">
-              <div class="leaderboard-metric-label">Total points</div>
-              <div class="leaderboard-metric-value leaderboard-metric-accent" id="terminalTotalPoints">—</div>
-            </div>
-            <div class="leaderboard-metric">
-              <div class="leaderboard-metric-label">Recent points</div>
-              <div class="leaderboard-metric-value leaderboard-metric-pink" id="terminalRecentPoints">—</div>
-            </div>
-            <div class="leaderboard-metric">
+            <div class="leaderboard-metric primary">
               <div class="leaderboard-metric-label">Projected campaign points</div>
               <div class="leaderboard-metric-value leaderboard-metric-blue" id="terminalProjectedPoints">—</div>
             </div>
-            <div class="leaderboard-metric">
-              <div class="leaderboard-metric-label">Point value</div>
+            <div class="leaderboard-metric primary">
+              <div class="leaderboard-metric-label">Estimated MEGA / point</div>
               <div class="leaderboard-metric-value leaderboard-metric-accent" id="terminalPointValue">—</div>
+            </div>
+            <div class="leaderboard-metric">
+              <div class="leaderboard-metric-label">7d distributed points</div>
+              <div class="leaderboard-metric-value leaderboard-metric-pink" id="terminalRecentPoints">—</div>
+            </div>
+            <div class="leaderboard-metric">
+              <div class="leaderboard-metric-label">Estimated USD / point</div>
+              <div class="leaderboard-metric-value leaderboard-metric-blue" id="terminalPointUsdValue">—</div>
             </div>
           </div>
           <div class="leaderboard-scenarios">
@@ -2744,7 +2827,7 @@
           <div class="leaderboard-simulator">
             <div class="leaderboard-control">
               <div class="leaderboard-control-head">
-                <div class="leaderboard-control-title">Point simulator</div>
+                <div class="leaderboard-control-title">Your points</div>
                 <input class="leaderboard-input" id="terminalPointInput" type="number" min="0" step="100" value="10000" inputmode="numeric" aria-label="Terminal points" />
               </div>
               <input class="leaderboard-range" id="terminalPointRange" type="range" min="0" max="300000" step="100" value="10000" aria-label="Terminal points slider" />
@@ -2764,20 +2847,20 @@
               </div>
             </div>
             <div class="leaderboard-farmer">
-              <div class="leaderboard-farmer-title">Farmer checkpoints</div>
+              <div class="leaderboard-farmer-title">Rank checkpoints</div>
               <div class="leaderboard-thresholds" id="terminalThresholds">
                 <div class="skeleton">Loading checkpoints…</div>
               </div>
             </div>
           </div>
-          <div class="note" id="terminalLeaderboardNote">Loading Terminal leaderboard…</div>
+          <div class="leaderboard-assumptions" id="terminalLeaderboardNote">Loading Terminal leaderboard…</div>
         </article>
 
         <article class="category-chart-card" id="leaderboard-table-card">
           <div class="category-chart-head">
             <div class="category-chart-copy">
               <h3>Top Players</h3>
-              <div class="desc">Top all-time profiles with their recent point velocity and campaign projection.</div>
+              <div class="desc">Top all-time profiles, recent 7-day points, and projected scenario contribution.</div>
             </div>
           </div>
           <div class="table-scroll leaderboard-table-wrap">
@@ -2953,6 +3036,12 @@
   function fmtUSDFit(n, maxLen = 10) {
     const full = fmtUSD(n);
     return full.length <= maxLen ? full : fmtUSDCompact(n);
+  }
+  function fmtUsdPerPoint(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return '$ —';
+    const decimals = n >= 100 ? 0 : n >= 10 ? 2 : n >= 1 ? 3 : 4;
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
   }
   const fmtETH = (n) => Number(n).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
   const fmtNum = (n) => Number(n).toLocaleString('en-US');
@@ -6176,15 +6265,19 @@
     }
     host.innerHTML = TERMINAL_SCENARIO_OPTIONS.map((seasons) => {
       const scenario = terminalScenarioProjection(model, seasons);
+      const usdPerPoint = Number(terminalLeaderboardState.megaPrice) > 0 && Number(scenario.pointValue) > 0
+        ? scenario.pointValue * Number(terminalLeaderboardState.megaPrice)
+        : null;
       const active = seasons === terminalLeaderboardState.seasons;
       return `
-        <div class="leaderboard-scenario-card${active ? ' active' : ''}">
+        <button type="button" class="leaderboard-scenario-card${active ? ' active' : ''}" data-season-card="${seasons}" aria-pressed="${active ? 'true' : 'false'}">
           <div class="leaderboard-scenario-name">${seasons} seasons</div>
-          <div class="leaderboard-scenario-line"><span>Points</span><strong>${fmtTokenCompact(scenario.projectedCampaignPoints)}</strong></div>
+          <div class="leaderboard-scenario-primary">${fmtTokenCompact(scenario.projectedCampaignPoints)}</div>
+          <div class="leaderboard-scenario-sub">Projected points</div>
           <div class="leaderboard-scenario-line"><span>MEGA / point</span><strong>${fmtMegaPointNumber(scenario.pointValue)}</strong></div>
           <div class="leaderboard-scenario-line"><span>Days</span><strong>${fmtNum(scenario.projectedDays)}</strong></div>
-          <div class="leaderboard-scenario-line"><span>7d periods</span><strong>${scenario.multiplier.toFixed(2).replace(/\.00$/, '')}x</strong></div>
-        </div>`;
+          <div class="leaderboard-scenario-line"><span>USD / point</span><strong>${Number.isFinite(usdPerPoint) ? fmtUsdPerPoint(usdPerPoint) : '—'}</strong></div>
+        </button>`;
     }).join('');
   }
 
@@ -6203,16 +6296,25 @@
 
   function bindTerminalScenarioToggle() {
     const toggle = document.getElementById('terminalScenarioToggle');
-    if (!toggle || toggle.dataset.bound === '1') return;
-    toggle.dataset.bound = '1';
-    toggle.querySelectorAll('button').forEach((button) => {
-      button.addEventListener('click', () => {
-        const seasons = Number(button.dataset.seasons);
-        if (!TERMINAL_SCENARIO_OPTIONS.includes(seasons)) return;
-        terminalLeaderboardState.seasons = seasons;
-        renderTerminalLeaderboard(terminalLeaderboardState.model, terminalLeaderboardState.megaPrice);
+    const grid = document.getElementById('terminalScenarioGrid');
+    const selectSeasons = (seasons) => {
+      if (!TERMINAL_SCENARIO_OPTIONS.includes(seasons)) return;
+      terminalLeaderboardState.seasons = seasons;
+      renderTerminalLeaderboard(terminalLeaderboardState.model, terminalLeaderboardState.megaPrice);
+    };
+    if (toggle && toggle.dataset.bound !== '1') {
+      toggle.dataset.bound = '1';
+      toggle.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => selectSeasons(Number(button.dataset.seasons)));
       });
-    });
+    }
+    if (grid && grid.dataset.bound !== '1') {
+      grid.dataset.bound = '1';
+      grid.addEventListener('click', (event) => {
+        const card = event.target.closest('[data-season-card]');
+        if (card) selectSeasons(Number(card.dataset.seasonCard));
+      });
+    }
   }
 
   function renderTerminalLeaderboard(model = terminalLeaderboardState.model, megaPrice = terminalLeaderboardState.megaPrice) {
@@ -6220,7 +6322,7 @@
     if (Number(megaPrice) > 0) terminalLeaderboardState.megaPrice = Number(megaPrice);
     const body = document.getElementById('leaderboardBody');
     const note = document.getElementById('terminalLeaderboardNote');
-    const totalEl = document.getElementById('terminalTotalPoints');
+    const pointUsdValueEl = document.getElementById('terminalPointUsdValue');
     const recentEl = document.getElementById('terminalRecentPoints');
     const projectedEl = document.getElementById('terminalProjectedPoints');
     const pointValueEl = document.getElementById('terminalPointValue');
@@ -6231,7 +6333,7 @@
     if (!model) {
       setCategoryPrimarySource('kpi-terminal-points', 'total', null);
       setCategoryPrimarySource('kpi-terminal-points', 'value', null);
-      if (totalEl) totalEl.textContent = '—';
+      if (pointUsdValueEl) pointUsdValueEl.textContent = '—';
       if (recentEl) recentEl.textContent = '—';
       if (projectedEl) projectedEl.textContent = '—';
       if (pointValueEl) pointValueEl.textContent = '—';
@@ -6252,7 +6354,10 @@
     const scenarioMultiplierText = scenario.multiplier.toFixed(2).replace(/\.00$/, '');
     const projectedText = fmtTokenCompact(scenario.projectedCampaignPoints);
     const pointValueText = fmtMegaPerPoint(scenario.pointValue);
-    if (totalEl) totalEl.textContent = fmtNum(Math.round(model.totalPoints));
+    const pointUsdValue = Number(terminalLeaderboardState.megaPrice) > 0 && Number(scenario.pointValue) > 0
+      ? scenario.pointValue * Number(terminalLeaderboardState.megaPrice)
+      : null;
+    if (pointUsdValueEl) pointUsdValueEl.textContent = Number.isFinite(pointUsdValue) ? fmtUsdPerPoint(pointUsdValue) : '—';
     if (recentEl) recentEl.textContent = fmtNum(Math.round(model.recentPoints));
     if (projectedEl) projectedEl.textContent = fmtNum(Math.round(scenario.projectedCampaignPoints));
     if (pointValueEl) pointValueEl.textContent = pointValueText;
@@ -6269,7 +6374,7 @@
         const safeTitle = escapeHTML(row.address || user);
         return `
           <tr>
-            <td>#${row.rank}</td>
+            <td><span class="leaderboard-rank-badge">#${row.rank}</span></td>
             <td class="leaderboard-user" title="${safeTitle}">${safeUser}</td>
             <td class="leaderboard-total">${fmtNum(Math.round(row.totalPoints))}</td>
             <td class="leaderboard-recent">+${fmtNum(Math.round(row.weeklyPointsChange))}</td>
@@ -6279,16 +6384,18 @@
     }
 
     if (note) {
-      note.textContent = 'Source: terminal.megaeth.com/leaderboard. Total points sum the all-time top ' + fmtNum(model.participantCount)
-        + '; recent points sum the weekly top ' + fmtNum(model.weeklyParticipantCount)
-        + '. Scenario ' + scenario.seasons + ' seasons: ' + TERMINAL_DAYS_PER_SEASON + ' days per season = '
-        + fmtNum(scenario.projectedDays) + ' days, so recent 7d points × ' + scenarioMultiplierText
-        + ' = projected campaign points. Allocation assumption: '
-        + (TERMINAL_CAMPAIGN_SUPPLY_SHARE * 100).toFixed(1) + '% of 10B MEGA for all '
-        + scenario.seasons + ' seasons = ' + fmtToken(model.campaignAllocation, 'MEGA', 0)
-        + ' total, or an average ' + fmtToken(scenario.averageSeasonAllocation, 'MEGA', 0)
-        + ' per season. Implied value: ' + fmtMegaPerPoint(scenario.pointValue)
-        + '/point for the full campaign. USD estimates use the live MEGA price when Blockscout exposes it. Points are not a guaranteed token allocation.';
+      note.title = 'Source: terminal.megaeth.com/leaderboard. Recent points sum the weekly top ' + fmtNum(model.weeklyParticipantCount)
+        + '. Scenario: ' + scenario.seasons + ' seasons × ' + TERMINAL_DAYS_PER_SEASON + ' days = '
+        + fmtNum(scenario.projectedDays) + ' days, so 7-day points × ' + scenarioMultiplierText
+        + '. Allocation assumption: ' + fmtToken(model.campaignAllocation, 'MEGA', 0)
+        + ' total across the selected scenario. Points are not a guaranteed token allocation.';
+      note.innerHTML = `
+        <div class="leaderboard-assumption"><span>Source</span><strong>Terminal top ${fmtNum(model.participantCount)}</strong></div>
+        <div class="leaderboard-assumption"><span>7d base</span><strong>${fmtTokenCompact(model.recentPoints)} points</strong></div>
+        <div class="leaderboard-assumption"><span>Duration</span><strong>${fmtNum(scenario.projectedDays)} days</strong></div>
+        <div class="leaderboard-assumption"><span>Multiplier</span><strong>${scenarioMultiplierText}x</strong></div>
+        <div class="leaderboard-assumption"><span>Allocation</span><strong>${fmtTokenCompact(model.campaignAllocation)} MEGA</strong></div>
+        <div class="leaderboard-assumption warn"><span>Status</span><strong>Estimate only</strong></div>`;
     }
     bindTerminalPointSimulator();
     bindTerminalScenarioToggle();
