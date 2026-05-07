@@ -2593,7 +2593,7 @@
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
-          <span class="category-stat-label" id="kpi-terminal-projected-label">Recent ×28.57</span>
+          <span class="category-stat-label" id="kpi-terminal-projected-label">Total + 7d ×28.57</span>
           <span class="category-stat-value" id="kpi-terminal-projected">—</span>
         </div>
       </div>
@@ -2792,12 +2792,12 @@
           <div class="category-chart-head">
             <div class="category-chart-copy">
               <h3><span class="token-logo rank">#</span>Terminal Points</h3>
-              <div class="desc">Projected campaign points and implied MEGA per point from the live Terminal weekly distribution.</div>
+              <div class="desc">Initial Terminal points plus projected weekly distributions, with implied MEGA and USD per point.</div>
             </div>
           </div>
           <div class="leaderboard-summary">
             <div class="leaderboard-metric primary">
-              <div class="leaderboard-metric-label">Projected campaign points</div>
+              <div class="leaderboard-metric-label">Total projected points</div>
               <div class="leaderboard-metric-value leaderboard-metric-blue" id="terminalProjectedPoints">—</div>
             </div>
             <div class="leaderboard-metric primary">
@@ -2814,7 +2814,7 @@
             </div>
           </div>
           <div class="leaderboard-scenarios">
-            <div class="leaderboard-scenario-copy" id="terminalScenarioCopy">Scenario: <strong>4 seasons</strong> · 50 days per season, 7d distributions</div>
+            <div class="leaderboard-scenario-copy" id="terminalScenarioCopy">Scenario: <strong>4 seasons</strong> · initial points + 50-day seasons</div>
             <div class="leaderboard-scenario-toggle" id="terminalScenarioToggle" role="tablist" aria-label="Terminal season scenario">
               <button type="button" data-seasons="3">3 seasons</button>
               <button type="button" data-seasons="4" class="active">4 seasons</button>
@@ -2871,7 +2871,7 @@
                   <th>User</th>
                   <th>All Time Points</th>
                   <th>Recent Points</th>
-                  <th id="terminalProjectedColumnHeader">Recent ×28.57</th>
+                  <th id="terminalProjectedColumnHeader">Total + recent ×28.57</th>
                 </tr>
               </thead>
               <tbody id="leaderboardBody">
@@ -6154,11 +6154,15 @@
     if (!model) return null;
     const selectedSeasons = TERMINAL_SCENARIO_OPTIONS.includes(Number(seasons)) ? Number(seasons) : TERMINAL_SEASONS;
     const multiplier = terminalScenarioMultiplier(selectedSeasons);
-    const projectedCampaignPoints = Number(model.recentPoints || 0) * multiplier;
+    const initialPoints = Number(model.totalPoints || 0);
+    const weeklyProjectedPoints = Number(model.recentPoints || 0) * multiplier;
+    const projectedCampaignPoints = initialPoints + weeklyProjectedPoints;
     const pointValue = projectedCampaignPoints > 0 ? Number(model.campaignAllocation || 0) / projectedCampaignPoints : null;
     return {
       seasons: selectedSeasons,
       multiplier,
+      initialPoints,
+      weeklyProjectedPoints,
       projectedDays: selectedSeasons * TERMINAL_DAYS_PER_SEASON,
       projectedCampaignPoints,
       pointValue,
@@ -6273,7 +6277,7 @@
         <button type="button" class="leaderboard-scenario-card${active ? ' active' : ''}" data-season-card="${seasons}" aria-pressed="${active ? 'true' : 'false'}">
           <div class="leaderboard-scenario-name">${seasons} seasons</div>
           <div class="leaderboard-scenario-primary">${fmtTokenCompact(scenario.projectedCampaignPoints)}</div>
-          <div class="leaderboard-scenario-sub">Projected points</div>
+          <div class="leaderboard-scenario-sub">Initial + weekly projection</div>
           <div class="leaderboard-scenario-line"><span>MEGA / point</span><strong>${fmtMegaPointNumber(scenario.pointValue)}</strong></div>
           <div class="leaderboard-scenario-line"><span>Days</span><strong>${fmtNum(scenario.projectedDays)}</strong></div>
           <div class="leaderboard-scenario-line"><span>USD / point</span><strong>${Number.isFinite(usdPerPoint) ? fmtUsdPerPoint(usdPerPoint) : '—'}</strong></div>
@@ -6288,8 +6292,8 @@
     const copy = document.getElementById('terminalScenarioCopy');
     const scenario = terminalScenarioProjection(model, terminalLeaderboardState.seasons);
     if (copy && scenario) {
-      copy.innerHTML = 'Scenario: <strong>' + scenario.seasons + ' seasons</strong> · <strong>'
-        + fmtNum(scenario.projectedDays) + ' days</strong> / 7d points × <strong>'
+      copy.innerHTML = 'Scenario: <strong>' + scenario.seasons + ' seasons</strong> · initial <strong>'
+        + fmtTokenCompact(scenario.initialPoints) + '</strong> + 7d points × <strong>'
         + scenario.multiplier.toFixed(2).replace(/\.00$/, '') + '</strong>';
     }
   }
@@ -6362,8 +6366,8 @@
     if (projectedEl) projectedEl.textContent = fmtNum(Math.round(scenario.projectedCampaignPoints));
     if (pointValueEl) pointValueEl.textContent = pointValueText;
     if (projectedKpi) projectedKpi.textContent = projectedText;
-    if (projectedKpiLabel) projectedKpiLabel.textContent = 'Recent ×' + scenarioMultiplierText;
-    if (projectedColumnHeader) projectedColumnHeader.textContent = 'Recent ×' + scenarioMultiplierText;
+    if (projectedKpiLabel) projectedKpiLabel.textContent = 'Total + 7d ×' + scenarioMultiplierText;
+    if (projectedColumnHeader) projectedColumnHeader.textContent = 'Total + recent ×' + scenarioMultiplierText;
     setCategoryPrimarySource('kpi-terminal-points', 'total', fmtTokenCompact(model.totalPoints), 'Total Points');
     setCategoryPrimarySource('kpi-terminal-points', 'value', fmtMegaPointNumber(scenario.pointValue), 'MEGA / Point');
 
@@ -6378,7 +6382,7 @@
             <td class="leaderboard-user" title="${safeTitle}">${safeUser}</td>
             <td class="leaderboard-total">${fmtNum(Math.round(row.totalPoints))}</td>
             <td class="leaderboard-recent">+${fmtNum(Math.round(row.weeklyPointsChange))}</td>
-            <td class="leaderboard-projected">${fmtNum(Math.round(row.weeklyPointsChange * scenario.multiplier))}</td>
+            <td class="leaderboard-projected">${fmtNum(Math.round(row.totalPoints + (row.weeklyPointsChange * scenario.multiplier)))}</td>
           </tr>`;
       }).join('');
     }
@@ -6386,14 +6390,15 @@
     if (note) {
       note.title = 'Source: terminal.megaeth.com/leaderboard. Recent points sum the weekly top ' + fmtNum(model.weeklyParticipantCount)
         + '. Scenario: ' + scenario.seasons + ' seasons × ' + TERMINAL_DAYS_PER_SEASON + ' days = '
-        + fmtNum(scenario.projectedDays) + ' days, so 7-day points × ' + scenarioMultiplierText
+        + fmtNum(scenario.projectedDays) + ' days. Total projected points = initial top-' + fmtNum(model.participantCount)
+        + ' all-time points + 7-day points × ' + scenarioMultiplierText
         + '. Allocation assumption: ' + fmtToken(model.campaignAllocation, 'MEGA', 0)
         + ' total across the selected scenario. Points are not a guaranteed token allocation.';
       note.innerHTML = `
         <div class="leaderboard-assumption"><span>Source</span><strong>Terminal top ${fmtNum(model.participantCount)}</strong></div>
+        <div class="leaderboard-assumption"><span>Initial</span><strong>${fmtTokenCompact(scenario.initialPoints)} points</strong></div>
         <div class="leaderboard-assumption"><span>7d base</span><strong>${fmtTokenCompact(model.recentPoints)} points</strong></div>
-        <div class="leaderboard-assumption"><span>Duration</span><strong>${fmtNum(scenario.projectedDays)} days</strong></div>
-        <div class="leaderboard-assumption"><span>Multiplier</span><strong>${scenarioMultiplierText}x</strong></div>
+        <div class="leaderboard-assumption"><span>Weekly projection</span><strong>${fmtTokenCompact(scenario.weeklyProjectedPoints)} points</strong></div>
         <div class="leaderboard-assumption"><span>Allocation</span><strong>${fmtTokenCompact(model.campaignAllocation)} MEGA</strong></div>
         <div class="leaderboard-assumption warn"><span>Status</span><strong>Estimate only</strong></div>`;
     }
