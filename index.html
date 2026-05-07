@@ -1596,7 +1596,7 @@
   /* CATEGORY NAVIGATION + STACKED CATEGORY VIEW */
   .category-cards {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 12px;
     margin: 0 0 18px;
   }
@@ -1651,6 +1651,7 @@
   .category-card[data-category="revenue"] { --accent: var(--peach); }
   .category-card[data-category="comparison"] { --accent: #C586FF; }
   .category-card[data-category="mega"] { --accent: var(--blue); }
+  .category-card[data-category="leaderboard"] { --accent: var(--green-2); }
   .category-card-top {
     display: flex;
     align-items: center;
@@ -1765,6 +1766,7 @@
   .category-card[data-category="revenue"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
   .category-card[data-category="comparison"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
   .category-card[data-category="mega"] .category-card-primary { color: var(--blue); text-shadow: 0 0 14px rgba(126,170,212,0.24); }
+  .category-card[data-category="leaderboard"] .category-card-primary { color: var(--green-2); text-shadow: 0 0 14px rgba(109,208,169,0.26); }
   .category-card-details {
     display: flex;
     flex-wrap: wrap;
@@ -1891,6 +1893,221 @@
     width: 18px;
     height: 18px;
   }
+  .token-logo.rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--green-2), var(--peach));
+    color: #19191A;
+    font-family: var(--mono);
+    font-weight: 900;
+    font-size: 10px;
+    box-shadow: 0 0 12px rgba(109,208,169,0.55);
+  }
+  .leaderboard-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .leaderboard-metric {
+    min-width: 0;
+    padding: 14px 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  .leaderboard-metric-label {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.82;
+  }
+  .leaderboard-metric-value {
+    margin-top: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: clamp(18px, 2vw, 27px);
+    font-weight: 800;
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+  }
+  .leaderboard-metric-accent { color: var(--green-2); text-shadow: 0 0 14px rgba(109,208,169,0.28); }
+  .leaderboard-metric-pink { color: var(--pink); text-shadow: 0 0 14px rgba(255,138,168,0.24); }
+  .leaderboard-metric-blue { color: var(--blue); text-shadow: 0 0 14px rgba(126,170,212,0.24); }
+  .leaderboard-scenarios {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 0 0 18px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.018);
+  }
+  .leaderboard-scenario-copy {
+    min-width: 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+  .leaderboard-scenario-copy strong { color: var(--green-2); }
+  .leaderboard-scenario-toggle {
+    flex-shrink: 0;
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--border-strong);
+    background: rgba(144,215,159,0.04);
+    font-family: var(--mono);
+  }
+  .leaderboard-scenario-toggle button {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    padding: 8px 13px;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .leaderboard-scenario-toggle button.active {
+    color: var(--green);
+    background: rgba(144,215,159,0.16);
+    box-shadow: 0 0 0 1px rgba(144,215,159,0.4), 0 0 14px rgba(144,215,159,0.22);
+  }
+  .leaderboard-scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: -4px 0 18px;
+  }
+  .leaderboard-scenario-card {
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.018);
+    padding: 11px 10px;
+    font-family: var(--mono);
+  }
+  .leaderboard-scenario-card.active { border-color: rgba(109,208,169,0.55); box-shadow: inset 0 0 18px rgba(109,208,169,0.06); }
+  .leaderboard-scenario-name { color: var(--green-2); font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+  .leaderboard-scenario-line { margin-top: 7px; display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 10px; }
+  .leaderboard-scenario-line strong { color: var(--text); font-weight: 800; text-align: right; }
+  .leaderboard-simulator {
+    display: grid;
+    grid-template-columns: minmax(260px, 1.2fr) minmax(260px, 1fr);
+    gap: 18px;
+    margin-top: 18px;
+  }
+  .leaderboard-control,
+  .leaderboard-farmer {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.018);
+  }
+  .leaderboard-control-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .leaderboard-control-title,
+  .leaderboard-farmer-title {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .leaderboard-input {
+    width: 148px;
+    min-width: 0;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(0,0,0,0.22);
+    color: var(--text);
+    padding: 9px 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+    text-align: right;
+    outline: none;
+  }
+  .leaderboard-input:focus { border-color: var(--green-2); box-shadow: 0 0 0 1px rgba(109,208,169,0.20); }
+  .leaderboard-range {
+    width: 100%;
+    accent-color: var(--green-2);
+  }
+  .leaderboard-sim-output {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .leaderboard-sim-pill {
+    min-width: 0;
+    padding: 11px 10px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.018);
+  }
+  .leaderboard-sim-label {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.78;
+  }
+  .leaderboard-sim-value {
+    margin-top: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: clamp(13px, 1.2vw, 16px);
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .leaderboard-thresholds {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .leaderboard-threshold {
+    display: grid;
+    grid-template-columns: 78px 1fr 86px;
+    gap: 10px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .leaderboard-threshold-rank { color: var(--green-2); font-weight: 800; }
+  .leaderboard-threshold-track {
+    height: 9px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.025);
+    overflow: hidden;
+  }
+  .leaderboard-threshold-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--green-2), var(--peach));
+    box-shadow: 0 0 14px rgba(109,208,169,0.35);
+  }
+  .leaderboard-threshold-points { color: var(--muted); text-align: right; }
+  .leaderboard-table-wrap { margin-top: 12px; }
+  #leaderboardTable tbody td:first-child { color: var(--green-2); font-weight: 800; }
+  #leaderboardTable .leaderboard-user { color: var(--text); }
+  #leaderboardTable .leaderboard-recent { color: var(--pink); }
+  #leaderboardTable .leaderboard-total { color: var(--green); font-weight: 800; }
+  #leaderboardTable .leaderboard-projected { color: var(--blue); }
   @media (max-width: 1120px) {
     .category-cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1934,6 +2151,25 @@
     .mega-card {
       padding: 16px;
     }
+    .leaderboard-summary {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .leaderboard-scenarios {
+      align-items: stretch;
+      flex-direction: column;
+    }
+    .leaderboard-scenario-toggle {
+      width: 100%;
+    }
+    .leaderboard-scenario-toggle button {
+      flex: 1;
+    }
+    .leaderboard-scenario-grid {
+      grid-template-columns: 1fr;
+    }
+    .leaderboard-simulator {
+      grid-template-columns: 1fr;
+    }
     .category-chart-head {
       gap: 12px;
       margin-bottom: 12px;
@@ -1966,6 +2202,31 @@
     .category-chart-card,
     .mega-card {
       padding: 14px 12px;
+    }
+    .leaderboard-summary {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .leaderboard-metric {
+      padding: 12px 10px;
+    }
+    .leaderboard-metric-value {
+      font-size: clamp(16px, 6.2vw, 23px);
+    }
+    .leaderboard-control-head {
+      align-items: stretch;
+      flex-direction: column;
+    }
+    .leaderboard-input {
+      width: 100%;
+      text-align: left;
+    }
+    .leaderboard-sim-output {
+      display: grid;
+    }
+    .leaderboard-threshold {
+      grid-template-columns: 64px 1fr 70px;
+      font-size: 10px;
     }
   }
 
@@ -2124,7 +2385,7 @@
 <div id="loadingOverlay" role="status" aria-live="polite" aria-atomic="true">
   <div class="load-logo">
     <span class="bolt">/\</span>MEGA<span class="accent">FEES</span>
-    <span class="load-count" id="loadCount">0/14</span>
+    <span class="load-count" id="loadCount">0/22</span>
   </div>
   <div class="load-bar"></div>
   <div class="load-status" id="loadStatus">Syncing dashboard · 0/14<span class="blink">_</span></div>
@@ -2233,6 +2494,24 @@
         <div class="category-stat">
           <span class="category-stat-label">Forecast</span>
           <span class="category-stat-value" id="kpi-opium">$ —</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-card" data-category="leaderboard" role="button" tabindex="0">
+      <div class="category-card-top">
+        <div class="category-card-label"><span class="token-logo rank">#</span>Leaderboard</div>
+        <div class="category-card-count">2 views</div>
+      </div>
+      <div class="category-card-primary" id="kpi-terminal-points">—</div>
+      <div class="category-card-details">
+        <span class="category-card-detail" data-chart-key="summary" role="button" tabindex="0">Point Value</span>
+        <span class="category-card-detail" data-chart-key="table" role="button" tabindex="0">Top Players</span>
+      </div>
+      <div class="category-card-stats">
+        <div class="category-stat">
+          <span class="category-stat-label" id="kpi-terminal-projected-label">Recent ×28.57</span>
+          <span class="category-stat-value" id="kpi-terminal-projected">—</span>
         </div>
       </div>
     </div>
@@ -2423,10 +2702,107 @@
         </article>
       </div>
     </div>
+
+    <div class="category-panel" data-category="leaderboard">
+      <div class="category-stack">
+        <article class="category-chart-card" id="leaderboard-summary-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><span class="token-logo rank">#</span>Terminal Points</h3>
+              <div class="desc">All-time Terminal leaderboard totals, recent points, campaign projection, and MEGA per point assumptions.</div>
+            </div>
+          </div>
+          <div class="leaderboard-summary">
+            <div class="leaderboard-metric">
+              <div class="leaderboard-metric-label">Total points</div>
+              <div class="leaderboard-metric-value leaderboard-metric-accent" id="terminalTotalPoints">—</div>
+            </div>
+            <div class="leaderboard-metric">
+              <div class="leaderboard-metric-label">Recent points</div>
+              <div class="leaderboard-metric-value leaderboard-metric-pink" id="terminalRecentPoints">—</div>
+            </div>
+            <div class="leaderboard-metric">
+              <div class="leaderboard-metric-label">Projected campaign points</div>
+              <div class="leaderboard-metric-value leaderboard-metric-blue" id="terminalProjectedPoints">—</div>
+            </div>
+            <div class="leaderboard-metric">
+              <div class="leaderboard-metric-label">Point value</div>
+              <div class="leaderboard-metric-value leaderboard-metric-accent" id="terminalPointValue">—</div>
+            </div>
+          </div>
+          <div class="leaderboard-scenarios">
+            <div class="leaderboard-scenario-copy" id="terminalScenarioCopy">Scenario: <strong>4 seasons</strong> · 50 days per season, 7d distributions</div>
+            <div class="leaderboard-scenario-toggle" id="terminalScenarioToggle" role="tablist" aria-label="Terminal season scenario">
+              <button type="button" data-seasons="3">3 seasons</button>
+              <button type="button" data-seasons="4" class="active">4 seasons</button>
+              <button type="button" data-seasons="5">5 seasons</button>
+            </div>
+          </div>
+          <div class="leaderboard-scenario-grid" id="terminalScenarioGrid">
+            <div class="skeleton">Loading scenarios…</div>
+          </div>
+          <div class="leaderboard-simulator">
+            <div class="leaderboard-control">
+              <div class="leaderboard-control-head">
+                <div class="leaderboard-control-title">Point simulator</div>
+                <input class="leaderboard-input" id="terminalPointInput" type="number" min="0" step="100" value="10000" inputmode="numeric" aria-label="Terminal points" />
+              </div>
+              <input class="leaderboard-range" id="terminalPointRange" type="range" min="0" max="300000" step="100" value="10000" aria-label="Terminal points slider" />
+              <div class="leaderboard-sim-output">
+                <div class="leaderboard-sim-pill">
+                  <div class="leaderboard-sim-label">Estimated MEGA</div>
+                  <div class="leaderboard-sim-value leaderboard-metric-accent" id="terminalSimMega">—</div>
+                </div>
+                <div class="leaderboard-sim-pill">
+                  <div class="leaderboard-sim-label">Estimated USD</div>
+                  <div class="leaderboard-sim-value leaderboard-metric-blue" id="terminalSimUsd">—</div>
+                </div>
+                <div class="leaderboard-sim-pill">
+                  <div class="leaderboard-sim-label">Estimated rank</div>
+                  <div class="leaderboard-sim-value leaderboard-metric-pink" id="terminalSimRank">—</div>
+                </div>
+              </div>
+            </div>
+            <div class="leaderboard-farmer">
+              <div class="leaderboard-farmer-title">Farmer checkpoints</div>
+              <div class="leaderboard-thresholds" id="terminalThresholds">
+                <div class="skeleton">Loading checkpoints…</div>
+              </div>
+            </div>
+          </div>
+          <div class="note" id="terminalLeaderboardNote">Loading Terminal leaderboard…</div>
+        </article>
+
+        <article class="category-chart-card" id="leaderboard-table-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3>Top Players</h3>
+              <div class="desc">Top all-time profiles with their recent point velocity and campaign projection.</div>
+            </div>
+          </div>
+          <div class="table-scroll leaderboard-table-wrap">
+            <table id="leaderboardTable">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>User</th>
+                  <th>All Time Points</th>
+                  <th>Recent Points</th>
+                  <th id="terminalProjectedColumnHeader">Recent ×28.57</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboardBody">
+                <tr><td colspan="5" class="skeleton">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+    </div>
   </section>
 
   <!-- TX REVENUE TABLE -->
-  <section class="section">
+  <section class="section" id="txRevenueSection" data-visible-category="revenue">
     <h2>Transaction Revenue Breakdown</h2>
     <div class="desc">Daily aggregate of network fees and USDm yield.</div>
     <div class="table-scroll">
@@ -2449,7 +2825,7 @@
   </section>
 
   <!-- USDm EXPLAINER -->
-  <details class="section" open>
+  <details class="section" id="usdmExplainerSection" data-visible-category="usdm" open>
     <summary>
       <h2>How USDm Powers MegaETH</h2>
       <span class="chev">▶</span>
@@ -2534,6 +2910,13 @@
   const DL_FEES_MEGAETH   = 'https://api.llama.fi/summary/fees/megaeth?dataType=dailyFees';
   // DefiLlama — used only for the "all stables on MegaETH" comparison curve
   const DL_ALL_ON_MEGAETH = 'https://stablecoins.llama.fi/stablecoincharts/Megaeth';
+  const TERMINAL_LEADERBOARD_PAGE = 'https://terminal.megaeth.com/leaderboard';
+  const MEGA_TOTAL_SUPPLY = 10_000_000_000;
+  const TERMINAL_SEASONS = 4;
+  const TERMINAL_CAMPAIGN_SUPPLY_SHARE = 0.025;
+  const TERMINAL_DAYS_PER_SEASON = 50;
+  const TERMINAL_DISTRIBUTION_WINDOW_DAYS = 7;
+  const TERMINAL_SCENARIO_OPTIONS = [3, 4, 5];
 
   // -------- HELPERS --------
   const fmtUSD = (n, d = 0) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -2603,6 +2986,12 @@
     const raw = String(text || '').trim();
     return raw.length > max ? raw.slice(0, max - 1) + '…' : raw;
   };
+  const escapeHTML = (value) => String(value ?? '').replace(/[&<>"]/g, (ch) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+  })[ch]);
   const isoDate = (d) => d.toISOString().slice(0, 10);
 
   function daysBetween(a, b) {
@@ -2734,7 +3123,7 @@
       ttlMs: 5 * MINUTE_MS,
     },
     {
-      pattern: /^(usdm-history|mega-marketcap-history-v2|defillama-chain-fees:megaeth|eth-price-history|all-stables-on-megaeth|growthepie:megaeth|chain-revenue-leaderboard|chain-fees-series:|chain-tvl-latest:|chain-marketcap:|megaeth-protocol-tvl-rows:v1)/,
+      pattern: /^(usdm-history|mega-marketcap-history-v2|defillama-chain-fees:megaeth|eth-price-history|all-stables-on-megaeth|growthepie:megaeth|chain-revenue-leaderboard|terminal-leaderboard:v2|chain-fees-series:|chain-tvl-latest:|chain-marketcap:|megaeth-protocol-tvl-rows:v1)/,
       ttlMs: 30 * MINUTE_MS,
     },
     {
@@ -3285,6 +3674,94 @@
       return Array.isArray(arr) && arr.length ? new Map(arr) : null;
     } catch (e) {
       console.warn('Bundled MEGA holders history fetch failed:', e);
+      return null;
+    }
+  }
+
+  function extractTerminalLeaderboardArray(html, key) {
+    if (typeof html !== 'string' || !html) return null;
+    const markers = [
+      '\\"' + key + '\\":[',
+      '"' + key + '":[',
+    ];
+    let marker = '';
+    let idx = -1;
+    for (const candidate of markers) {
+      idx = html.indexOf(candidate);
+      if (idx >= 0) {
+        marker = candidate;
+        break;
+      }
+    }
+    if (idx < 0) return null;
+
+    const start = idx + marker.length - 1;
+    let depth = 0;
+    let end = -1;
+    for (let i = start; i < html.length; i++) {
+      const ch = html[i];
+      if (ch === '[') depth += 1;
+      if (ch === ']') {
+        depth -= 1;
+        if (depth === 0) {
+          end = i;
+          break;
+        }
+      }
+    }
+    if (end < start) return null;
+    const raw = html.slice(start, end + 1);
+    const jsonText = raw.includes('\\"')
+      ? raw.replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+      : raw;
+    try {
+      const parsed = JSON.parse(jsonText);
+      return Array.isArray(parsed) ? parsed : null;
+    } catch (e) {
+      console.warn('Terminal leaderboard JSON parse failed:', e);
+      return null;
+    }
+  }
+
+  function normalizeTerminalLeaderboardRows(rows) {
+    return (Array.isArray(rows) ? rows : [])
+      .map((row) => {
+        const rank = Number(row?.rank);
+        const totalPoints = Number(row?.totalPoints);
+        const weeklyPointsChange = Number(row?.weeklyPointsChange);
+        const address = String(row?.mainWalletAddress || '').trim();
+        const user = String(row?.xAccount || '').trim() || shortAddress(address);
+        if (!Number.isFinite(rank) || !(rank > 0) || !Number.isFinite(totalPoints)) return null;
+        return {
+          rank,
+          user,
+          address,
+          totalPoints: Math.max(0, totalPoints),
+          weeklyPointsChange: Number.isFinite(weeklyPointsChange) ? Math.max(0, weeklyPointsChange) : 0,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.rank - b.rank);
+  }
+
+  async function fetchTerminalLeaderboard() {
+    const cacheKey = 'terminal-leaderboard:v2';
+    const cachedFresh = cacheGet(cacheKey);
+    if (cachedFresh && Array.isArray(cachedFresh?.all) && Array.isArray(cachedFresh?.weekly)) return cachedFresh;
+    try {
+      const res = await corsFetch(TERMINAL_LEADERBOARD_PAGE);
+      if (!res.ok) throw new Error('Terminal leaderboard ' + res.status);
+      const html = await res.text();
+      const all = normalizeTerminalLeaderboardRows(extractTerminalLeaderboardArray(html, 'all'));
+      const weekly = normalizeTerminalLeaderboardRows(extractTerminalLeaderboardArray(html, 'weekly'));
+      if (!all.length || !weekly.length) throw new Error('Terminal leaderboard payload empty');
+      const payload = { all, weekly };
+      cacheSet(cacheKey, payload);
+      return payload;
+    } catch (e) {
+      console.warn('Terminal leaderboard fetch failed:', e);
+      const cached = cachePeek(cacheKey);
+      if (cached && Array.isArray(cached?.all) && Array.isArray(cached?.weekly)) return cached;
       return null;
     }
   }
@@ -4386,8 +4863,9 @@
   const chartInstances = {};
   const LOAD_TARGETS = [
     'kpi-tvl', 'kpi-daily', 'kpi-annual', 'kpi-cum', 'kpi-days', 'kpi-opium', 'kpi-rank',
+    'kpi-terminal-points', 'kpi-terminal-projected',
     'panel-tvl', 'panel-revenue', 'panel-cum', 'panel-annual', 'panel-stables', 'panel-opium', 'panel-chainrev', 'panel-pe',
-    'panel-mega-holders', 'panel-mega-float', 'panel-mega-pe',
+    'panel-mega-holders', 'panel-mega-float', 'panel-mega-pe', 'panel-leaderboard-summary', 'panel-leaderboard-table',
   ];
   const LOAD_TARGET_SET = new Set(LOAD_TARGETS);
   const LOAD_LABELS = {
@@ -4398,6 +4876,8 @@
     'kpi-days': 'stables share card',
     'kpi-opium': 'forecast card',
     'kpi-rank': 'rank card',
+    'kpi-terminal-points': 'Terminal points card',
+    'kpi-terminal-projected': 'Terminal projection card',
     'panel-tvl': 'TVL chart',
     'panel-revenue': 'revenue chart',
     'panel-cum': 'cumulative chart',
@@ -4409,6 +4889,8 @@
     'panel-mega-holders': 'MEGA holders chart',
     'panel-mega-float': 'MEGA float chart',
     'panel-mega-pe': 'MEGA P/E chart',
+    'panel-leaderboard-summary': 'Terminal leaderboard summary',
+    'panel-leaderboard-table': 'Terminal leaderboard table',
   };
   const loadTracker = {
     total: LOAD_TARGETS.length,
@@ -4455,12 +4937,14 @@
     'kpi-mega-holders': 1400,
     'kpi-daily': 2800,
     'kpi-rank': 4200,
+    'kpi-terminal-points': 5200,
   };
   const CATEGORY_PRIMARY_SOURCE_ORDER = {
     'kpi-tvl': ['tvl', 'stables', 'concentration', 'appflow'],
     'kpi-mega-holders': ['holders', 'float', 'pe'],
     'kpi-daily': ['daily', 'annual', 'cumulative'],
     'kpi-rank': ['forecast', 'rank', 'pe'],
+    'kpi-terminal-points': ['total', 'value'],
   };
   const categoryPrimarySources = {};
   const categoryPrimaryRotations = {};
@@ -5550,6 +6034,274 @@
     `).join('');
   }
 
+  function buildTerminalLeaderboardModel(payload) {
+    const entries = Array.isArray(payload?.all) ? payload.all : (Array.isArray(payload) ? payload : []);
+    const weeklyEntries = Array.isArray(payload?.weekly) ? payload.weekly : entries;
+    if (!entries.length || !weeklyEntries.length) return null;
+    const totalPoints = entries.reduce((sum, row) => sum + (Number(row.totalPoints) || 0), 0);
+    const recentPoints = weeklyEntries.reduce((sum, row) => sum + (Number(row.weeklyPointsChange) || 0), 0);
+    const campaignAllocation = MEGA_TOTAL_SUPPLY * TERMINAL_CAMPAIGN_SUPPLY_SHARE;
+    const sortedTotals = entries.map((row) => Number(row.totalPoints) || 0).sort((a, b) => b - a);
+    return {
+      rows: entries,
+      weeklyRows: weeklyEntries,
+      participantCount: entries.length,
+      weeklyParticipantCount: weeklyEntries.length,
+      totalPoints,
+      recentPoints,
+      campaignAllocation,
+      thresholds: [1, 10, 100, 500, 1000, 5000]
+        .map((rank) => ({ rank, points: sortedTotals[rank - 1] }))
+        .filter((row) => Number.isFinite(row.points)),
+    };
+  }
+
+  function terminalScenarioMultiplier(seasons) {
+    const value = Number(seasons) || TERMINAL_SEASONS;
+    return (value * TERMINAL_DAYS_PER_SEASON) / TERMINAL_DISTRIBUTION_WINDOW_DAYS;
+  }
+
+  function terminalScenarioProjection(model, seasons) {
+    if (!model) return null;
+    const selectedSeasons = TERMINAL_SCENARIO_OPTIONS.includes(Number(seasons)) ? Number(seasons) : TERMINAL_SEASONS;
+    const multiplier = terminalScenarioMultiplier(selectedSeasons);
+    const projectedCampaignPoints = Number(model.recentPoints || 0) * multiplier;
+    const pointValue = projectedCampaignPoints > 0 ? Number(model.campaignAllocation || 0) / projectedCampaignPoints : null;
+    return {
+      seasons: selectedSeasons,
+      multiplier,
+      projectedDays: selectedSeasons * TERMINAL_DAYS_PER_SEASON,
+      projectedCampaignPoints,
+      pointValue,
+      averageSeasonAllocation: Number(model.campaignAllocation || 0) / selectedSeasons,
+    };
+  }
+
+  function fmtMegaPerPoint(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return '—';
+    const decimals = n >= 100 ? 1 : n >= 10 ? 2 : n >= 1 ? 3 : 5;
+    return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: decimals }) + ' MEGA';
+  }
+
+  function fmtMegaPointNumber(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return '—';
+    const decimals = n >= 100 ? 1 : n >= 10 ? 2 : n >= 1 ? 3 : 5;
+    return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
+  }
+
+  const terminalLeaderboardState = {
+    model: null,
+    megaPrice: null,
+    seasons: TERMINAL_SEASONS,
+  };
+
+  function estimateTerminalRank(model, points) {
+    if (!model?.rows?.length || !Number.isFinite(points)) return null;
+    const better = model.rows.filter((row) => Number(row.totalPoints) > points).length;
+    return Math.min(model.rows.length + 1, better + 1);
+  }
+
+  function renderTerminalThresholds(model) {
+    const host = document.getElementById('terminalThresholds');
+    if (!host) return;
+    if (!model?.thresholds?.length) {
+      host.innerHTML = '<div class="skeleton">Leaderboard checkpoints unavailable</div>';
+      return;
+    }
+    const max = Math.max(...model.thresholds.map((row) => row.points), 1);
+    host.innerHTML = model.thresholds.map((row) => {
+      const pct = Math.max(1, Math.min(100, (row.points / max) * 100));
+      return `
+        <div class="leaderboard-threshold">
+          <span class="leaderboard-threshold-rank">Top ${fmtNum(row.rank)}</span>
+          <span class="leaderboard-threshold-track"><span class="leaderboard-threshold-fill" style="width:${pct}%"></span></span>
+          <span class="leaderboard-threshold-points">${fmtTokenCompact(row.points)}</span>
+        </div>`;
+    }).join('');
+  }
+
+  function renderTerminalPointSimulator() {
+    const model = terminalLeaderboardState.model;
+    const input = document.getElementById('terminalPointInput');
+    const range = document.getElementById('terminalPointRange');
+    const megaEl = document.getElementById('terminalSimMega');
+    const usdEl = document.getElementById('terminalSimUsd');
+    const rankEl = document.getElementById('terminalSimRank');
+    if (!input || !range || !megaEl || !usdEl || !rankEl) return;
+
+    const maxRankPoints = model?.thresholds?.[0]?.points || 300000;
+    const maxInput = Math.max(300000, Math.ceil(maxRankPoints / 1000) * 1000);
+    range.max = String(maxInput);
+
+    const rawPoints = Math.max(0, Number(input.value || range.value || 0));
+    const points = rawPoints;
+    if (String(points) !== input.value) input.value = String(Math.round(points));
+    range.value = String(Math.round(Math.min(points, maxInput)));
+
+    const scenario = terminalScenarioProjection(model, terminalLeaderboardState.seasons);
+    const mega = Number(scenario?.pointValue) > 0 ? points * scenario.pointValue : null;
+    const usd = Number.isFinite(mega) && Number(terminalLeaderboardState.megaPrice) > 0
+      ? mega * Number(terminalLeaderboardState.megaPrice)
+      : null;
+    const rank = estimateTerminalRank(model, points);
+    megaEl.textContent = Number.isFinite(mega) ? fmtTokenCompact(mega) + ' MEGA' : '—';
+    megaEl.title = Number.isFinite(mega) ? fmtToken(mega, 'MEGA', 2) : '';
+    usdEl.textContent = Number.isFinite(usd) ? fmtUSDCompact(usd) : '—';
+    usdEl.title = Number.isFinite(usd) ? fmtUSD(usd, 2) : '';
+    rankEl.textContent = rank ? '#' + fmtNum(rank) : '—';
+  }
+
+  function bindTerminalPointSimulator() {
+    const input = document.getElementById('terminalPointInput');
+    const range = document.getElementById('terminalPointRange');
+    if (!input || !range || input.dataset.bound === '1') return;
+    input.dataset.bound = '1';
+    const syncFromInput = () => renderTerminalPointSimulator();
+    const syncFromRange = () => {
+      input.value = range.value;
+      renderTerminalPointSimulator();
+    };
+    input.addEventListener('input', syncFromInput);
+    range.addEventListener('input', syncFromRange);
+  }
+
+  function renderTerminalScenarioGrid(model) {
+    const host = document.getElementById('terminalScenarioGrid');
+    if (!host) return;
+    if (!model) {
+      host.innerHTML = '<div class="skeleton">Scenarios unavailable</div>';
+      return;
+    }
+    host.innerHTML = TERMINAL_SCENARIO_OPTIONS.map((seasons) => {
+      const scenario = terminalScenarioProjection(model, seasons);
+      const active = seasons === terminalLeaderboardState.seasons;
+      return `
+        <div class="leaderboard-scenario-card${active ? ' active' : ''}">
+          <div class="leaderboard-scenario-name">${seasons} seasons</div>
+          <div class="leaderboard-scenario-line"><span>Points</span><strong>${fmtTokenCompact(scenario.projectedCampaignPoints)}</strong></div>
+          <div class="leaderboard-scenario-line"><span>MEGA / point</span><strong>${fmtMegaPointNumber(scenario.pointValue)}</strong></div>
+          <div class="leaderboard-scenario-line"><span>Days</span><strong>${fmtNum(scenario.projectedDays)}</strong></div>
+          <div class="leaderboard-scenario-line"><span>7d periods</span><strong>${scenario.multiplier.toFixed(2).replace(/\.00$/, '')}x</strong></div>
+        </div>`;
+    }).join('');
+  }
+
+  function syncTerminalScenarioControls(model) {
+    document.querySelectorAll('#terminalScenarioToggle button').forEach((button) => {
+      button.classList.toggle('active', Number(button.dataset.seasons) === terminalLeaderboardState.seasons);
+    });
+    const copy = document.getElementById('terminalScenarioCopy');
+    const scenario = terminalScenarioProjection(model, terminalLeaderboardState.seasons);
+    if (copy && scenario) {
+      copy.innerHTML = 'Scenario: <strong>' + scenario.seasons + ' seasons</strong> · <strong>'
+        + fmtNum(scenario.projectedDays) + ' days</strong> / 7d points × <strong>'
+        + scenario.multiplier.toFixed(2).replace(/\.00$/, '') + '</strong>';
+    }
+  }
+
+  function bindTerminalScenarioToggle() {
+    const toggle = document.getElementById('terminalScenarioToggle');
+    if (!toggle || toggle.dataset.bound === '1') return;
+    toggle.dataset.bound = '1';
+    toggle.querySelectorAll('button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const seasons = Number(button.dataset.seasons);
+        if (!TERMINAL_SCENARIO_OPTIONS.includes(seasons)) return;
+        terminalLeaderboardState.seasons = seasons;
+        renderTerminalLeaderboard(terminalLeaderboardState.model, terminalLeaderboardState.megaPrice);
+      });
+    });
+  }
+
+  function renderTerminalLeaderboard(model = terminalLeaderboardState.model, megaPrice = terminalLeaderboardState.megaPrice) {
+    terminalLeaderboardState.model = model || null;
+    if (Number(megaPrice) > 0) terminalLeaderboardState.megaPrice = Number(megaPrice);
+    const body = document.getElementById('leaderboardBody');
+    const note = document.getElementById('terminalLeaderboardNote');
+    const totalEl = document.getElementById('terminalTotalPoints');
+    const recentEl = document.getElementById('terminalRecentPoints');
+    const projectedEl = document.getElementById('terminalProjectedPoints');
+    const pointValueEl = document.getElementById('terminalPointValue');
+    const projectedKpi = document.getElementById('kpi-terminal-projected');
+    const projectedKpiLabel = document.getElementById('kpi-terminal-projected-label');
+    const projectedColumnHeader = document.getElementById('terminalProjectedColumnHeader');
+
+    if (!model) {
+      setCategoryPrimarySource('kpi-terminal-points', 'total', null);
+      setCategoryPrimarySource('kpi-terminal-points', 'value', null);
+      if (totalEl) totalEl.textContent = '—';
+      if (recentEl) recentEl.textContent = '—';
+      if (projectedEl) projectedEl.textContent = '—';
+      if (pointValueEl) pointValueEl.textContent = '—';
+      if (projectedKpi) projectedKpi.textContent = '—';
+      if (body) body.innerHTML = '<tr><td colspan="5" class="skeleton">Terminal leaderboard unavailable</td></tr>';
+      if (note) note.textContent = 'Terminal leaderboard data is unavailable right now.';
+      markReady('kpi-terminal-points');
+      markReady('kpi-terminal-projected');
+      markReady('panel-leaderboard-summary');
+      markReady('panel-leaderboard-table');
+      renderTerminalThresholds(null);
+      renderTerminalScenarioGrid(null);
+      renderTerminalPointSimulator();
+      return;
+    }
+
+    const scenario = terminalScenarioProjection(model, terminalLeaderboardState.seasons);
+    const scenarioMultiplierText = scenario.multiplier.toFixed(2).replace(/\.00$/, '');
+    const projectedText = fmtTokenCompact(scenario.projectedCampaignPoints);
+    const pointValueText = fmtMegaPerPoint(scenario.pointValue);
+    if (totalEl) totalEl.textContent = fmtNum(Math.round(model.totalPoints));
+    if (recentEl) recentEl.textContent = fmtNum(Math.round(model.recentPoints));
+    if (projectedEl) projectedEl.textContent = fmtNum(Math.round(scenario.projectedCampaignPoints));
+    if (pointValueEl) pointValueEl.textContent = pointValueText;
+    if (projectedKpi) projectedKpi.textContent = projectedText;
+    if (projectedKpiLabel) projectedKpiLabel.textContent = 'Recent ×' + scenarioMultiplierText;
+    if (projectedColumnHeader) projectedColumnHeader.textContent = 'Recent ×' + scenarioMultiplierText;
+    setCategoryPrimarySource('kpi-terminal-points', 'total', fmtTokenCompact(model.totalPoints), 'Total Points');
+    setCategoryPrimarySource('kpi-terminal-points', 'value', fmtMegaPointNumber(scenario.pointValue), 'MEGA / Point');
+
+    if (body) {
+      body.innerHTML = model.rows.slice(0, 25).map((row) => {
+        const user = row.user || shortAddress(row.address);
+        const safeUser = escapeHTML(user);
+        const safeTitle = escapeHTML(row.address || user);
+        return `
+          <tr>
+            <td>#${row.rank}</td>
+            <td class="leaderboard-user" title="${safeTitle}">${safeUser}</td>
+            <td class="leaderboard-total">${fmtNum(Math.round(row.totalPoints))}</td>
+            <td class="leaderboard-recent">+${fmtNum(Math.round(row.weeklyPointsChange))}</td>
+            <td class="leaderboard-projected">${fmtNum(Math.round(row.weeklyPointsChange * scenario.multiplier))}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    if (note) {
+      note.textContent = 'Source: terminal.megaeth.com/leaderboard. Total points sum the all-time top ' + fmtNum(model.participantCount)
+        + '; recent points sum the weekly top ' + fmtNum(model.weeklyParticipantCount)
+        + '. Scenario ' + scenario.seasons + ' seasons: ' + TERMINAL_DAYS_PER_SEASON + ' days per season = '
+        + fmtNum(scenario.projectedDays) + ' days, so recent 7d points × ' + scenarioMultiplierText
+        + ' = projected campaign points. Allocation assumption: '
+        + (TERMINAL_CAMPAIGN_SUPPLY_SHARE * 100).toFixed(1) + '% of 10B MEGA for all '
+        + scenario.seasons + ' seasons = ' + fmtToken(model.campaignAllocation, 'MEGA', 0)
+        + ' total, or an average ' + fmtToken(scenario.averageSeasonAllocation, 'MEGA', 0)
+        + ' per season. Implied value: ' + fmtMegaPerPoint(scenario.pointValue)
+        + '/point for the full campaign. USD estimates use the live MEGA price when Blockscout exposes it. Points are not a guaranteed token allocation.';
+    }
+    bindTerminalPointSimulator();
+    bindTerminalScenarioToggle();
+    syncTerminalScenarioControls(model);
+    renderTerminalScenarioGrid(model);
+    renderTerminalThresholds(model);
+    renderTerminalPointSimulator();
+    markReady('kpi-terminal-points');
+    markReady('kpi-terminal-projected');
+    markReady('panel-leaderboard-summary');
+    markReady('panel-leaderboard-table');
+  }
+
   function buildMcapSeries(history, dateKeys, fallbackTvl) {
     if (history && history.length) {
       const byDay = new Map();
@@ -5634,8 +6386,20 @@
     const pOpiumTvl    = fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug));
     const pMegaSnapshot = fetchMegaCommitmentSnapshot();
     const pMegaMarketCapHistory = fetchMegaMarketCapHistory();
+    const pTerminalLeaderboard = fetchTerminalLeaderboard();
+
+    pTerminalLeaderboard
+      .then((rows) => renderTerminalLeaderboard(buildTerminalLeaderboardModel(rows)))
+      .catch((e) => {
+        console.warn('Terminal leaderboard render failed', e);
+        renderTerminalLeaderboard(null);
+      });
 
     pMegaSnapshot.then((snapshot) => {
+      if (Number(snapshot?.price) > 0) {
+        terminalLeaderboardState.megaPrice = Number(snapshot.price);
+        if (terminalLeaderboardState.model) renderTerminalLeaderboard(terminalLeaderboardState.model, snapshot.price);
+      }
       renderMegaFloatChart(snapshot, null);
       return fetchMegaCommitmentHistoryOnChain(snapshot).then((history) => {
         if (history?.dates?.length) renderMegaFloatChart(snapshot, history);
@@ -6161,6 +6925,11 @@
       desc: 'Forecast scenarios, live chain rank, and chain P/E stacked in one view.',
       panels: ['opium', 'chainrev', 'pe'],
     },
+    leaderboard: {
+      title: 'LEADERBOARD',
+      desc: 'Terminal point totals, recent emissions, campaign projection, and implied MEGA per point.',
+      panels: ['leaderboard-summary', 'leaderboard-table'],
+    },
   };
   const CATEGORY_CARD_CHART_TARGETS = {
     usdm: {
@@ -6183,6 +6952,10 @@
       forecast: '[data-panel="opium"]',
       rank: '[data-panel="chainrev"]',
       pe: '[data-panel="pe"]',
+    },
+    leaderboard: {
+      summary: '#leaderboard-summary-card',
+      table: '#leaderboard-table-card',
     },
   };
   let activeCategory = 'usdm';
@@ -6217,6 +6990,9 @@
         renderMegaPeHistoryPanel();
         return;
       }
+      if (panelKey === 'leaderboard-summary' || panelKey === 'leaderboard-table') {
+        return;
+      }
       renderPanel(panelKey);
     });
   }
@@ -6241,8 +7017,12 @@
 
   function selectCategory(target, { scroll = true } = {}) {
     activeCategory = target;
+    document.body.dataset.activeCategory = target;
     document.querySelectorAll('#kpiTabs .category-card').forEach((card) => {
       card.classList.toggle('active', card.dataset.category === target);
+    });
+    document.querySelectorAll('[data-visible-category]').forEach((section) => {
+      section.hidden = section.dataset.visibleCategory !== target;
     });
     document.querySelectorAll('.category-panel').forEach((panel) => {
       panel.classList.toggle('active', panel.dataset.category === target);
