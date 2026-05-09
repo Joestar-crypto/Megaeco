@@ -2760,7 +2760,7 @@
       <div class="mega-grid">
         <div class="mega-card" id="mega-holders-card">
           <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />MEGA Holders</h3>
-          <div class="desc">Unique wallets and contracts holding a positive MEGA balance, reconstructed from Blockscout transfer history.</div>
+          <div class="desc">Unique wallets and contracts holding a positive MEGA balance, plus 1k+/10k+/100k+/1M+ holder cohorts reconstructed from Blockscout transfer history.</div>
           <div class="chart-wrap"><canvas id="megaHoldersChart"></canvas></div>
           <div class="note mega-note" id="megaHoldersNote">Loading MEGA holders history…</div>
         </div>
@@ -3084,6 +3084,13 @@
   const DL_ALL_ON_MEGAETH = 'https://stablecoins.llama.fi/stablecoincharts/Megaeth';
   const TERMINAL_LEADERBOARD_PAGE = 'https://terminal.megaeth.com/leaderboard';
   const MEGA_TOTAL_SUPPLY = 10_000_000_000;
+  const MEGA_BASE_UNITS = 10n ** 18n;
+  const MEGA_HOLDER_BUCKETS = [
+    { key: 'gt1k', label: '1k+ holders', thresholdRaw: 1_000n * MEGA_BASE_UNITS, color: '#90D79F' },
+    { key: 'gt10k', label: '10k+ holders', thresholdRaw: 10_000n * MEGA_BASE_UNITS, color: '#F4D35E' },
+    { key: 'gt100k', label: '100k+ holders', thresholdRaw: 100_000n * MEGA_BASE_UNITS, color: '#FF9F6E' },
+    { key: 'gt1m', label: '1M+ holders', thresholdRaw: 1_000_000n * MEGA_BASE_UNITS, color: '#FF6F91' },
+  ];
   const TERMINAL_SEASONS = 4;
   const TERMINAL_CAMPAIGN_SUPPLY_SHARE = 0.025;
   const TERMINAL_DAYS_PER_SEASON = 50;
@@ -3856,6 +3863,59 @@
     }
   }
 
+  function cloneMegaHolderBucketHistory(bucketHistoryByKey) {
+    if (!(bucketHistoryByKey instanceof Map) || !bucketHistoryByKey.size) return null;
+    const cloned = new Map();
+    bucketHistoryByKey.forEach((series, key) => {
+      if (series instanceof Map && series.size) cloned.set(key, new Map(series));
+    });
+    return cloned.size ? cloned : null;
+  }
+
+  function attachMegaHolderBucketHistory(totalHistory, bucketHistoryByKey = null) {
+    if (!(totalHistory instanceof Map)) return null;
+    const cloned = cloneMegaHolderBucketHistory(bucketHistoryByKey);
+    if (cloned) totalHistory.bucketHistoryByKey = cloned;
+    else delete totalHistory.bucketHistoryByKey;
+    return totalHistory;
+  }
+
+  function normalizeMegaHoldersHistory(history) {
+    if (history instanceof Map) {
+      return attachMegaHolderBucketHistory(new Map(history), history.bucketHistoryByKey);
+    }
+    if (Array.isArray(history) && history.length && Array.isArray(history[0])) {
+      return attachMegaHolderBucketHistory(new Map(history));
+    }
+    if (history && Array.isArray(history.total)) {
+      const bucketHistoryByKey = new Map();
+      MEGA_HOLDER_BUCKETS.forEach((bucket) => {
+        const entries = history?.buckets?.[bucket.key];
+        if (Array.isArray(entries) && entries.length) {
+          bucketHistoryByKey.set(bucket.key, new Map(entries));
+        }
+      });
+      return attachMegaHolderBucketHistory(new Map(history.total), bucketHistoryByKey);
+    }
+    return null;
+  }
+
+  function serializeMegaHoldersHistory(history) {
+    const normalized = normalizeMegaHoldersHistory(history);
+    if (!normalized || !normalized.size) return null;
+    const buckets = {};
+    MEGA_HOLDER_BUCKETS.forEach((bucket) => {
+      const series = normalized.bucketHistoryByKey?.get(bucket.key);
+      if (series instanceof Map && series.size) {
+        buckets[bucket.key] = [...series.entries()];
+      }
+    });
+    return {
+      total: [...normalized.entries()],
+      buckets,
+    };
+  }
+
   function extractTerminalLeaderboardArray(html, key) {
     if (typeof html !== 'string' || !html) return null;
     const markers = [
@@ -3995,15 +4055,23 @@
   }
 
   async function fetchMegaHoldersHistoryOnChain() {
-    const cacheKey = 'mega-holders-history:v2';
+    const cacheKey = 'mega-holders-history:v3';
 
-    async function restoreFallback(allowStale = false) {
+    function restoreFromCache(allowStale = false) {
       const cached = allowStale ? cachePeek(cacheKey) : cacheGet(cacheKey);
-      if (Array.isArray(cached) && cached.length) return new Map(cached);
-      return fetchBundledMegaHoldersHistory();
+      const normalized = normalizeMegaHoldersHistory(cached);
+      return normalized && normalized.size ? normalized : null;
     }
 
-    const cachedFresh = await restoreFallback();
+    async function restoreFallback(allowStale = false) {
+      const cached = restoreFromCache(allowStale);
+      if (cached) return cached;
+      const bundled = await fetchBundledMegaHoldersHistory();
+      const normalizedBundled = normalizeMegaHoldersHistory(bundled);
+      return normalizedBundled && normalizedBundled.size ? normalizedBundled : null;
+    }
+
+    const cachedFresh = restoreFromCache();
     if (cachedFresh) return cachedFresh;
 
     try {
@@ -4012,6 +4080,8 @@
 
       const balances = new Map();
       const holdersByDay = new Map();
+      const bucketHistoryByKey = new Map(MEGA_HOLDER_BUCKETS.map((bucket) => [bucket.key, new Map()]));
+      const bucketCounts = new Map(MEGA_HOLDER_BUCKETS.map((bucket) => [bucket.key, 0]));
       let holderCount = 0;
       const applyDelta = (address, delta) => {
         const prev = balances.get(address) || 0n;
@@ -4019,6 +4089,16 @@
         if (next < 0n) next = 0n;
         if (prev === 0n && next > 0n) holderCount += 1;
         if (prev > 0n && next === 0n) holderCount = Math.max(0, holderCount - 1);
+        MEGA_HOLDER_BUCKETS.forEach((bucket) => {
+          const wasInBucket = prev >= bucket.thresholdRaw;
+          const isInBucket = next >= bucket.thresholdRaw;
+          if (!wasInBucket && isInBucket) {
+            bucketCounts.set(bucket.key, (bucketCounts.get(bucket.key) || 0) + 1);
+          }
+          if (wasInBucket && !isInBucket) {
+            bucketCounts.set(bucket.key, Math.max(0, (bucketCounts.get(bucket.key) || 0) - 1));
+          }
+        });
         if (next > 0n) balances.set(address, next);
         else balances.delete(address);
       };
@@ -4032,12 +4112,18 @@
         if (to && to !== ZERO_ADDRESS) applyDelta(to, raw);
         const ts = parseInt(log.timeStamp, 16) * 1000;
         if (Number.isFinite(ts) && ts > 0) {
-          holdersByDay.set(isoDate(new Date(ts)), holderCount);
+          const day = isoDate(new Date(ts));
+          holdersByDay.set(day, holderCount);
+          MEGA_HOLDER_BUCKETS.forEach((bucket) => {
+            bucketHistoryByKey.get(bucket.key)?.set(day, bucketCounts.get(bucket.key) || 0);
+          });
         }
       }
 
-      if (holdersByDay.size) cacheSet(cacheKey, [...holdersByDay.entries()]);
-      return holdersByDay.size ? holdersByDay : await restoreFallback(true);
+      const history = attachMegaHolderBucketHistory(holdersByDay, bucketHistoryByKey);
+      const payload = serializeMegaHoldersHistory(history);
+      if (payload) cacheSet(cacheKey, payload);
+      return history.size ? history : await restoreFallback(true);
     } catch (e) {
       console.warn('MEGA holders history fetch failed:', e);
       return await restoreFallback(true);
@@ -5497,12 +5583,13 @@
   };
 
   function mergeMegaHoldersHistoryWithSnapshot(historyByDay, currentHolders) {
-    if (!historyByDay || !historyByDay.size) return null;
-    const merged = new Map(historyByDay);
+    const normalizedHistory = normalizeMegaHoldersHistory(historyByDay);
+    if (!normalizedHistory || !normalizedHistory.size) return null;
+    const merged = new Map(normalizedHistory);
     if (Number.isFinite(currentHolders) && currentHolders >= 0) {
       merged.set(isoDate(new Date()), currentHolders);
     }
-    return merged;
+    return attachMegaHolderBucketHistory(merged, normalizedHistory.bucketHistoryByKey);
   }
 
   function renderMegaCategorySummary() {
@@ -5538,7 +5625,9 @@
   function renderMegaHoldersChart(historyByDay, currentHolders) {
     const note = document.getElementById('megaHoldersNote');
     const mergedHistory = mergeMegaHoldersHistoryWithSnapshot(historyByDay, currentHolders);
-    megaHoldersState.historyByDay = mergedHistory && mergedHistory.size ? new Map(mergedHistory) : null;
+    megaHoldersState.historyByDay = mergedHistory && mergedHistory.size
+      ? attachMegaHolderBucketHistory(new Map(mergedHistory), mergedHistory.bucketHistoryByKey)
+      : null;
     megaHoldersState.currentHolders = Number.isFinite(currentHolders) ? currentHolders : null;
     if (!mergedHistory || !mergedHistory.size) {
       if (Number.isFinite(currentHolders)) {
@@ -5558,17 +5647,31 @@
     const dateKeys = dates.map((d) => isoDate(d));
     const values = mapSeriesByDate(mergedHistory, dateKeys, 0);
     const latest = Number.isFinite(currentHolders) ? currentHolders : values[values.length - 1];
-    makeLineChart('megaHoldersChart', [
-      { label: 'MEGA holders', values, color: '#7EAAD4', fill: true }
-    ], dates, {
+    const datasets = [
+      { label: 'All holders', values, color: '#7EAAD4', fill: true }
+    ];
+    MEGA_HOLDER_BUCKETS.forEach((bucket) => {
+      const bucketHistory = mergedHistory.bucketHistoryByKey?.get(bucket.key);
+      if (!(bucketHistory instanceof Map) || !bucketHistory.size) return;
+      datasets.push({
+        label: bucket.label,
+        values: mapSeriesByDate(bucketHistory, dateKeys, 0),
+        color: bucket.color,
+        fill: false,
+      });
+    });
+    makeLineChart('megaHoldersChart', datasets, dates, {
       valueFormatter: (v) => fmtNum(Math.round(v)) + ' holders',
       tickFormatter: (v) => Number(v).toLocaleString('en-US'),
     });
     megaSummaryState.holdersCount = Number.isFinite(latest) ? latest : megaSummaryState.holdersCount;
     renderMegaCategorySummary();
+    const cohortNote = datasets.length > 1
+      ? ' Cohorts 1k+, 10k+, 100k+, and 1M+ are replayed from the same transfer history.'
+      : '';
     if (note) note.textContent = Number.isFinite(currentHolders)
-      ? 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Today\'s slot is refreshed from the live token snapshot. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.'
-      : 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.';
+      ? 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Today\'s slot is refreshed from the live token snapshot. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.' + cohortNote
+      : 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.' + cohortNote;
     markReady('panel-mega-holders');
   }
 
@@ -6022,8 +6125,8 @@
         renderMegaHoldersChart(bundledHistory, snapshot?.holdersCount ?? null);
         const bundledNote = document.getElementById('megaHoldersNote');
         if (bundledNote) bundledNote.textContent = Number.isFinite(snapshot?.holdersCount)
-          ? 'Bundled MEGA holders history shown from ' + MEGA_FLOAT_START_DAY + ', with today\'s slot refreshed from the live Blockscout token snapshot. Full backfill is still running in the background…'
-          : 'Bundled MEGA holders history shown from ' + MEGA_FLOAT_START_DAY + '. Full backfill is still running in the background…';
+          ? 'Bundled MEGA holders history shown from ' + MEGA_FLOAT_START_DAY + ', with today\'s slot refreshed from the live Blockscout token snapshot. Cohort lines (1k+/10k+/100k+/1M+) will appear once the full backfill finishes in the background…'
+          : 'Bundled MEGA holders history shown from ' + MEGA_FLOAT_START_DAY + '. Cohort lines (1k+/10k+/100k+/1M+) will appear once the full backfill finishes in the background…';
       }).catch(() => null);
     }
     if (note) note.textContent = attempt === 0
