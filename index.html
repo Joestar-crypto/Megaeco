@@ -3777,7 +3777,11 @@
       <div class="mega-grid">
         <div class="mega-card" id="mega-holders-card">
           <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />MEGA Holders</h3>
-          <div class="desc">Unique wallets and contracts holding a positive MEGA balance, plus 1k+/10k+/100k+/1M+ holder cohorts reconstructed from Blockscout transfer history.</div>
+          <div class="desc">Unique wallets and contracts holding a positive MEGA balance, plus 1k+/10k+/100k+/1M+ holder cohorts reconstructed from Blockscout transfer history, with absolute and 100% stacked views.</div>
+          <div class="mode-toggle show" id="megaHoldersModeToggle" role="tablist" aria-label="MEGA holders display mode">
+            <button type="button" data-mode="abs" class="active"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
+            <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>100% Stacked</button>
+          </div>
           <div class="chart-wrap"><canvas id="megaHoldersChart"></canvas></div>
           <div class="note mega-note" id="megaHoldersNote">Loading MEGA holders history…</div>
         </div>
@@ -4931,8 +4935,8 @@
     try {
       const res = await fetch('data/mega-holders-history.json', { cache: 'no-store' });
       if (!res.ok) throw new Error('bundled mega holders ' + res.status);
-      const arr = await res.json();
-      return Array.isArray(arr) && arr.length ? new Map(arr) : null;
+      const payload = await res.json();
+      return normalizeMegaHoldersHistory(payload);
     } catch (e) {
       console.warn('Bundled MEGA holders history fetch failed:', e);
       return null;
@@ -6649,6 +6653,7 @@
   const megaHoldersState = {
     historyByDay: null,
     currentHolders: null,
+    mode: 'abs',
   };
 
   const megaSummaryState = {
@@ -6666,6 +6671,51 @@
       merged.set(isoDate(new Date()), currentHolders);
     }
     return attachMegaHolderBucketHistory(merged, normalizedHistory.bucketHistoryByKey);
+  }
+
+  function syncMegaHoldersModeToggle() {
+    document.querySelectorAll('#megaHoldersModeToggle button').forEach((button) => {
+      button.classList.toggle('active', button.dataset.mode === megaHoldersState.mode);
+    });
+  }
+
+  function buildMegaHolderCompositionDatasets(totalValues, thresholdValuesByKey) {
+    const gt1kValues = thresholdValuesByKey.gt1k || totalValues.map(() => 0);
+    const gt10kValues = thresholdValuesByKey.gt10k || totalValues.map(() => 0);
+    const gt100kValues = thresholdValuesByKey.gt100k || totalValues.map(() => 0);
+    const gt1mValues = thresholdValuesByKey.gt1m || totalValues.map(() => 0);
+    return [
+      {
+        label: '<1k holders',
+        values: totalValues.map((total, index) => Math.max(0, Number(total || 0) - Number(gt1kValues[index] || 0))),
+        color: '#7EAAD4',
+        fill: true,
+      },
+      {
+        label: '1k-10k holders',
+        values: gt1kValues.map((value, index) => Math.max(0, Number(value || 0) - Number(gt10kValues[index] || 0))),
+        color: '#90D79F',
+        fill: true,
+      },
+      {
+        label: '10k-100k holders',
+        values: gt10kValues.map((value, index) => Math.max(0, Number(value || 0) - Number(gt100kValues[index] || 0))),
+        color: '#F4D35E',
+        fill: true,
+      },
+      {
+        label: '100k-1M holders',
+        values: gt100kValues.map((value, index) => Math.max(0, Number(value || 0) - Number(gt1mValues[index] || 0))),
+        color: '#FF9F6E',
+        fill: true,
+      },
+      {
+        label: '1M+ holders',
+        values: gt1mValues.map((value) => Math.max(0, Number(value || 0))),
+        color: '#FF6F91',
+        fill: true,
+      },
+    ];
   }
 
   function renderMegaCategorySummary() {
@@ -6701,6 +6751,7 @@
   function renderMegaHoldersChart(historyByDay, currentHolders) {
     const note = document.getElementById('megaHoldersNote');
     const mergedHistory = mergeMegaHoldersHistoryWithSnapshot(historyByDay, currentHolders);
+    syncMegaHoldersModeToggle();
     megaHoldersState.historyByDay = mergedHistory && mergedHistory.size
       ? attachMegaHolderBucketHistory(new Map(mergedHistory), mergedHistory.bucketHistoryByKey)
       : null;
@@ -6723,31 +6774,45 @@
     const dateKeys = dates.map((d) => isoDate(d));
     const values = mapSeriesByDate(mergedHistory, dateKeys, 0);
     const latest = Number.isFinite(currentHolders) ? currentHolders : values[values.length - 1];
-    const datasets = [
+    const absoluteDatasets = [
       { label: 'All holders', values, color: '#7EAAD4', fill: true }
     ];
+    const thresholdValuesByKey = {};
     MEGA_HOLDER_BUCKETS.forEach((bucket) => {
       const bucketHistory = mergedHistory.bucketHistoryByKey?.get(bucket.key);
+      const bucketValues = bucketHistory instanceof Map && bucketHistory.size
+        ? mapSeriesByDate(bucketHistory, dateKeys, 0)
+        : values.map(() => 0);
+      thresholdValuesByKey[bucket.key] = bucketValues;
       if (!(bucketHistory instanceof Map) || !bucketHistory.size) return;
-      datasets.push({
+      absoluteDatasets.push({
         label: bucket.label,
-        values: mapSeriesByDate(bucketHistory, dateKeys, 0),
+        values: bucketValues,
         color: bucket.color,
         fill: false,
       });
     });
+    const isPercent = megaHoldersState.mode === 'pct';
+    const datasets = isPercent
+      ? buildMegaHolderCompositionDatasets(values, thresholdValuesByKey)
+      : absoluteDatasets;
     makeLineChart('megaHoldersChart', datasets, dates, {
+      stacked: isPercent,
+      percent: isPercent,
       valueFormatter: (v) => fmtNum(Math.round(v)) + ' holders',
       tickFormatter: (v) => Number(v).toLocaleString('en-US'),
     });
     megaSummaryState.holdersCount = Number.isFinite(latest) ? latest : megaSummaryState.holdersCount;
     renderMegaCategorySummary();
-    const cohortNote = datasets.length > 1
+    const cohortNote = absoluteDatasets.length > 1
       ? ' Cohorts 1k+, 10k+, 100k+, and 1M+ are replayed from the same transfer history.'
       : '';
+    const modeNote = isPercent
+      ? ' 100% stacked view converts the threshold lines into exclusive cohorts: <1k, 1k-10k, 10k-100k, 100k-1M, and 1M+.'
+      : '';
     if (note) note.textContent = Number.isFinite(currentHolders)
-      ? 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Today\'s slot is refreshed from the live token snapshot. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.' + cohortNote
-      : 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.' + cohortNote;
+      ? 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Today\'s slot is refreshed from the live token snapshot. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.' + cohortNote + modeNote
+      : 'Blockscout reconstruction from MEGA ERC-20 transfer logs, shown from ' + MEGA_FLOAT_START_DAY + '. Current holders: ' + fmtNum(Math.round(latest || 0)) + '.' + cohortNote + modeNote;
     markReady('panel-mega-holders');
   }
 
@@ -7201,8 +7266,8 @@
         renderMegaHoldersChart(bundledHistory, snapshot?.holdersCount ?? null);
         const bundledNote = document.getElementById('megaHoldersNote');
         if (bundledNote) bundledNote.textContent = Number.isFinite(snapshot?.holdersCount)
-          ? 'Bundled MEGA holders history shown from ' + MEGA_FLOAT_START_DAY + ', with today\'s slot refreshed from the live Blockscout token snapshot. Cohort lines (1k+/10k+/100k+/1M+) will appear once the full backfill finishes in the background…'
-          : 'Bundled MEGA holders history shown from ' + MEGA_FLOAT_START_DAY + '. Cohort lines (1k+/10k+/100k+/1M+) will appear once the full backfill finishes in the background…';
+          ? 'Bundled MEGA holders history and 1k+/10k+/100k+/1M+ cohorts shown from ' + MEGA_FLOAT_START_DAY + ', with today\'s slot refreshed from the live Blockscout token snapshot.'
+          : 'Bundled MEGA holders history and 1k+/10k+/100k+/1M+ cohorts shown from ' + MEGA_FLOAT_START_DAY + '.';
       }).catch(() => null);
     }
     if (note) note.textContent = attempt === 0
@@ -9488,6 +9553,14 @@
       document.querySelectorAll('#megaFloatModeToggle button').forEach(b =>
         b.classList.toggle('active', b === btn));
       renderMegaFloatPanel();
+    });
+  });
+
+  document.querySelectorAll('#megaHoldersModeToggle button').forEach((button) => {
+    button.addEventListener('click', () => {
+      megaHoldersState.mode = button.dataset.mode || 'abs';
+      syncMegaHoldersModeToggle();
+      renderMegaHoldersChart(megaHoldersState.historyByDay, megaHoldersState.currentHolders);
     });
   });
 
