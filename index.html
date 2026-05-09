@@ -676,6 +676,7 @@
     background: #fff;
   }
   .token-logo.usdt0 { box-shadow: 0 0 8px rgba(38,161,123,0.55); }
+    .token-logo.usde { box-shadow: 0 0 8px rgba(232,199,106,0.55); }
   .token-logo.dollar {
     display: inline-flex;
     align-items: center;
@@ -2595,13 +2596,13 @@
       <div class="category-card-primary" id="kpi-tvl">$ —</div>
       <div class="category-card-details">
         <span class="category-card-detail" data-chart-key="tvl" role="button" tabindex="0">USDm TVL</span>
-        <span class="category-card-detail" data-chart-key="stables" role="button" tabindex="0">USDm vs USDT0</span>
+        <span class="category-card-detail" data-chart-key="stables" role="button" tabindex="0">USDm vs USDT0 + USDe</span>
         <span class="category-card-detail" data-chart-key="concentration" role="button" tabindex="0">Top Holder Concentration</span>
         <span class="category-card-detail" data-chart-key="appflow" role="button" tabindex="0">Destination Apps</span>
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
-          <span class="category-stat-label">USDm vs USDT0</span>
+          <span class="category-stat-label">USDm share</span>
           <span class="category-stat-value" id="kpi-days">—</span>
         </div>
       </div>
@@ -2712,10 +2713,10 @@
         <article class="category-chart-card">
           <div class="category-chart-head">
             <div class="category-chart-copy">
-              <h3><span class="token-pair"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><img class="token-logo usdt0" src="https://coin-images.coingecko.com/coins/images/53705/large/usdt0.jpg?1737086183" alt="USDT0" /></span>USDm vs USDT0</h3>
-              <div class="desc">USDm market cap vs USDT0 supply on MegaETH, sourced from Blockscout.</div>
+              <h3><span class="token-pair"><img class="token-logo" src="https://coin-images.coingecko.com/coins/images/69955/large/USDm.png?1760170136" alt="USDm" /><img class="token-logo usdt0" src="https://coin-images.coingecko.com/coins/images/53705/large/usdt0.jpg?1737086183" alt="USDT0" /><img class="token-logo usde" src="https://assets.coingecko.com/coins/images/33613/small/usde.png?1733810059" alt="USDe" /></span>USDm vs USDT0 + USDe</h3>
+              <div class="desc">USDm market cap vs USDT0 and USDe supply on MegaETH, sourced from Blockscout.</div>
             </div>
-            <div class="mode-toggle show panel-mode-toggle" data-mode-target="stables" role="tablist" aria-label="USDM vs USDT0 display mode">
+            <div class="mode-toggle show panel-mode-toggle" data-mode-target="stables" role="tablist" aria-label="USDm vs USDT0 and USDe display mode">
               <button type="button" data-mode="abs" class="active"><span class="glyph"><i></i><i></i><i></i></span>Absolute</button>
               <button type="button" data-mode="stk"><span class="glyph"><i></i><i></i><i></i></span>Stacked</button>
               <button type="button" data-mode="pct"><span class="glyph"><i></i><i></i><i></i></span>Percentage</button>
@@ -2723,7 +2724,7 @@
           </div>
           <div class="panel" data-panel="stables">
             <div class="chart-wrap"><canvas id="stablesChart"></canvas></div>
-            <div class="note" id="stablesNote">USDT0 is sourced from MegaETH Blockscout. When transfer-history reconstruction is unavailable, the chart falls back to the live Blockscout supply snapshot.</div>
+            <div class="note" id="stablesNote">USDT0 and USDe are sourced from MegaETH Blockscout. When transfer-history reconstruction is unavailable, each line falls back to the live Blockscout supply snapshot.</div>
           </div>
         </article>
 
@@ -3072,6 +3073,7 @@
   const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
   const USDM_TOKEN_ADDRESS  = '0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7'; // MegaUSD (USDm)
   const USDT0_TOKEN_ADDRESS = '0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb'; // USDT0 (LayerZero OFT)
+  const USDE_TOKEN_ADDRESS  = '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34'; // Ethena USDe
   const ETH_PRICE_API = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd';
   // growthepie — MegaETH chain metrics (network fees/revenue)
   const GP_MEGAETH = 'https://api.growthepie.xyz/v1/chains/megaeth.json';
@@ -5267,7 +5269,7 @@
       'kpi-tvl',
       'stables',
       (usdmShare != null && isFinite(usdmShare)) ? (usdmShare * 100).toFixed(1) + '%' : null,
-      'USDm vs USDT0'
+      'USDm share'
     );
     setCategoryPrimarySource('kpi-daily', 'daily', fmtUSDFit(dailyRev), 'Daily Revenue');
     setCategoryPrimarySource('kpi-daily', 'annual', fmtUSDFit(annualRev), 'Annualized Revenue');
@@ -6582,6 +6584,8 @@
     const pMegaEthProtocols = fetchMegaETHProtocolTvlRows();
     const pUsdt0Live   = fetchTokenSupplyOnMegaETH(USDT0_TOKEN_ADDRESS);
     const pUsdt0History = fetchTokenSupplyHistoryOnChain(USDT0_TOKEN_ADDRESS, 6);
+    const pUsdeLive    = fetchTokenSupplyOnMegaETH(USDE_TOKEN_ADDRESS);
+    const pUsdeHistory = fetchTokenSupplyHistoryOnChain(USDE_TOKEN_ADDRESS, 18);
     const pOpiumTvl    = fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug));
     const pMegaSnapshot = fetchMegaCommitmentSnapshot();
     const pMegaMarketCapHistory = fetchMegaMarketCapHistory();
@@ -6646,7 +6650,7 @@
     }).catch((e) => console.warn('early TVL KPI failed', e));
 
     // Hydrate the active TVL chart without waiting for slower panels like
-    // USDT0 history or peer-chain TVL.
+    // USDT0/USDe history or peer-chain TVL.
     Promise.all([pHistory, Promise.race([pTvl, pUsdmLive])]).then(([historyEarly, tvlEarly]) => {
       if ((!historyEarly || !historyEarly.length) && tvlEarly == null) return;
       const earlyDates = buildDateSeries(MAINNET_LAUNCH, now);
@@ -6663,8 +6667,8 @@
       renderPanel('tvl');
     }).catch((e) => console.warn('early TVL chart failed', e));
 
-    const [tvlRaw, ethPrice, history, apyData, dlStables, gp, dlFees, ethPriceHist, bsFees, usdmLive, usdt0Live, usdt0History, opiumTvl] = await Promise.all([
-      pTvl, pEthPrice, pHistory, pApy, pDlStables, pGp, pDlFees, pEthHist, pBsFees, pUsdmLive, pUsdt0Live, pUsdt0History, pOpiumTvl,
+    const [tvlRaw, ethPrice, history, apyData, dlStables, gp, dlFees, ethPriceHist, bsFees, usdmLive, usdt0Live, usdt0History, usdeLive, usdeHistory, opiumTvl] = await Promise.all([
+      pTvl, pEthPrice, pHistory, pApy, pDlStables, pGp, pDlFees, pEthHist, pBsFees, pUsdmLive, pUsdt0Live, pUsdt0History, pUsdeLive, pUsdeHistory, pOpiumTvl,
     ]);
     // Apply live BUIDL/USDm APY (overrides fallback)
     if (apyData?.buidl > 0) BUIDL_APY = apyData.buidl;
@@ -6793,8 +6797,8 @@
       return lastOther;
     });
 
-    // USDT0 + USDm supply curves reconstructed from on-chain mint/burn events
-    // via Blockscout logs API. Forward-filled across the canonical date axis.
+    // USDm peers are reconstructed from on-chain mint/burn events via the
+    // Blockscout logs API and forward-filled across the canonical date axis.
     function ffillFromMap(map) {
       if (!map || !map.size) return null;
       const sortedKeys = [...map.keys()].sort();
@@ -6810,19 +6814,27 @@
       });
     }
 
-    // USDT0 on MegaETH should come from Blockscout's own token data, not from
-    // the "all stables minus USDm" residual bucket. We prefer the reconstructed
-    // mint/burn history when it reconciles with the live total_supply snapshot;
-    // otherwise we fall back to a flat live snapshot from the token page/API.
-    const usdt0HistorySeries = ffillFromMap(usdt0History);
-    const usdt0HistoryLast = usdt0HistorySeries ? usdt0HistorySeries[usdt0HistorySeries.length - 1] : null;
-    const useUsdt0History = !!(usdt0HistorySeries && (
-      usdt0Live == null
-      || Math.abs(usdt0HistoryLast - usdt0Live) / Math.max(1, usdt0Live) < 0.02
-    ));
-    const usdt0Series = useUsdt0History
-      ? usdt0HistorySeries
-      : (usdt0Live != null ? dateKeys.map(() => usdt0Live) : null);
+    function buildStableSupplySeries(historyMap, liveSupply) {
+      const historySeries = ffillFromMap(historyMap);
+      const historyLast = historySeries ? historySeries[historySeries.length - 1] : null;
+      const useHistory = !!(historySeries && (
+        liveSupply == null
+        || Math.abs(historyLast - liveSupply) / Math.max(1, liveSupply) < 0.02
+      ));
+      return {
+        useHistory,
+        series: useHistory
+          ? historySeries
+          : (liveSupply != null ? dateKeys.map(() => liveSupply) : null),
+      };
+    }
+
+    // USDT0 and USDe on MegaETH should come from Blockscout token history,
+    // not from the "all stables minus USDm" residual bucket. We prefer the
+    // reconstructed mint/burn history when it reconciles with the live
+    // total_supply snapshot; otherwise we fall back to a flat live snapshot.
+    const { useHistory: useUsdt0History, series: usdt0Series } = buildStableSupplySeries(usdt0History, usdt0Live);
+    const { useHistory: useUsdeHistory, series: usdeSeries } = buildStableSupplySeries(usdeHistory, usdeLive);
 
     // Chart note
     const noteEl = document.getElementById('chartNote');
@@ -6847,7 +6859,18 @@
     const usdt0Last = usdt0Series
       ? (usdt0Series[usdt0Series.length - 1] || 0)
       : (usdt0Live != null ? usdt0Live : null);
-    const pairTotal = usdt0Last != null ? (usdmLast + usdt0Last) : null;
+    const usdeLast = usdeSeries
+      ? (usdeSeries[usdeSeries.length - 1] || 0)
+      : (usdeLive != null ? usdeLive : null);
+    const trackedStableTerms = [
+      { label: 'USDT0', value: usdt0Last },
+      { label: 'USDe', value: usdeLast },
+    ].filter((entry) => entry.value != null);
+    const trackedStableTotal = trackedStableTerms.length
+      ? trackedStableTerms.reduce((sum, entry) => sum + (Number(entry.value) || 0), 0)
+      : null;
+    const shareFormulaTerms = ['USDm', ...trackedStableTerms.map((entry) => entry.label)];
+    const pairTotal = trackedStableTotal != null ? (usdmLast + trackedStableTotal) : null;
     const usdmShare = pairTotal > 0 ? usdmLast / pairTotal : null;
     renderKPIs(tvl, days, dailyRev, cumRev, annualizedRunRate, usdmShare);
 
@@ -6882,38 +6905,36 @@
     ];
     renderPanel('tvl');
 
-    // USDm vs USDT0 — USDm uses CoinGecko market cap; USDT0 uses Blockscout
-    // on-chain supply data. The KPI is the direct USDm share of
-    // (USDm + USDT0), not the broader total-stables bucket.
+    // USDm vs tracked stables — USDm uses CoinGecko market cap; USDT0 and
+    // USDe use Blockscout on-chain supply data. The KPI is the direct USDm
+    // share of the tokens shown on this chart, not the broader stables bucket.
     const stablesNoteEl = document.getElementById('stablesNote');
     chartState.stables.dates = dates;
+    const stableDatasets = [
+      { label: 'USDm', values: mcapSeries, color: '#FF8AA8', fill: false },
+    ];
+    const stableSourceNotes = [];
+    const live = [];
+    if (usdmLive != null) live.push('USDm: ' + fmtUSD(usdmLive));
     if (usdt0Series) {
-      chartState.stables.datasets = [
-        { label: 'USDm',  values: mcapSeries,  color: '#FF8AA8', fill: false },
-        { label: 'USDT0', values: usdt0Series, color: '#26A17B', fill: false },
-      ];
-      const live = [];
-      if (usdmLive  != null) live.push('USDm: '  + fmtUSD(usdmLive));
-      if (usdt0Live != null) live.push('USDT0 supply: ' + fmtToken(usdt0Live, 'USDT0'));
+      stableDatasets.push({ label: 'USDT0', values: usdt0Series, color: '#26A17B', fill: false });
+      stableSourceNotes.push('USDT0 ' + (useUsdt0History ? 'uses mint/burn history + live supply check' : 'falls back to the live Blockscout supply snapshot'));
+    }
+    if (usdt0Live != null) live.push('USDT0 supply: ' + fmtToken(usdt0Live, 'USDT0'));
+    if (usdeSeries) {
+      stableDatasets.push({ label: 'USDe', values: usdeSeries, color: '#E8C76A', fill: false });
+      stableSourceNotes.push('USDe ' + (useUsdeHistory ? 'uses mint/burn history + live supply check' : 'falls back to the live Blockscout supply snapshot'));
+    }
+    if (usdeLive != null) live.push('USDe supply: ' + fmtToken(usdeLive, 'USDe'));
+    chartState.stables.datasets = stableDatasets;
+    if (stableSourceNotes.length) {
       stablesNoteEl.textContent =
-        'USDT0 comes from MegaETH Blockscout '
-        + (useUsdt0History ? '(mint/burn history + live supply check). ' : '(live supply snapshot fallback). ')
+        stableSourceNotes.join('. ') + '. '
         + (live.length ? 'Live on-chain (Blockscout): ' + live.join(' · ') + '. ' : '')
-        + (usdmShare != null ? 'KPI = USDm / (USDm + USDT0) = ' + (usdmShare * 100).toFixed(1) + '%. ' : '')
+        + (usdmShare != null ? 'KPI = USDm / (' + shareFormulaTerms.join(' + ') + ') = ' + (usdmShare * 100).toFixed(1) + '%. ' : '')
         + 'Toggle [ % ] for share view.';
-    } else if (usdt0Live != null) {
-      const flat = dateKeys.map(() => usdt0Live);
-      chartState.stables.datasets = [
-        { label: 'USDm',  values: mcapSeries, color: '#FF8AA8', fill: false },
-        { label: 'USDT0', values: flat,       color: '#26A17B', fill: false },
-      ];
-      stablesNoteEl.textContent =
-        'USDT0 shown as flat line at the live Blockscout snapshot (' + fmtToken(usdt0Live, 'USDT0') + ').';
     } else {
-      chartState.stables.datasets = [
-        { label: 'USDm', values: mcapSeries, color: '#FF8AA8', fill: false },
-      ];
-      stablesNoteEl.textContent = 'USDT0 Blockscout supply unavailable — only USDm shown.';
+      stablesNoteEl.textContent = 'USDT0/USDe Blockscout supply unavailable — only USDm shown.';
     }
     renderPanel('stables');
 
