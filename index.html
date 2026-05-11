@@ -2202,6 +2202,126 @@
   }
   .leaderboard-threshold-points { color: var(--muted); text-align: right; }
   .leaderboard-table-wrap { margin-top: 12px; }
+  .leaderboard-tier-section {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    background:
+      radial-gradient(circle at top left, rgba(109,208,169,0.10), transparent 45%),
+      linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.012));
+  }
+  .leaderboard-tier-head {
+    margin-bottom: 14px;
+  }
+  .leaderboard-tier-title {
+    margin: 0;
+    color: var(--text);
+    font-size: 18px;
+    letter-spacing: 0.03em;
+  }
+  .leaderboard-tier-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+    gap: 18px;
+    align-items: center;
+  }
+  .leaderboard-tier-chart-wrap {
+    position: relative;
+    width: min(100%, 260px);
+    margin: 0 auto;
+    aspect-ratio: 1;
+  }
+  #leaderboardTierChart {
+    width: 100%;
+    height: 100%;
+    display: block;
+    transform: rotate(-90deg);
+  }
+  .leaderboard-tier-chart-center {
+    position: absolute;
+    inset: 50%;
+    width: 46%;
+    height: 46%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 4px;
+    text-align: center;
+    background: rgba(20,20,22,0.92);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 0 24px rgba(255,255,255,0.02);
+    pointer-events: none;
+  }
+  .leaderboard-tier-chart-center span {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .leaderboard-tier-chart-center strong {
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 18px;
+    line-height: 1;
+  }
+  .leaderboard-tier-legend {
+    display: grid;
+    gap: 10px;
+  }
+  .leaderboard-tier-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.018);
+  }
+  .leaderboard-tier-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 0 12px currentColor;
+  }
+  .leaderboard-tier-copy {
+    min-width: 0;
+  }
+  .leaderboard-tier-label {
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .leaderboard-tier-range {
+    margin-top: 4px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .leaderboard-tier-metrics {
+    text-align: right;
+    font-family: var(--mono);
+  }
+  .leaderboard-tier-count {
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .leaderboard-tier-share {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
   #leaderboardTable th:not(:nth-child(2)),
   #leaderboardTable td:not(:nth-child(2)) { text-align: right; }
   #leaderboardTable th:first-child,
@@ -2324,6 +2444,9 @@
     .leaderboard-simulator {
       grid-template-columns: 1fr;
     }
+    .leaderboard-tier-layout {
+      grid-template-columns: 1fr;
+    }
     #terminalLeaderboardNote.leaderboard-assumptions {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -2395,6 +2518,16 @@
     .leaderboard-threshold {
       grid-template-columns: 64px 1fr 70px;
       font-size: 10px;
+    }
+    .leaderboard-tier-section {
+      padding: 14px 12px;
+    }
+    .leaderboard-tier-item {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .leaderboard-tier-metrics {
+      grid-column: 2;
+      text-align: left;
     }
     #terminalLeaderboardNote.leaderboard-assumptions {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2951,6 +3084,24 @@
               <div class="desc">Top all-time profiles, recent 7-day points, and projected scenario contribution.</div>
             </div>
           </div>
+          <div class="leaderboard-tier-section" id="leaderboardTierSection">
+            <div class="leaderboard-tier-head">
+              <h4 class="leaderboard-tier-title">Player Distribution by Point Tier</h4>
+              <div class="desc">Users grouped by total points into Whale, Dolphin, Fish, Crab, and Shrimp tiers.</div>
+            </div>
+            <div class="leaderboard-tier-layout">
+              <div class="leaderboard-tier-chart-wrap">
+                <svg id="leaderboardTierChart" viewBox="0 0 160 160" role="img" aria-label="Player distribution by point tier"></svg>
+                <div class="leaderboard-tier-chart-center">
+                  <span>Tracked users</span>
+                  <strong id="leaderboardTierTotal">—</strong>
+                </div>
+              </div>
+              <div class="leaderboard-tier-legend" id="leaderboardTierLegend">
+                <div class="skeleton">Loading distribution…</div>
+              </div>
+            </div>
+          </div>
           <div class="table-scroll leaderboard-table-wrap">
             <table id="leaderboardTable">
               <thead>
@@ -3096,6 +3247,13 @@
   const TERMINAL_DAYS_PER_SEASON = 50;
   const TERMINAL_DISTRIBUTION_WINDOW_DAYS = 7;
   const TERMINAL_SCENARIO_OPTIONS = [3, 4, 5];
+  const TERMINAL_POINT_TIER_CONFIG = [
+    { key: 'whales', label: 'Whales', color: '#FF8AA8' },
+    { key: 'dolphins', label: 'Dolphins', color: '#F4D35E' },
+    { key: 'fish', label: 'Fish', color: '#7EABD4' },
+    { key: 'crabs', label: 'Crabs', color: '#90D79F' },
+    { key: 'shrimp', label: 'Shrimp', color: '#FFB26B' },
+  ];
 
   // -------- HELPERS --------
   const fmtUSD = (n, d = 0) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -6388,6 +6546,122 @@
     return Math.min(model.rows.length + 1, better + 1);
   }
 
+  function niceTierThreshold(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n) || n <= 1) return 1;
+    const magnitude = 10 ** Math.floor(Math.log10(n));
+    const normalized = n / magnitude;
+    const step = normalized >= 5 ? 5 : normalized >= 2 ? 2 : 1;
+    return Math.max(1, step * magnitude);
+  }
+
+  function fmtPctCompact(value) {
+    if (!Number.isFinite(value)) return '0%';
+    return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: value >= 10 ? 0 : 1 }) + '%';
+  }
+
+  function formatTierRange(minPoints, maxPoints) {
+    if (maxPoints == null) return fmtTokenCompact(minPoints) + '+ pts';
+    if (minPoints <= 0) return 'Below ' + fmtTokenCompact(maxPoints + 1) + ' pts';
+    return fmtTokenCompact(minPoints) + ' to ' + fmtTokenCompact(maxPoints) + ' pts';
+  }
+
+  function buildTerminalPointTiers(rows) {
+    const values = Array.isArray(rows)
+      ? rows.map((row) => Math.max(0, Number(row?.totalPoints) || 0)).filter((value) => Number.isFinite(value))
+      : [];
+    if (!values.length) return [];
+
+    const maxPoints = Math.max(...values, 1);
+    const thresholdsAscending = [1, 2, 3, 4]
+      .map((step) => niceTierThreshold(maxPoints ** (step / 5)))
+      .filter((value, index, arr) => value > 0 && arr.indexOf(value) === index)
+      .sort((a, b) => a - b);
+    const starts = [
+      thresholdsAscending[3] ?? thresholdsAscending[thresholdsAscending.length - 1] ?? 1,
+      thresholdsAscending[2] ?? thresholdsAscending[Math.max(thresholdsAscending.length - 2, 0)] ?? 1,
+      thresholdsAscending[1] ?? thresholdsAscending[Math.max(thresholdsAscending.length - 3, 0)] ?? 1,
+      thresholdsAscending[0] ?? 1,
+      0,
+    ];
+
+    return TERMINAL_POINT_TIER_CONFIG.map((tier, index) => {
+      const minPoints = starts[index];
+      const maxPointsForTier = index === 0 ? null : Math.max(0, starts[index - 1] - 1);
+      const count = values.filter((value) => value >= minPoints && (maxPointsForTier == null || value <= maxPointsForTier)).length;
+      return {
+        ...tier,
+        minPoints,
+        maxPoints: maxPointsForTier,
+        count,
+      };
+    });
+  }
+
+  function renderTerminalPointTierChart(model) {
+    const svg = document.getElementById('leaderboardTierChart');
+    const legend = document.getElementById('leaderboardTierLegend');
+    const totalEl = document.getElementById('leaderboardTierTotal');
+    if (!svg || !legend || !totalEl) return;
+    if (!model?.rows?.length) {
+      svg.innerHTML = '';
+      legend.innerHTML = '<div class="skeleton">Distribution unavailable</div>';
+      totalEl.textContent = '—';
+      return;
+    }
+
+    const tiers = buildTerminalPointTiers(model.rows);
+    const totalUsers = tiers.reduce((sum, tier) => sum + tier.count, 0);
+    totalEl.textContent = fmtNum(totalUsers);
+
+    const radius = 52;
+    const circumference = 2 * Math.PI * radius;
+    let offset = 0;
+    svg.innerHTML = `
+      <circle cx="80" cy="80" r="52" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="24"></circle>
+      ${tiers.map((tier) => {
+        const share = totalUsers > 0 ? tier.count / totalUsers : 0;
+        const dash = Math.max(share * circumference, tier.count > 0 ? 3 : 0);
+        const segment = `
+          <circle
+            cx="80"
+            cy="80"
+            r="52"
+            fill="none"
+            stroke="${tier.color}"
+            stroke-width="24"
+            stroke-linecap="butt"
+            stroke-dasharray="${dash} ${circumference - dash}"
+            stroke-dashoffset="${-offset}"></circle>`;
+        offset += dash;
+        return segment;
+      }).join('')}
+    `;
+    svg.setAttribute(
+      'aria-label',
+      'Player distribution by point tier: ' + tiers
+        .filter((tier) => tier.count > 0)
+        .map((tier) => tier.label + ' ' + fmtPctCompact(totalUsers > 0 ? (tier.count / totalUsers) * 100 : 0))
+        .join(', ')
+    );
+
+    legend.innerHTML = tiers.map((tier) => {
+      const share = totalUsers > 0 ? (tier.count / totalUsers) * 100 : 0;
+      return `
+        <div class="leaderboard-tier-item">
+          <span class="leaderboard-tier-swatch" style="color:${tier.color};background:${tier.color}"></span>
+          <div class="leaderboard-tier-copy">
+            <div class="leaderboard-tier-label">${escapeHTML(tier.label)}</div>
+            <div class="leaderboard-tier-range">${escapeHTML(formatTierRange(tier.minPoints, tier.maxPoints))}</div>
+          </div>
+          <div class="leaderboard-tier-metrics">
+            <div class="leaderboard-tier-count">${fmtNum(tier.count)} users</div>
+            <div class="leaderboard-tier-share">${fmtPctCompact(share)}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
   function renderTerminalThresholds(model) {
     const host = document.getElementById('terminalThresholds');
     if (!host) return;
@@ -6542,6 +6816,7 @@
       markReady('panel-leaderboard-table');
       renderTerminalThresholds(null);
       renderTerminalScenarioGrid(null);
+      renderTerminalPointTierChart(null);
       renderTerminalPointSimulator();
       return;
     }
@@ -6599,6 +6874,7 @@
     syncTerminalScenarioControls(model);
     renderTerminalScenarioGrid(model);
     renderTerminalThresholds(model);
+    renderTerminalPointTierChart(model);
     renderTerminalPointSimulator();
     markReady('kpi-terminal-points');
     markReady('kpi-terminal-projected');
