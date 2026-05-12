@@ -1,0 +1,216 @@
+{
+  "project": {
+    "name": "World Markets",
+    "siteUrl": "https://world.inc/",
+    "description": "Canonical MegaETH PrimeDEX with unified cross margin for spot, perpetual futures, and loans.",
+    "exchangeAddress": "0x5e3Ae52EbA0F9740364Bd5dd39738e1336086A8b",
+    "chain": "MegaETH",
+    "chainId": 4326,
+    "logoUrl": "https://icons.llamao.fi/icons/protocols/world-markets-spot.jpg",
+    "visual": {
+      "accent": "#5BA7FF",
+      "secondary": "#6DD0A9",
+      "surface": "#0D1018"
+    }
+  },
+  "sources": [
+    {
+      "label": "World Markets site",
+      "url": "https://world.inc/",
+      "note": "Project site visual direction and product positioning."
+    },
+    {
+      "label": "DefiLlama World Markets Spot",
+      "url": "https://defillama.com/protocol/world-markets-spot",
+      "note": "Spot TVL, spot DEX volume, and spot fees."
+    },
+    {
+      "label": "DefiLlama World Markets Perps",
+      "url": "https://defillama.com/protocol/world-markets-perps",
+      "note": "Perps fees methodology and fee totals."
+    },
+    {
+      "label": "DefiLlama TVL adapter",
+      "url": "https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/worldinc/index.js",
+      "note": "Counts exchange contract token balances as TVL."
+    },
+    {
+      "label": "DefiLlama dimension adapter",
+      "url": "https://github.com/DefiLlama/dimension-adapters/blob/master/dexs/worldinc-perps/worldinc.ts",
+      "note": "NewTrade, InterestPaid, LendPositionChanged, LendPositionClosed, and Liquidation event methodology."
+    },
+    {
+      "label": "MegaETH Blockscout exchange",
+      "url": "https://megaeth.blockscout.com/address/0x5e3Ae52EbA0F9740364Bd5dd39738e1336086A8b",
+      "note": "Live exchange balances and on-chain logs."
+    }
+  ],
+  "spotTvl": {
+    "asOf": "2026-05-12T13:06:00.000Z",
+    "defillamaCurrentUsd": 8075928.35963,
+    "blockscoutLiveUsd": 8160390.394515373,
+    "methodology": "DefiLlama counts WETH, USDM, USDT0, BTC.B, and WITRY held by the WorldInc exchange contract. Blockscout live view also shows MEGA and dust balances.",
+    "exchangeAddress": "0x5e3Ae52EbA0F9740364Bd5dd39738e1336086A8b",
+    "history": [
+      { "timestamp": 1778198400000, "value": 8239457 },
+      { "timestamp": 1778284800000, "value": 8294783 },
+      { "timestamp": 1778371200000, "value": 8283105 },
+      { "timestamp": 1778457600000, "value": 8037739 },
+      { "timestamp": 1778584043000, "value": 8075928 }
+    ],
+    "tokens": [
+      { "symbol": "USDM", "amount": 6267549.869173191, "priceUsd": 1.0, "usd": 6267549.869173191, "address": "0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7", "color": "#6DD0A9" },
+      { "symbol": "WITRY", "amount": 58960878.897, "priceUsd": 0.02285056, "usd": 1347289.1008886322, "address": "0x15B271D9012b5820FC42b1c495B4C1e206547De5", "color": "#F97357" },
+      { "symbol": "WETH", "amount": 119.98855167170315, "priceUsd": 2293.05, "usd": 275139.7484107989, "address": "0x4200000000000000000000000000000000000006", "color": "#7EAAD4" },
+      { "symbol": "BTC.B", "amount": 1.96095168, "priceUsd": 80867, "usd": 158576.27950656, "address": "0xB0F70C0bD6FD87dbEb7C10dC692a2a6106817072", "color": "#F4D35E" },
+      { "symbol": "MEGA", "amount": 814012.8442367427, "priceUsd": 0.113992, "usd": 92790.95214023477, "address": "0x28B7E77f82B25B95953825F1E3eA0E36c1c29861", "color": "#FF8AA8" },
+      { "symbol": "USDT0", "amount": 19049.365186, "priceUsd": 0.999737, "usd": 19044.35520295608, "address": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb", "color": "#9AA7C2" }
+    ]
+  },
+  "spotVolume": {
+    "source": "DefiLlama DEXs summary, slug world-markets-spot, dataType dailyVolume.",
+    "total24hUsd": 127980,
+    "total48hto24hUsd": 152879,
+    "total7dUsd": 1159808,
+    "total30dUsd": 6930084,
+    "totalAllTimeUsd": 14401216,
+    "daily": [
+      { "timestamp": 1777420800000, "value": 28413 },
+      { "timestamp": 1777507200000, "value": 2551621 },
+      { "timestamp": 1777593600000, "value": 28857 },
+      { "timestamp": 1777680000000, "value": 57035 },
+      { "timestamp": 1777766400000, "value": 69223 },
+      { "timestamp": 1777852800000, "value": 46556 },
+      { "timestamp": 1777939200000, "value": 59309 },
+      { "timestamp": 1778025600000, "value": 66318 },
+      { "timestamp": 1778112000000, "value": 77997 },
+      { "timestamp": 1778198400000, "value": 595357 },
+      { "timestamp": 1778284800000, "value": 125049 },
+      { "timestamp": 1778371200000, "value": 152879 },
+      { "timestamp": 1778457600000, "value": 82899 },
+      { "timestamp": 1778544000000, "value": 127980 }
+    ]
+  },
+  "perps": {
+    "volume": {
+      "source": "On-chain MegaETH NewTrade logs from discovered WorldInc perp orderbooks over latest 86400 blocks, decoded with DefiLlama adapter logic.",
+      "latestBlock": 15794364,
+      "fromBlock": 15707964,
+      "tradeLogs": 6714,
+      "notional24hUsd": 36177679.71932858,
+      "feesUsdFromLogs": 21738.4771000001,
+      "markets": [
+        { "symbol": "BTC.B", "notionalUsd": 12945836.295999937, "rawVolume": 160.0880000000013, "rawUnit": "BTC.B", "color": "#F4D35E", "orderbook": "0x757b27d961a25fef0c2b71819c91de8a7c669079" },
+        { "symbol": "WETH", "notionalUsd": 12347157.02999981, "rawVolume": 5384.599999999975, "rawUnit": "WETH", "color": "#7EAAD4", "orderbook": "0xf12fe484ab504276a454e750f54a9b7fbe5b0687" },
+        { "symbol": "SOL", "notionalUsd": 10765157.490245782, "rawVolume": 112988, "rawUnit": "SOL", "color": "#6DD0A9", "orderbook": "0x0b35a77978f008df9f9c43c6206c07d3535bebff" },
+        { "symbol": "HYPE", "notionalUsd": 108471.6790830529, "rawVolume": 2655, "rawUnit": "HYPE", "color": "#C586FF", "orderbook": "0xe666c9a0ae4948bd03e9651ba5a703868b97aba9" },
+        { "symbol": "MEGA", "notionalUsd": 11057.22400000001, "rawVolume": 97000, "rawUnit": "MEGA", "color": "#FF8AA8", "orderbook": "0x6be130b3c425dba04a097e21e4a4603a0bda04e8" }
+      ],
+      "hourlyNotional": [
+        { "label": "T-24h", "value": 2968533.5122306007 },
+        { "label": "T-23h", "value": 2945135.6708261543 },
+        { "label": "T-22h", "value": 3890838.4183013416 },
+        { "label": "T-21h", "value": 4942573.455265315 },
+        { "label": "T-20h", "value": 1376418.7830559437 },
+        { "label": "T-19h", "value": 1223036.5046388586 },
+        { "label": "T-18h", "value": 1576164.516581204 },
+        { "label": "T-17h", "value": 1270290.1726124391 },
+        { "label": "T-16h", "value": 1642272.3895856966 },
+        { "label": "T-15h", "value": 1533712.9886511243 },
+        { "label": "T-14h", "value": 1245361.4102705976 },
+        { "label": "T-13h", "value": 93999.95862680786 },
+        { "label": "T-12h", "value": 660876.1814090273 },
+        { "label": "T-11h", "value": 667282.4037380496 },
+        { "label": "T-10h", "value": 360979.2527688488 },
+        { "label": "T-9h", "value": 499465.81245977315 },
+        { "label": "T-8h", "value": 740287.708886667 },
+        { "label": "T-7h", "value": 967016.5758648579 },
+        { "label": "T-6h", "value": 1149013.5873978904 },
+        { "label": "T-5h", "value": 1598668.8221340277 },
+        { "label": "T-4h", "value": 967756.1685252015 },
+        { "label": "T-3h", "value": 1013898.3582514197 },
+        { "label": "T-2h", "value": 793002.2574134076 },
+        { "label": "T-1h", "value": 2051094.8098334973 }
+      ]
+    },
+    "fees": {
+      "source": "DefiLlama fees summary, slug world-markets-perps, dataType dailyFees.",
+      "total24hUsd": 22085,
+      "total48hto24hUsd": 18236,
+      "total7dUsd": 147703,
+      "total30dUsd": 588086,
+      "totalAllTimeUsd": 642503,
+      "methodology": "Perps trading fees plus lending interest plus liquidation fees.",
+      "daily": [
+        { "timestamp": 1777420800000, "value": 64424 },
+        { "timestamp": 1777507200000, "value": 77214 },
+        { "timestamp": 1777593600000, "value": 38341 },
+        { "timestamp": 1777680000000, "value": 33994 },
+        { "timestamp": 1777766400000, "value": 20546 },
+        { "timestamp": 1777852800000, "value": 25989 },
+        { "timestamp": 1777939200000, "value": 12489 },
+        { "timestamp": 1778025600000, "value": 13617 },
+        { "timestamp": 1778112000000, "value": 29661 },
+        { "timestamp": 1778198400000, "value": 32269 },
+        { "timestamp": 1778284800000, "value": 15887 },
+        { "timestamp": 1778371200000, "value": 18236 },
+        { "timestamp": 1778457600000, "value": 25544 },
+        { "timestamp": 1778544000000, "value": 22085 }
+      ]
+    }
+  },
+  "spotFees": {
+    "source": "DefiLlama fees summary, slug world-markets-spot, dataType dailyFees.",
+    "total24hUsd": 117,
+    "total48hto24hUsd": 153,
+    "total7dUsd": 778,
+    "total30dUsd": 3557,
+    "totalAllTimeUsd": 4451,
+    "daily": [
+      { "timestamp": 1777420800000, "value": 58 },
+      { "timestamp": 1777507200000, "value": 1333 },
+      { "timestamp": 1777593600000, "value": 71 },
+      { "timestamp": 1777680000000, "value": 65 },
+      { "timestamp": 1777766400000, "value": 121 },
+      { "timestamp": 1777852800000, "value": 54 },
+      { "timestamp": 1777939200000, "value": 62 },
+      { "timestamp": 1778025600000, "value": 72 },
+      { "timestamp": 1778112000000, "value": 88 },
+      { "timestamp": 1778198400000, "value": 188 },
+      { "timestamp": 1778284800000, "value": 122 },
+      { "timestamp": 1778371200000, "value": 153 },
+      { "timestamp": 1778457600000, "value": 93 },
+      { "timestamp": 1778544000000, "value": 117 }
+    ]
+  },
+  "lending": {
+    "source": "On-chain MegaETH LendPositionChanged and LendPositionClosed logs, active positions checked with readLendingPosition on the exchange contract.",
+    "tvlUsd": 617454.294,
+    "activePositions": 135,
+    "changedLogs": 608,
+    "closedLogs": 945,
+    "positionsSeen": 1157,
+    "tokens": [
+      { "symbol": "USDM", "amount": 565600, "priceUsd": 1.0, "usd": 565600, "color": "#6DD0A9" },
+      { "symbol": "BTC.B", "amount": 0.352, "priceUsd": 80867, "usd": 28465.184, "color": "#F4D35E" },
+      { "symbol": "WETH", "amount": 10.2, "priceUsd": 2293.05, "usd": 23389.11, "color": "#7EAAD4" }
+    ],
+    "lendOrderbooks": [
+      { "token": "USDM", "address": "0x2b654f4a35394739c66a8c790324c8e829d9bf6e" },
+      { "token": "WETH", "address": "0x835ea0705ca9ec7f1db08ab4c27a4fbbeb568072" },
+      { "token": "BTC.B", "address": "0x39832aab5907796953ca19cb0ce99b2f71dc53b0" },
+      { "token": "MEGA", "address": "0xd4cabe6f708a8d84413b9c5472b4cb50743ef03a" }
+    ]
+  },
+  "tokenPrices": {
+    "USDM": 1.0,
+    "WETH": 2293.05,
+    "USDT0": 0.999737,
+    "BTC.B": 80867,
+    "WITRY": 0.02285056,
+    "MEGA": 0.113992,
+    "SOL": 95.27699835598168,
+    "HYPE": 40.85562300679958
+  },
+  "asOf": "2026-05-12T13:06:00.000Z"
+}

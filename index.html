@@ -2681,6 +2681,880 @@
       letter-spacing: 0.08em;
     }
   }
+
+  /* SITE SIDES */
+  .site-switcher {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 24px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+  }
+  .site-tab {
+    --side-accent: var(--green-2);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 14px;
+    align-items: center;
+    min-height: 78px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.018);
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    overflow: hidden;
+  }
+  .site-tab::before,
+  .site-tab::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    opacity: 0.9;
+  }
+  .site-tab::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid var(--side-accent);
+    border-left: 1px solid var(--side-accent);
+  }
+  .site-tab::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 1px solid var(--side-accent);
+    border-bottom: 1px solid var(--side-accent);
+  }
+  .site-tab[data-site-tab="apps"] { --side-accent: var(--pink); }
+  .site-tab:hover,
+  .site-tab:focus-visible,
+  .site-tab.active {
+    outline: none;
+    border-color: color-mix(in srgb, var(--side-accent) 52%, rgba(255,255,255,0.12));
+    background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 14px 28px rgba(0,0,0,0.18);
+  }
+  .site-tab.active { transform: translateY(-1px); }
+  .site-tab-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    font-family: var(--mono);
+    font-size: clamp(16px, 1.55vw, 22px);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--side-accent);
+    line-height: 1.1;
+  }
+  .site-tab-title .br {
+    color: var(--side-accent);
+    opacity: 0.82;
+  }
+  .site-tab-copy {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.5;
+    opacity: 0.72;
+  }
+  .site-tab-count {
+    justify-self: end;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.024);
+    color: var(--muted);
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .site-panel { display: none; }
+  .site-panel.active { display: block; }
+
+  /* APPS DASHBOARD ARCHITECTURE */
+  .apps-shell {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.32fr) minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .apps-rail,
+  .dashboards-board {
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.014));
+  }
+  .apps-rail {
+    position: sticky;
+    top: 16px;
+    padding: 12px;
+  }
+  .apps-rail-head,
+  .dashboards-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .apps-rail-title,
+  .dashboards-title {
+    font-family: var(--mono);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .apps-rail-meta,
+  .dashboards-meta {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .apps-list {
+    display: grid;
+    gap: 8px;
+  }
+  .app-nav-item {
+    --app-accent: var(--green-2);
+    position: relative;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.018);
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+  }
+  .app-nav-item:hover,
+  .app-nav-item:focus-visible,
+  .app-nav-item.active {
+    outline: none;
+    border-color: color-mix(in srgb, var(--app-accent) 46%, rgba(255,255,255,0.12));
+    background: linear-gradient(90deg, color-mix(in srgb, var(--app-accent) 12%, transparent), rgba(255,255,255,0.018));
+  }
+  .app-nav-item.active { transform: translateX(2px); }
+  .app-icon {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid color-mix(in srgb, var(--app-accent) 58%, rgba(255,255,255,0.12));
+    background: color-mix(in srgb, var(--app-accent) 12%, rgba(255,255,255,0.03));
+    color: var(--app-accent);
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .app-icon img {
+    width: 86%;
+    height: 86%;
+    display: block;
+    object-fit: contain;
+  }
+  .app-icon-brix {
+    background: #050505;
+    box-shadow: inset 0 0 0 1px rgba(249,115,87,0.25), 0 0 18px rgba(249,115,87,0.12);
+  }
+  .app-icon-brix img { filter: drop-shadow(0 0 8px rgba(255,255,255,0.28)); }
+  .app-icon-world-markets {
+    background: #060a12;
+    border-color: rgba(91,167,255,0.42);
+    box-shadow: inset 0 0 0 1px rgba(109,208,169,0.12), 0 0 18px rgba(91,167,255,0.18);
+  }
+  .app-icon-world-markets img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .app-name {
+    display: block;
+    min-width: 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .app-kind {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    opacity: 0.68;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .app-dash-count {
+    color: var(--app-accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .dashboards-board {
+    min-width: 0;
+    padding: 18px;
+  }
+  .app-hero-row {
+    --app-accent: var(--pink);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) repeat(3, minmax(120px, 0.22fr));
+    gap: 12px;
+    align-items: stretch;
+    margin-bottom: 18px;
+  }
+  .app-identity,
+  .app-stat {
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.02);
+    padding: 14px;
+  }
+  .app-identity {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    border-color: color-mix(in srgb, var(--app-accent) 36%, rgba(255,255,255,0.07));
+  }
+  .app-identity .app-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+  }
+  .app-identity h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: clamp(20px, 2vw, 30px);
+    line-height: 1.05;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .app-identity p {
+    margin: 7px 0 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    line-height: 1.5;
+    opacity: 0.74;
+  }
+  .app-stat-label {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.74;
+  }
+  .app-stat-value {
+    margin-top: 10px;
+    color: var(--app-accent);
+    font-family: var(--mono);
+    font-size: clamp(18px, 1.7vw, 26px);
+    font-weight: 800;
+    line-height: 1;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .app-stat-tight {
+    min-width: 0;
+    padding: 12px 10px;
+  }
+  .app-stat-tight .app-stat-label,
+  .app-stat-tight .app-stat-value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .app-stat-tight .app-stat-label { font-size: 8px; }
+  .app-stat-tight .app-stat-value {
+    font-size: clamp(15px, 1.2vw, 20px);
+    letter-spacing: 0.04em;
+  }
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .dashboard-card {
+    --dash-accent: var(--green-2);
+    position: relative;
+    min-height: 210px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.012)),
+      radial-gradient(100% 70% at 100% 0%, color-mix(in srgb, var(--dash-accent) 13%, transparent), transparent 58%);
+    overflow: hidden;
+  }
+  .dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--dash-accent), transparent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--dash-accent) 46%, transparent);
+  }
+  .dashboard-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .dashboard-card h4 {
+    margin: 0;
+    color: var(--text);
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.25;
+  }
+  .dashboard-status {
+    flex-shrink: 0;
+    padding: 4px 7px;
+    border: 1px solid color-mix(in srgb, var(--dash-accent) 44%, rgba(255,255,255,0.08));
+    color: var(--dash-accent);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .dashboard-copy {
+    margin: 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.5;
+    opacity: 0.76;
+  }
+  .dashboard-mini-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 54px;
+    margin-top: auto;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .dashboard-mini-chart i {
+    flex: 1 1 0;
+    min-width: 5px;
+    height: var(--h);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--dash-accent) 88%, #fff), color-mix(in srgb, var(--dash-accent) 38%, transparent));
+    box-shadow: 0 0 12px color-mix(in srgb, var(--dash-accent) 28%, transparent);
+  }
+  .dashboard-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .dashboard-metric {
+    color: var(--dash-accent);
+    font-weight: 800;
+    text-align: right;
+  }
+  .brix-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .brix-panel {
+    --brix-accent: #f97357;
+    position: relative;
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid color-mix(in srgb, var(--brix-accent) 24%, rgba(255,255,255,0.07));
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.012)),
+      radial-gradient(100% 70% at 100% 0%, color-mix(in srgb, var(--brix-accent) 13%, transparent), transparent 58%);
+    overflow: hidden;
+  }
+  .brix-panel.wide { grid-column: 1 / -1; }
+  .brix-panel::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brix-accent), transparent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--brix-accent) 46%, transparent);
+  }
+  .brix-panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .brix-eyebrow {
+    color: var(--brix-accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .brix-panel h4 {
+    margin: 7px 0 0;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: clamp(24px, 3vw, 42px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .brix-panel-copy {
+    max-width: 420px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    text-transform: uppercase;
+    opacity: 0.74;
+  }
+  .brix-metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .brix-metric-row-apy { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .brix-metric {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 10px;
+  }
+  .brix-metric-label {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    opacity: 0.64;
+  }
+  .brix-metric-value {
+    margin-top: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: clamp(18px, 1.8vw, 28px);
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .brix-metric-value.accent { color: var(--brix-accent); }
+  .brix-chart {
+    position: relative;
+    width: 100%;
+    min-height: 280px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 12px;
+  }
+  .brix-chart-figure {
+    position: relative;
+    width: 100%;
+  }
+  .brix-chart svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 240px;
+  }
+  .brix-hover-point {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: crosshair;
+  }
+  .brix-hover-point::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    background: var(--brix-accent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--brix-accent) 62%, transparent);
+    opacity: 0;
+    transition: none;
+  }
+  .brix-hover-point:hover::before,
+  .brix-hover-point.is-active::before,
+  .brix-hover-point:focus::before,
+  .brix-hover-point:focus-visible::before { opacity: 1 !important; }
+  .brix-chart-tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 9px);
+    width: max-content;
+    max-width: min(260px, 72vw);
+    padding: 10px 11px;
+    border: 1px solid color-mix(in srgb, var(--brix-accent) 42%, rgba(255,255,255,0.12));
+    background: rgba(30,30,32,0.98);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    line-height: 1.35;
+    text-transform: uppercase;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(var(--tooltip-shift, -50%), 6px);
+    transition: none;
+    z-index: 4;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.34);
+  }
+  .brix-chart-tooltip strong { color: var(--brix-accent); font-weight: 800; }
+  .brix-tooltip-title {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--brix-accent);
+    font-weight: 800;
+  }
+  .brix-tooltip-row {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 16px;
+    justify-content: space-between;
+    min-width: 160px;
+  }
+  .brix-tooltip-row + .brix-tooltip-row { margin-top: 4px; }
+  .brix-tooltip-row span:first-child { color: var(--muted); opacity: 0.74; }
+  .brix-tooltip-row span:last-child { color: var(--text); font-weight: 800; text-align: right; }
+  .brix-hover-point:hover .brix-chart-tooltip,
+  .brix-hover-point.is-active .brix-chart-tooltip,
+  .brix-hover-point:focus .brix-chart-tooltip,
+  .brix-hover-point:focus-visible .brix-chart-tooltip {
+    opacity: 1 !important;
+    transform: translate(var(--tooltip-shift, -50%), 0) !important;
+  }
+  .brix-note {
+    margin-top: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    line-height: 1.55;
+    text-transform: uppercase;
+    opacity: 0.64;
+  }
+  .brix-note strong { color: var(--text); font-weight: 800; }
+  .brix-note a { color: var(--brix-accent); text-decoration: none; }
+  .brix-holder-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 20px;
+    align-items: center;
+  }
+  .brix-donut-wrap {
+    position: relative;
+    width: min(220px, 100%);
+    aspect-ratio: 1;
+    margin: 0 auto;
+  }
+  .brix-donut-wrap svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .brix-donut-segment {
+    transition: stroke-width 0.14s ease, filter 0.14s ease;
+    cursor: crosshair;
+  }
+  .brix-donut-segment:hover,
+  .brix-donut-segment:focus-visible {
+    stroke-width: 28;
+    filter: drop-shadow(0 0 8px currentColor);
+    outline: none;
+  }
+  .brix-donut-center {
+    position: absolute;
+    inset: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .brix-donut-center span {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    opacity: 0.64;
+  }
+  .brix-donut-center strong {
+    margin-top: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .brix-tier-list {
+    display: grid;
+    gap: 9px;
+  }
+  .brix-tier-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .brix-tier-dot {
+    width: 10px;
+    height: 10px;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow: 0 0 14px currentColor;
+  }
+  .brix-tier-name {
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+  .brix-tier-range {
+    margin-top: 3px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.56;
+  }
+  .brix-tier-value {
+    text-align: right;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .brix-loading {
+    min-height: 240px;
+    display: grid;
+    place-items: center;
+    color: rgba(248,245,240,0.56);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #050505;
+  }
+  .world-dashboard-grid {
+    --brix-accent: #5BA7FF;
+  }
+  .world-dashboard-grid .brix-panel {
+    --brix-accent: #5BA7FF;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
+      radial-gradient(90% 66% at 100% 0%, rgba(91,167,255,0.16), transparent 60%),
+      radial-gradient(70% 50% at 0% 100%, rgba(109,208,169,0.10), transparent 64%);
+  }
+  .world-dashboard-grid .brix-panel:nth-child(2) { --brix-accent: #6DD0A9; }
+  .world-dashboard-grid .brix-panel:nth-child(3) { --brix-accent: #7EAAD4; }
+  .world-dashboard-grid .brix-panel:nth-child(4) { --brix-accent: #F4D35E; }
+  .world-dual-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.44fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .world-row-list {
+    display: grid;
+    gap: 9px;
+  }
+  .world-row {
+    display: grid;
+    grid-template-columns: minmax(92px, 0.34fr) minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-family: var(--mono);
+    text-transform: uppercase;
+  }
+  .world-row-label {
+    min-width: 0;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .world-row-sub {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    opacity: 0.58;
+  }
+  .world-meter {
+    min-width: 0;
+    height: 8px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  .world-meter-fill {
+    display: block;
+    width: var(--w);
+    height: 100%;
+    background: linear-gradient(90deg, currentColor, rgba(255,255,255,0.74));
+    box-shadow: 0 0 16px currentColor;
+  }
+  .world-row-value {
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .world-kv-stack {
+    display: grid;
+    gap: 8px;
+  }
+  .world-kv {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-family: var(--mono);
+    text-transform: uppercase;
+  }
+  .world-kv span {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    opacity: 0.68;
+  }
+  .world-kv strong {
+    color: var(--text);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-align: right;
+  }
+  .world-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0 0;
+  }
+  .world-chip {
+    border: 1px solid color-mix(in srgb, var(--brix-accent) 34%, rgba(255,255,255,0.08));
+    color: var(--muted);
+    padding: 6px 8px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.018);
+  }
+  .world-chip strong { color: var(--brix-accent); }
+  .world-source-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .world-source-list a {
+    min-width: 0;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--muted);
+    padding: 8px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .world-source-list a:hover,
+  .world-source-list a:focus-visible {
+    border-color: color-mix(in srgb, var(--brix-accent) 44%, rgba(255,255,255,0.12));
+    color: var(--brix-accent);
+    outline: none;
+  }
+
+  @media (max-width: 1100px) {
+    .apps-shell { grid-template-columns: 1fr; }
+    .apps-rail { position: static; }
+    .apps-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .app-hero-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .app-identity { grid-column: 1 / -1; }
+    .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .brix-dashboard-grid { grid-template-columns: 1fr; }
+    .world-dual-layout { grid-template-columns: 1fr; }
+    .world-source-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 720px) {
+    .site-switcher { grid-template-columns: 1fr; }
+    .site-tab { min-height: 68px; padding: 13px; }
+    .apps-list,
+    .app-hero-row,
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .dashboards-board { padding: 14px 12px; }
+    .dashboard-card { min-height: 190px; }
+    .brix-panel { padding: 16px 12px; }
+    .brix-metric-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .brix-holder-layout { grid-template-columns: 1fr; }
+    .world-row { grid-template-columns: minmax(0, 1fr) minmax(72px, 0.44fr); }
+    .world-row .world-meter { grid-column: 1 / -1; grid-row: 2; }
+    .world-source-list { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -2713,6 +3587,21 @@
     <h1>The First <span class="accent">Real-Time</span><br/>Economics Dashboard.</h1>
     <p>>>  USDM Yield + Network Fees · Live On-Chain Data · Updated Daily</p>
   </section>
+
+  <nav class="site-switcher" aria-label="MegaFees site sections">
+    <button class="site-tab active" type="button" data-site-tab="network" aria-selected="true">
+      <span class="site-tab-title"><span class="br">[</span>Network<span class="br">]</span></span>
+      <span class="site-tab-count">15 charts</span>
+      <span class="site-tab-copy">Cards, network economics, revenue, token flows, and leaderboard data.</span>
+    </button>
+    <button class="site-tab" type="button" data-site-tab="apps" aria-selected="false">
+      <span class="site-tab-title"><span class="br">[</span>Apps<span class="br">]</span></span>
+      <span class="site-tab-count" id="appsDashboardCount">— dashboards</span>
+      <span class="site-tab-copy">A dedicated surface for app-level analytics and future product dashboards.</span>
+    </button>
+  </nav>
+
+  <div class="site-panel active" data-site-panel="network">
 
   <!-- CATEGORY CARDS -->
   <div class="category-cards" id="kpiTabs">
@@ -3159,6 +4048,40 @@
       </div>
     </div>
   </details>
+
+  </div>
+
+  <div class="site-panel" data-site-panel="apps" hidden>
+    <section class="section apps-section" id="appsSection">
+      <div class="chart-header">
+        <div class="title-block">
+          <h2><span>Apps</span></h2>
+          <div class="desc">Ten app workspaces with ready-to-fill dashboard slots, grouped by product area.</div>
+        </div>
+      </div>
+      <div class="apps-shell">
+        <aside class="apps-rail" aria-label="App list">
+          <div class="apps-rail-head">
+            <div>
+              <div class="apps-rail-title">App Index</div>
+              <div class="apps-rail-meta" id="appsRailMeta">— apps</div>
+            </div>
+          </div>
+          <div class="apps-list" id="appsList"></div>
+        </aside>
+        <div class="dashboards-board">
+          <div class="dashboards-head">
+            <div>
+              <div class="dashboards-title" id="activeAppTitle">—</div>
+              <div class="dashboards-meta" id="activeAppMeta">—</div>
+            </div>
+          </div>
+          <div class="app-hero-row" id="activeAppSummary"></div>
+          <div class="dashboard-grid" id="dashboardGrid"></div>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <footer>
     <div class="footer-inner">
@@ -7496,6 +8419,887 @@
     if (kind === 'usdt0')  return `<img class="token-logo usdt0 ${cls}" src="${LOGO_USDT0}" alt="USDT0" />`;
     return `<img class="token-logo ${cls}" src="${LOGO_USDM}" alt="USDm" />`;
   };
+
+  const APP_DASHBOARD_CATALOG = [
+    {
+      id: 'brix',
+      name: 'Brix',
+      kind: 'Tokenized FX',
+      initials: 'BX',
+      logo: 'logos/brix-symbol.svg',
+      accent: '#f97357',
+      health: 'Official data',
+      tvl: '$6.13M',
+      users: '$0.0228',
+      volume: '43.7%',
+      stats: [
+        ['iTRY MCAP', '$6.13M'],
+        ['wiTRY Price', '$0.0228'],
+        ['APY', '43.7%'],
+      ],
+      dashboards: [
+        ['Market Cap Growth', 'iTRY supply x TRY/USD.', 'Live', '$6.13M'],
+        ['wiTRY APY', 'Official 7d staking APY.', 'Live', '43.7%'],
+        ['Supply Tiers', 'EOA supply plus World Markets.', 'Live', '178.5M'],
+      ],
+    },
+    {
+      id: 'world-markets',
+      name: 'World Markets',
+      kind: 'PrimeDEX',
+      initials: 'WM',
+      logo: 'https://icons.llamao.fi/icons/protocols/world-markets-spot.jpg',
+      accent: '#5BA7FF',
+      health: 'On-chain data',
+      tvl: '$8.16M',
+      users: '$617K',
+      volume: '$36.2M',
+      stats: [
+        ['Perps Notional 24h', '$36.2M'],
+        ['Lending TVL', '$617K'],
+        ['Spot TVL', '$8.16M'],
+      ],
+      dashboards: [
+        ['Perps Volume', 'Notional USD and raw base volume from NewTrade logs.', 'On-chain', '$36.2M'],
+        ['Fees', 'Perps, lending interest, liquidation, and spot fees.', 'Live', '$22.1K'],
+        ['Spot TVL', 'Exchange balance composition from DefiLlama and Blockscout.', 'Live', '$8.16M'],
+        ['Lending TVL', 'Active lending positions decoded on-chain.', 'On-chain', '$617K'],
+      ],
+    },
+    {
+      id: 'mintpark',
+      name: 'MintPark',
+      kind: 'NFT',
+      initials: 'MP',
+      accent: '#FF8AA8',
+      health: 'Designing',
+      tvl: '$7.4M',
+      users: '31.2K',
+      volume: '$1.2M',
+      dashboards: [
+        ['Collection Pulse', 'Floor movement, listings, bids, and owner distribution.', 'Schema', '124 sets'],
+        ['Mint Funnel', 'Wallet conversion from allowlist to reveal and secondary sale.', 'Draft', '38%'],
+        ['Creator Revenue', 'Primary sale, royalty, and marketplace fee breakdowns.', 'Queue', '$84K'],
+      ],
+    },
+    {
+      id: 'vaultline',
+      name: 'VaultLine',
+      kind: 'Yield',
+      initials: 'VL',
+      accent: '#7EAAD4',
+      health: 'Live-ready',
+      tvl: '$62.8M',
+      users: '9.6K',
+      volume: '$3.1M',
+      dashboards: [
+        ['Strategy TVL', 'Deposits, withdrawals, and vault share by strategy family.', 'Schema', '$62.8M'],
+        ['Yield Quality', 'APY sources, subsidy share, volatility, and realized spread.', 'Draft', '8.4%'],
+        ['Risk Limits', 'Exposure caps, oracle drift, and liquidation proximity.', 'Queue', 'Low'],
+        ['Allocator Mix', 'Retail, vault, and whale balances across active products.', 'Schema', '9.6K'],
+        ['Revenue Waterfall', 'Gross yield, keeper costs, protocol take, and user net.', 'Draft', '$122K'],
+      ],
+    },
+    {
+      id: 'hypernest',
+      name: 'HyperNest',
+      kind: 'Perps',
+      initials: 'HN',
+      accent: '#C586FF',
+      health: 'Designing',
+      tvl: '$35.5M',
+      users: '22.1K',
+      volume: '$41.6M',
+      dashboards: [
+        ['Open Interest', 'Long/short skew, funding, and leverage by market.', 'Schema', '$19.4M'],
+        ['Trader PnL', 'Realized PnL, win rate, and whale concentration.', 'Draft', '51%'],
+        ['Liquidation Radar', 'Price bands, cascading risk, and insurance buffer.', 'Queue', '$2.8M'],
+        ['Market Quality', 'Spread, depth, and oracle update health per instrument.', 'Schema', '12 mkts'],
+      ],
+    },
+    {
+      id: 'loopforge',
+      name: 'LoopForge',
+      kind: 'Lending',
+      initials: 'LF',
+      accent: '#F5AF94',
+      health: 'Live-ready',
+      tvl: '$54.9M',
+      users: '13.8K',
+      volume: '$6.4M',
+      dashboards: [
+        ['Borrow Book', 'Utilization, borrow APR, and supplier yield by market.', 'Schema', '$28.7M'],
+        ['Collateral Heat', 'Collateral mix, health factors, and liquidation bands.', 'Draft', '1.72 HF'],
+        ['Rate Engine', 'Interest model changes and utilization sensitivity.', 'Queue', '84%'],
+        ['Bad Debt Watch', 'Dust, shortfall, and liquidation recovery tracking.', 'Schema', '$0'],
+        ['Wallet Segments', 'Borrower retention and supply-side cohort behavior.', 'Draft', '13.8K'],
+        ['Oracle Monitor', 'Feed latency, deviation, and fallback activation history.', 'Queue', 'Green'],
+      ],
+    },
+    {
+      id: 'pixelgate',
+      name: 'PixelGate',
+      kind: 'Gaming',
+      initials: 'PG',
+      accent: '#F4D35E',
+      health: 'Designing',
+      tvl: '$4.8M',
+      users: '74.5K',
+      volume: '$880K',
+      dashboards: [
+        ['Player Economy', 'Active players, sinks, faucets, and token velocity.', 'Schema', '74.5K'],
+        ['Match Loop', 'Sessions, completion, retries, and reward claim behavior.', 'Draft', '12.7m'],
+        ['Asset Market', 'Crafting, trades, floor prices, and inventory turnover.', 'Queue', '$880K'],
+      ],
+    },
+    {
+      id: 'flowdesk',
+      name: 'FlowDesk',
+      kind: 'Payments',
+      initials: 'FD',
+      accent: '#6DD0A9',
+      health: 'Live-ready',
+      tvl: '$22.6M',
+      users: '40.3K',
+      volume: '$15.1M',
+      dashboards: [
+        ['Payment Rails', 'Transfer volume, settlement time, and stablecoin split.', 'Schema', '$15.1M'],
+        ['Merchant Panel', 'Merchant cohorts, refunds, chargebacks, and net inflow.', 'Draft', '842'],
+        ['User Paths', 'Deposit source, first payment, repeat usage, and churn.', 'Queue', '40.3K'],
+        ['Treasury Float', 'Idle balance, sweep cadence, and yield contribution.', 'Schema', '$2.2M'],
+      ],
+    },
+    {
+      id: 'signalbay',
+      name: 'SignalBay',
+      kind: 'Social',
+      initials: 'SB',
+      accent: '#9AA7C2',
+      health: 'Designing',
+      tvl: '$3.6M',
+      users: '96.1K',
+      volume: '$510K',
+      dashboards: [
+        ['Creator Graph', 'Creator earnings, fan purchases, and content velocity.', 'Schema', '2.4K'],
+        ['Engagement Loop', 'Daily active wallets, posting cadence, and retention.', 'Draft', '96.1K'],
+        ['Social Trading', 'Signal purchases, copy volume, and top curator share.', 'Queue', '$510K'],
+        ['Reputation', 'Score distribution, abuse flags, and verified identity rate.', 'Schema', '87%'],
+        ['Campaigns', 'Quest conversion, referral depth, and reward cost per user.', 'Draft', '$0.19'],
+      ],
+    },
+    {
+      id: 'orbitlend',
+      name: 'OrbitLend',
+      kind: 'Credit',
+      initials: 'OL',
+      accent: '#FFB26B',
+      health: 'Live-ready',
+      tvl: '$17.9M',
+      users: '6.7K',
+      volume: '$2.3M',
+      dashboards: [
+        ['Credit Lines', 'Issued limits, active utilization, and repayment cadence.', 'Schema', '$11.2M'],
+        ['Borrower Risk', 'Default probability, late payments, and exposure buckets.', 'Draft', '2.1%'],
+        ['Pool Returns', 'Senior/junior tranche return and drawdown history.', 'Queue', '6.8%'],
+      ],
+    },
+    {
+      id: 'zappkit',
+      name: 'ZappKit',
+      kind: 'Automation',
+      initials: 'ZK',
+      accent: '#E56B6F',
+      health: 'Designing',
+      tvl: '$12.4M',
+      users: '16.9K',
+      volume: '$4.9M',
+      dashboards: [
+        ['Task Volume', 'Executions, failure reasons, retries, and gas sponsorship.', 'Schema', '1.8M'],
+        ['Bot Revenue', 'Subscription, task fee, and integrator revenue streams.', 'Draft', '$61K'],
+        ['Integration Health', 'Protocol endpoints, stale jobs, and latency windows.', 'Queue', '94%'],
+        ['User Automations', 'Most-used templates, retention, and upgrade behavior.', 'Schema', '16.9K'],
+        ['Keeper Market', 'Keeper competition, payout variance, and uptime.', 'Draft', '99.2%'],
+        ['Alert Center', 'Anomaly triggers and incident history by integration.', 'Queue', '7 alerts'],
+      ],
+    },
+  ];
+
+  let activeSiteTab = 'network';
+  let activeAppId = APP_DASHBOARD_CATALOG[0]?.id || '';
+
+  function dashboardBars(seed) {
+    const base = String(seed || '').split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+    return Array.from({ length: 7 }, (_, index) => 24 + ((base + index * 17) % 62));
+  }
+
+  function appIconMarkup(app) {
+    if (app?.logo) return `<span class="app-icon app-icon-${app.id}"><img src="${app.logo}" alt="${app.name} logo" loading="lazy" /></span>`;
+    return `<span class="app-icon">${app.initials}</span>`;
+  }
+
+  const BRIX_DASHBOARD_DATA_URL = 'data/brix-dashboard-data.json';
+  const BRIX_TOKEN_DATA_URL = 'data/brix-tokens.json';
+  const brixDataState = { dashboard: null, tokens: null, promise: null, error: null };
+  const WORLD_MARKETS_DASHBOARD_DATA_URL = 'data/world-markets-dashboard-data.json';
+  const worldMarketsDataState = { dashboard: null, promise: null, error: null };
+
+  function loadBrixData() {
+    if (brixDataState.promise) return brixDataState.promise;
+    brixDataState.promise = Promise.all([
+      fetch(BRIX_DASHBOARD_DATA_URL, { cache: 'no-store' }).then((res) => res.ok ? res.json() : null),
+      fetch(BRIX_TOKEN_DATA_URL, { cache: 'no-store' }).then((res) => res.ok ? res.json() : null),
+    ]).then(([dashboard, tokens]) => {
+      brixDataState.dashboard = dashboard;
+      brixDataState.tokens = tokens;
+      brixDataState.error = null;
+      if (activeAppId === 'brix') renderActiveApp();
+    }).catch((error) => {
+      console.warn('Brix data load failed', error);
+      brixDataState.error = error;
+      if (activeAppId === 'brix') renderActiveApp();
+    }).finally(() => {
+      brixDataState.promise = null;
+    });
+    return brixDataState.promise;
+  }
+
+  function loadWorldMarketsData() {
+    if (worldMarketsDataState.promise) return worldMarketsDataState.promise;
+    worldMarketsDataState.promise = fetch(WORLD_MARKETS_DASHBOARD_DATA_URL, { cache: 'no-store' })
+      .then((res) => res.ok ? res.json() : null)
+      .then((dashboard) => {
+        worldMarketsDataState.dashboard = dashboard;
+        worldMarketsDataState.error = null;
+        if (activeAppId === 'world-markets') renderActiveApp();
+      }).catch((error) => {
+        console.warn('World Markets data load failed', error);
+        worldMarketsDataState.error = error;
+        if (activeAppId === 'world-markets') renderActiveApp();
+      }).finally(() => {
+        worldMarketsDataState.promise = null;
+      });
+    return worldMarketsDataState.promise;
+  }
+
+  function brixPct(value, digits = 1) {
+    if (!Number.isFinite(value)) return '—';
+    const sign = value > 0 ? '+' : value < 0 ? '-' : '';
+    return sign + Math.abs(value * 100).toFixed(digits) + '%';
+  }
+
+  function brixApyPct(value, digits = 1) {
+    if (!Number.isFinite(value)) return '—';
+    const sign = value < 0 ? '-' : '';
+    return sign + Math.abs(value * 100).toFixed(digits) + '%';
+  }
+
+  function brixDateLabel(timestamp) {
+    return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  }
+
+  function brixDateKey(timestamp) {
+    return new Date(timestamp).toISOString().slice(0, 10);
+  }
+
+  function brixCompactToken(value) {
+    if (!Number.isFinite(value)) return '—';
+    if (Math.abs(value) >= 1e9) return (value / 1e9).toFixed(2).replace(/\.0+$/, '') + 'B';
+    if (Math.abs(value) >= 1e6) return (value / 1e6).toFixed(2).replace(/\.0+$/, '') + 'M';
+    if (Math.abs(value) >= 1e3) return (value / 1e3).toFixed(1).replace(/\.0+$/, '') + 'K';
+    return value.toFixed(0);
+  }
+
+  function brixAnnualize(returnValue, days) {
+    if (!Number.isFinite(returnValue)) return 0;
+    if (returnValue <= -1) return -1;
+    return Math.pow(1 + returnValue, 365 / Math.max(1, days)) - 1;
+  }
+
+  function brixLineCoordinates(points, minValue, maxValue, width, height, pad) {
+    const range = Math.max(0.000001, maxValue - minValue);
+    const xStep = points.length > 1 ? (width - pad.left - pad.right) / (points.length - 1) : 0;
+    return points.map((point, index) => ({
+      x: pad.left + index * xStep,
+      y: pad.top + (1 - ((point.value - minValue) / range)) * (height - pad.top - pad.bottom),
+    }));
+  }
+
+  function brixPolyline(points) {
+    return points.map((point, index) => (index ? 'L ' : 'M ') + point.x.toFixed(2) + ' ' + point.y.toFixed(2)).join(' ');
+  }
+
+  function brixLineChart(points, options = {}) {
+    if (!Array.isArray(points) || points.length < 2) return '<div class="brix-loading">Not enough data</div>';
+    const width = 920;
+    const height = options.height || 300;
+    const pad = { left: 54, right: 18, top: 18, bottom: 34 };
+    const chartColor = options.color || '#f97357';
+    const compare = Array.isArray(options.compare) ? options.compare : [];
+    const allValues = [...points, ...compare].map((point) => point.value).filter(Number.isFinite);
+    if (Number.isFinite(options.baseline)) allValues.push(options.baseline);
+    const minRaw = Math.min(...allValues);
+    const maxRaw = Math.max(...allValues);
+    const spread = Math.max(0.000001, maxRaw - minRaw);
+    const minValue = minRaw - spread * 0.08;
+    const maxValue = maxRaw + spread * 0.08;
+    const coords = brixLineCoordinates(points, minValue, maxValue, width, height, pad);
+    const compareCoords = compare.length ? brixLineCoordinates(compare, minValue, maxValue, width, height, pad) : [];
+    const path = brixPolyline(coords);
+    const area = path + ' L ' + coords[coords.length - 1].x.toFixed(2) + ' ' + (height - pad.bottom) + ' L ' + coords[0].x.toFixed(2) + ' ' + (height - pad.bottom) + ' Z';
+    const first = points[0];
+    const mid = points[Math.floor(points.length / 2)];
+    const last = points[points.length - 1];
+    const formatY = options.formatY || ((value) => fmtUSDCompact(value));
+    const yTicks = [maxRaw, (maxRaw + minRaw) / 2, minRaw];
+    const baselineY = Number.isFinite(options.baseline)
+      ? brixLineCoordinates([{ value: options.baseline }], minValue, maxValue, width, height, pad)[0].y
+      : null;
+    const tooltipFor = typeof options.tooltip === 'function'
+      ? options.tooltip
+      : ((point) => `<span class="brix-tooltip-title">${brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Value</span><span>${escapeHTML(String(formatY(point.value)))}</span></span>`);
+    const xLabel = typeof options.xLabel === 'function' ? options.xLabel : ((point) => brixDateLabel(point.timestamp));
+    const hotspots = coords.map((coord, index) => {
+      const tooltipShift = index < 3 ? '0' : index > coords.length - 4 ? '-100%' : '-50%';
+      return `<span class="brix-hover-point" tabindex="0" aria-label="${escapeHTML(options.label || 'Chart point')}" style="left:${(coord.x / width * 100).toFixed(3)}%;top:${(coord.y / height * 100).toFixed(3)}%;--tooltip-shift:${tooltipShift}"><span class="brix-chart-tooltip">${tooltipFor(points[index], index)}</span></span>`;
+    }).join('');
+    return `
+      <div class="brix-chart-figure">
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHTML(options.label || 'Brix line chart')}">
+          <defs>
+            <linearGradient id="${options.gradientId || 'brixLineArea'}" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="${chartColor}" stop-opacity="0.30" />
+              <stop offset="100%" stop-color="${chartColor}" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          ${yTicks.map((tick, index) => {
+            const y = pad.top + index * ((height - pad.top - pad.bottom) / 2);
+            return `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" stroke="rgba(255,255,255,0.08)"/><text x="${pad.left - 12}" y="${y + 4}" text-anchor="end" fill="rgba(223,217,217,0.52)" font-family="Courier New" font-size="11">${formatY(tick)}</text>`;
+          }).join('')}
+          ${baselineY != null ? `<line x1="${pad.left}" y1="${baselineY}" x2="${width - pad.right}" y2="${baselineY}" stroke="rgba(223,217,217,0.38)" stroke-dasharray="5 6"/>` : ''}
+          <path d="${area}" fill="url(#${options.gradientId || 'brixLineArea'})"/>
+          ${compareCoords.length ? `<path d="${brixPolyline(compareCoords)}" fill="none" stroke="rgba(223,217,217,0.34)" stroke-width="2" stroke-dasharray="6 7"/>` : ''}
+          <path d="${path}" fill="none" stroke="${chartColor}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="${coords[coords.length - 1].x}" cy="${coords[coords.length - 1].y}" r="4" fill="${chartColor}"/>
+          ${[first, mid, last].map((point, index) => {
+            const x = index === 0 ? pad.left : index === 1 ? width / 2 : width - pad.right;
+            return `<text x="${x}" y="${height - 8}" text-anchor="${index === 0 ? 'start' : index === 1 ? 'middle' : 'end'}" fill="rgba(223,217,217,0.52)" font-family="Courier New" font-size="11">${escapeHTML(xLabel(point, index))}</text>`;
+          }).join('')}
+        </svg>
+        ${hotspots}
+      </div>
+    `;
+  }
+
+  function brixRangeLabel(tier) {
+    if (tier.label === 'World Markets') return 'World Markets contract';
+    if (tier.max == null) return brixCompactToken(tier.min) + '+ WITRY';
+    if (tier.min <= 0) return '< ' + brixCompactToken(tier.max) + ' WITRY';
+    return brixCompactToken(tier.min) + ' - ' + brixCompactToken(tier.max) + ' WITRY';
+  }
+
+  function brixTierCountLabel(tier) {
+    if (tier.label === 'World Markets') return '1 contract';
+    return tier.count + ' ' + (tier.count === 1 ? 'holder' : 'holders');
+  }
+
+  function buildBrixModels(data) {
+    const fxPoints = data?.tryUsdSeries?.points || [];
+    const stakingPoints = data?.stakingYield?.points || [];
+    const apySnapshot = data?.apySnapshot || {};
+    const fxByDate = new Map(fxPoints.map((point) => [brixDateKey(point.timestamp), Number(point.value)]));
+    const supply = Number(data?.itryMarketCap?.supply || 0);
+    const marketCapPoints = fxPoints.map((point) => ({
+      timestamp: point.timestamp,
+      value: supply * Number(point.value || 0),
+      tryUsd: Number(point.value || 0),
+    })).filter((point) => point.value > 0);
+    const perfPoints = stakingPoints.map((point, index) => {
+      const windowPoints = stakingPoints.slice(Math.max(0, index - 6), index + 1);
+      const coveredDays = windowPoints.reduce((sum, entry) => sum + Number(entry.periodDays || 1), 0) || 1;
+      const compoundedReturn = windowPoints.reduce((product, entry) => product * (1 + Number(entry.periodReturn || 0)), 1) - 1;
+      const witryApy = brixAnnualize(compoundedReturn, coveredDays);
+      const fxStart = fxByDate.get(windowPoints[0]?.periodStartDate) || 0;
+      const fxEnd = fxByDate.get(point.distributionDate) || 0;
+      const tryUsdApy = fxStart > 0 && fxEnd > 0 ? brixAnnualize((fxEnd / fxStart) - 1, coveredDays) : 0;
+      const realYield = witryApy - Math.abs(tryUsdApy);
+      return {
+        timestamp: Date.parse(point.distributionDate + 'T23:59:59.999Z'),
+        value: witryApy * 100,
+        witryApy,
+        tryUsdApy,
+        realYield,
+        periodReturn: compoundedReturn,
+        coveredDays,
+        distributions: windowPoints.length,
+      };
+    });
+    const snapshotApy = Number(apySnapshot.stakingApy);
+    const witryApy = Number.isFinite(snapshotApy) ? snapshotApy : (perfPoints.at(-1)?.witryApy || 0);
+    const fxStart = fxByDate.get(apySnapshot.periodStartDate) || fxPoints[Math.max(0, fxPoints.length - 8)]?.value || 0;
+    const fxEnd = fxByDate.get(apySnapshot.periodEndDate) || fxPoints.at(-1)?.value || 0;
+    const fxDays = Number(apySnapshot.coveredDays || 7);
+    const tryUsdApy = fxStart > 0 && fxEnd > 0 ? brixAnnualize((fxEnd / fxStart) - 1, fxDays) : 0;
+    const realYield = witryApy - Math.abs(tryUsdApy);
+    const marketStart = marketCapPoints[0]?.value || 0;
+    const marketEnd = marketCapPoints[marketCapPoints.length - 1]?.value || Number(data?.itryMarketCap?.usd || 0);
+    return {
+      marketCapPoints,
+      perfPoints,
+      marketStart,
+      marketEnd,
+      marketGrowth: marketStart > 0 ? (marketEnd / marketStart) - 1 : 0,
+      witryApy,
+      tryUsdApy,
+      realYield,
+    };
+  }
+
+  function bindBrixChartTooltips(scope) {
+    scope.querySelectorAll('.brix-hover-point').forEach((point) => {
+      const tooltip = point.querySelector('.brix-chart-tooltip');
+      const show = () => {
+        point.classList.add('is-active');
+        if (tooltip) {
+          tooltip.style.opacity = '1';
+          tooltip.style.transform = 'translate(var(--tooltip-shift, -50%), 0)';
+        }
+      };
+      const hide = () => {
+        point.classList.remove('is-active');
+        if (tooltip) {
+          tooltip.style.opacity = '';
+          tooltip.style.transform = '';
+        }
+      };
+      point.addEventListener('pointerenter', show);
+      point.addEventListener('pointerleave', hide);
+      point.addEventListener('focus', show);
+      point.addEventListener('blur', hide);
+    });
+  }
+
+  function renderBrixDashboards(grid) {
+    grid.className = 'brix-dashboard-grid';
+    const data = brixDataState.dashboard;
+    if (!data) {
+      loadBrixData();
+      grid.innerHTML = '<div class="brix-loading">Loading Brix dashboards</div>';
+      return;
+    }
+    const model = buildBrixModels(data);
+    const tiers = data?.holderTiers?.tiers || [];
+    const circumference = 2 * Math.PI * 58;
+    let offset = 0;
+    const tierSegments = tiers.map((tier) => {
+      const dash = Math.max(0, (tier.balanceSharePct / 100) * circumference);
+      const title = `${tier.label}: ${tier.balanceSharePct.toFixed(2)}% supply, ${brixCompactToken(tier.balance)} WITRY, ${brixTierCountLabel(tier)}`;
+      const segment = `<circle class="brix-donut-segment" cx="80" cy="80" r="58" fill="none" stroke="${tier.color}" stroke-width="24" stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${-offset}" tabindex="0"><title>${escapeHTML(title)}</title></circle>`;
+      offset += dash;
+      return segment;
+    }).join('');
+    grid.innerHTML = `
+      <article class="brix-panel wide">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Market cap growth</div><h4>${fmtUSDCompact(model.marketEnd)}</h4></div>
+          <p class="brix-panel-copy">iTRY supply x TRY/USD.</p>
+        </div>
+        <div class="brix-metric-row">
+          <div class="brix-metric"><div class="brix-metric-label">Start</div><div class="brix-metric-value">${fmtUSDCompact(model.marketStart)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Current</div><div class="brix-metric-value accent">${fmtUSDCompact(model.marketEnd)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Growth</div><div class="brix-metric-value">${brixPct(model.marketGrowth)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Supply</div><div class="brix-metric-value">${brixCompactToken(data.itryMarketCap.supply)}</div></div>
+        </div>
+        <div class="brix-chart">${brixLineChart(model.marketCapPoints, {
+          label: 'iTRY market cap growth',
+          gradientId: 'brixMarketCapArea',
+          formatY: (value) => fmtUSDCompact(value),
+          tooltip: (point) => `<span class="brix-tooltip-title">${brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Market cap</span><span>${fmtUSD(point.value, 0)}</span></span><span class="brix-tooltip-row"><span>TRY/USD</span><span>$${Number(point.tryUsd).toFixed(5)}</span></span>`,
+        })}</div>
+        <div class="brix-note">Source: <strong>brix.money/dashboard</strong>. Latest: <strong>${fmtUSD(model.marketEnd, 0)}</strong>.</div>
+      </article>
+      <article class="brix-panel">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">wiTRY APY</div><h4>${brixApyPct(model.witryApy, 1)}</h4></div>
+          <p class="brix-panel-copy">Official 7d staking APY.</p>
+        </div>
+        <div class="brix-metric-row brix-metric-row-apy">
+          <div class="brix-metric"><div class="brix-metric-label">wiTRY APY</div><div class="brix-metric-value accent">${brixApyPct(model.witryApy, 1)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">TRY/USD APY</div><div class="brix-metric-value">${brixApyPct(model.tryUsdApy, 1)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Real Yield</div><div class="brix-metric-value">${brixApyPct(model.realYield, 1)}</div></div>
+        </div>
+        <div class="brix-chart">${brixLineChart(model.perfPoints, {
+          label: 'wiTRY APY',
+          gradientId: 'brixProfitArea',
+          formatY: (value) => value.toFixed(1) + '%',
+          tooltip: (point) => `<span class="brix-tooltip-title">${brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>wiTRY APY</span><span>${brixApyPct(point.witryApy, 1)}</span></span><span class="brix-tooltip-row"><span>TRY/USD APY</span><span>${brixApyPct(point.tryUsdApy, 1)}</span></span><span class="brix-tooltip-row"><span>Real Yield</span><span>${brixApyPct(point.realYield, 1)}</span></span>`,
+        })}</div>
+      </article>
+      <article class="brix-panel">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Supply tiers</div><h4>${brixCompactToken(data.holderTiers.totalBalance)}</h4></div>
+          <p class="brix-panel-copy">EOAs + World Markets only.</p>
+        </div>
+        <div class="brix-holder-layout">
+          <div class="brix-donut-wrap">
+            <svg viewBox="0 0 160 160" role="img" aria-label="WITRY supply distribution by wallet size">
+              <circle cx="80" cy="80" r="58" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="24"/>
+              ${tierSegments}
+            </svg>
+            <div class="brix-donut-center"><span>Counted supply</span><strong>${brixCompactToken(data.holderTiers.totalBalance)}</strong></div>
+          </div>
+          <div class="brix-tier-list">
+            ${tiers.map((tier) => `
+              <div class="brix-tier-row" title="${escapeHTML(`${tier.label}: ${tier.balanceSharePct.toFixed(2)}% supply across ${brixTierCountLabel(tier)}`)}">
+                <span class="brix-tier-dot" style="color:${tier.color}"></span>
+                <div><div class="brix-tier-name">${tier.label}</div><div class="brix-tier-range">${brixRangeLabel(tier)}</div></div>
+                <div class="brix-tier-value"><strong>${tier.balanceSharePct.toFixed(2)}%</strong> supply<br/>${brixTierCountLabel(tier)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="brix-note">Source: <a href="${data.holderTiers.sourceUrl}" target="_blank" rel="noopener">Blockscout WITRY</a>. Other contracts excluded.</div>
+      </article>
+    `;
+    bindBrixChartTooltips(grid);
+  }
+
+  function worldChartPoints(points) {
+    return (points || [])
+      .map((point) => ({
+        timestamp: Number(point.timestamp || 0),
+        value: Number(point.value),
+        label: point.label || brixDateLabel(Number(point.timestamp || 0)),
+      }))
+      .filter((point) => Number.isFinite(point.value));
+  }
+
+  function worldHourlyPoints(data) {
+    const rows = data?.perps?.volume?.hourlyNotional || [];
+    const asOf = Date.parse(data?.asOf || '') || Date.now();
+    return rows.map((point, index) => ({
+      timestamp: asOf - (rows.length - index) * 3600000,
+      value: Number(point.value || 0),
+      label: point.label || 'T-' + (rows.length - index) + 'h',
+    }));
+  }
+
+  function worldTokenAmount(value, symbol) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return '—';
+    const abs = Math.abs(amount);
+    const digits = abs >= 1000 ? 0 : abs >= 100 ? 1 : abs >= 10 ? 2 : abs >= 1 ? 3 : 4;
+    return amount.toLocaleString('en-US', { maximumFractionDigits: digits }) + (symbol ? ' ' + symbol : '');
+  }
+
+  function worldMetricBlocks(metrics) {
+    return metrics.map(([label, value, accent]) => `
+      <div class="brix-metric">
+        <div class="brix-metric-label">${escapeHTML(label)}</div>
+        <div class="brix-metric-value${accent ? ' accent' : ''}">${escapeHTML(value)}</div>
+      </div>
+    `).join('');
+  }
+
+  function worldRowList(rows, options = {}) {
+    const valueFor = options.value || ((row) => row.usd || row.notionalUsd || row.value || 0);
+    const maxValue = Math.max(1, ...rows.map((row) => Number(valueFor(row)) || 0));
+    return rows.map((row) => {
+      const value = Number(valueFor(row)) || 0;
+      const width = Math.max(2, Math.min(100, (value / maxValue) * 100));
+      const label = options.label ? options.label(row) : row.symbol;
+      const sub = options.sub ? options.sub(row) : '';
+      const metric = options.metric ? options.metric(row) : fmtUSDCompact(value);
+      const color = row.color || options.color || '#5BA7FF';
+      const title = options.title ? options.title(row) : `${label}: ${metric}`;
+      return `
+        <div class="world-row" title="${escapeHTML(title)}">
+          <div>
+            <div class="world-row-label">${escapeHTML(label)}</div>
+            ${sub ? `<div class="world-row-sub">${escapeHTML(sub)}</div>` : ''}
+          </div>
+          <div class="world-meter" aria-hidden="true"><span class="world-meter-fill" style="--w:${width.toFixed(2)}%;color:${color}"></span></div>
+          <div class="world-row-value">${escapeHTML(metric)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function worldSourceLinks(sources) {
+    return (sources || []).slice(0, 6).map((source) => `
+      <a href="${escapeHTML(source.url)}" target="_blank" rel="noopener" title="${escapeHTML(source.note || source.label)}">${escapeHTML(source.label)}</a>
+    `).join('');
+  }
+
+  function renderWorldMarketsDashboards(grid) {
+    grid.className = 'brix-dashboard-grid world-dashboard-grid';
+    const data = worldMarketsDataState.dashboard;
+    if (!data) {
+      loadWorldMarketsData();
+      grid.innerHTML = '<div class="brix-loading">Loading World Markets dashboards</div>';
+      return;
+    }
+
+    const spotTvl = data.spotTvl || {};
+    const spotTokens = spotTvl.tokens || [];
+    const spotTotal = Number(spotTvl.blockscoutLiveUsd || spotTvl.defillamaCurrentUsd || 0);
+    const spotHistory = worldChartPoints(spotTvl.history);
+    const spotVolumePoints = worldChartPoints(data.spotVolume?.daily);
+    const perpsVolume = data.perps?.volume || {};
+    const perpsMarkets = perpsVolume.markets || [];
+    const perpsNotional = Number(perpsVolume.notional24hUsd || 0);
+    const perpsHourly = worldHourlyPoints(data);
+    const perpsFees = data.perps?.fees || {};
+    const perpsFeePoints = worldChartPoints(perpsFees.daily);
+    const spotFeePoints = worldChartPoints(data.spotFees?.daily);
+    const lending = data.lending || {};
+    const lendingTokens = lending.tokens || [];
+
+    grid.innerHTML = `
+      <article class="brix-panel wide">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Perps volume</div><h4>${fmtUSDCompact(perpsNotional)}</h4></div>
+          <p class="brix-panel-copy">Notional USD plus raw base volume from NewTrade logs.</p>
+        </div>
+        <div class="brix-metric-row">
+          ${worldMetricBlocks([
+            ['Notional 24h', fmtUSDCompact(perpsNotional), true],
+            ['Raw logs', fmtNum(perpsVolume.tradeLogs || 0), false],
+            ['Log fees', fmtUSDCompact(perpsVolume.feesUsdFromLogs || 0), false],
+            ['Markets', String(perpsMarkets.length), false],
+          ])}
+        </div>
+        <div class="world-dual-layout">
+          <div class="brix-chart">${brixLineChart(perpsHourly, {
+            label: 'World Markets perps notional volume',
+            gradientId: 'worldPerpsNotionalArea',
+            color: '#5BA7FF',
+            formatY: (value) => fmtUSDCompact(value),
+            xLabel: (point) => point.label || brixDateLabel(point.timestamp),
+            tooltip: (point) => `<span class="brix-tooltip-title">${escapeHTML(point.label || 'Hour')}</span><span class="brix-tooltip-row"><span>Notional</span><span>${fmtUSD(point.value, 0)}</span></span>`,
+          })}</div>
+          <div class="world-row-list">
+            ${worldRowList(perpsMarkets, {
+              value: (row) => row.notionalUsd,
+              label: (row) => row.symbol,
+              sub: (row) => worldTokenAmount(row.rawVolume, row.rawUnit),
+              metric: (row) => fmtUSDCompact(row.notionalUsd),
+            })}
+          </div>
+        </div>
+        <div class="brix-note">Source: <strong>MegaETH logs</strong> decoded with DefiLlama WorldInc adapter. Window: blocks <strong>${fmtNum(perpsVolume.fromBlock || 0)}</strong> to <strong>${fmtNum(perpsVolume.latestBlock || 0)}</strong>.</div>
+      </article>
+
+      <article class="brix-panel">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Fees</div><h4>${fmtUSDCompact(perpsFees.total24hUsd || 0)}</h4></div>
+          <p class="brix-panel-copy">Perps fees include trading, lending interest, and liquidations.</p>
+        </div>
+        <div class="brix-metric-row">
+          ${worldMetricBlocks([
+            ['Perps 24h', fmtUSDCompact(perpsFees.total24hUsd || 0), true],
+            ['Perps 7d', fmtUSDCompact(perpsFees.total7dUsd || 0), false],
+            ['Perps 30d', fmtUSDCompact(perpsFees.total30dUsd || 0), false],
+            ['Spot 24h', fmtUSDCompact(data.spotFees?.total24hUsd || 0), false],
+          ])}
+        </div>
+        <div class="brix-chart">${brixLineChart(perpsFeePoints, {
+          label: 'World Markets perps fees',
+          gradientId: 'worldPerpsFeesArea',
+          color: '#6DD0A9',
+          compare: spotFeePoints,
+          formatY: (value) => fmtUSDCompact(value),
+          tooltip: (point) => `<span class="brix-tooltip-title">${brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Perps fees</span><span>${fmtUSD(point.value, 0)}</span></span>`,
+        })}</div>
+        <div class="world-chip-row">
+          <span class="world-chip">Perps 30d <strong>${fmtUSDCompact(perpsFees.total30dUsd || 0)}</strong></span>
+          <span class="world-chip">Spot 7d <strong>${fmtUSDCompact(data.spotFees?.total7dUsd || 0)}</strong></span>
+          <span class="world-chip">All-time fees <strong>${fmtUSDCompact((perpsFees.totalAllTimeUsd || 0) + (data.spotFees?.totalAllTimeUsd || 0))}</strong></span>
+        </div>
+      </article>
+
+      <article class="brix-panel">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Spot TVL</div><h4>${fmtUSDCompact(spotTotal)}</h4></div>
+          <p class="brix-panel-copy">Exchange balance composition, live on Blockscout.</p>
+        </div>
+        <div class="brix-metric-row">
+          ${worldMetricBlocks([
+            ['DefiLlama', fmtUSDCompact(spotTvl.defillamaCurrentUsd || 0), false],
+            ['Blockscout', fmtUSDCompact(spotTotal), true],
+            ['Spot volume', fmtUSDCompact(data.spotVolume?.total24hUsd || 0), false],
+            ['Spot fees', fmtUSDCompact(data.spotFees?.total24hUsd || 0), false],
+          ])}
+        </div>
+        <div class="world-dual-layout">
+          <div class="brix-chart">${brixLineChart(spotHistory, {
+            label: 'World Markets spot TVL',
+            gradientId: 'worldSpotTvlArea',
+            color: '#7EAAD4',
+            formatY: (value) => fmtUSDCompact(value),
+            tooltip: (point) => `<span class="brix-tooltip-title">${brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>TVL</span><span>${fmtUSD(point.value, 0)}</span></span>`,
+          })}</div>
+          <div class="world-row-list">
+            ${worldRowList(spotTokens, {
+              value: (row) => row.usd,
+              label: (row) => row.symbol,
+              sub: (row) => worldTokenAmount(row.amount, row.symbol),
+              metric: (row) => fmtUSDCompact(row.usd),
+            })}
+          </div>
+        </div>
+        <div class="brix-note">Methodology: <strong>${escapeHTML(spotTvl.methodology || 'Exchange balances')}</strong></div>
+      </article>
+
+      <article class="brix-panel">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Lending TVL</div><h4>${fmtUSDCompact(lending.tvlUsd || 0)}</h4></div>
+          <p class="brix-panel-copy">Active lend positions checked against exchange state.</p>
+        </div>
+        <div class="brix-metric-row">
+          ${worldMetricBlocks([
+            ['TVL', fmtUSDCompact(lending.tvlUsd || 0), true],
+            ['Active positions', fmtNum(lending.activePositions || 0), false],
+            ['Changed logs', fmtNum(lending.changedLogs || 0), false],
+            ['Closed logs', fmtNum(lending.closedLogs || 0), false],
+          ])}
+        </div>
+        <div class="world-dual-layout">
+          <div class="world-row-list">
+            ${worldRowList(lendingTokens, {
+              value: (row) => row.usd,
+              label: (row) => row.symbol,
+              sub: (row) => worldTokenAmount(row.amount, row.symbol),
+              metric: (row) => fmtUSDCompact(row.usd),
+            })}
+          </div>
+          <div class="world-kv-stack">
+            <div class="world-kv"><span>Positions seen</span><strong>${fmtNum(lending.positionsSeen || 0)}</strong></div>
+            <div class="world-kv"><span>Lend markets</span><strong>${fmtNum((lending.lendOrderbooks || []).length)}</strong></div>
+            <div class="world-kv"><span>TVL source</span><strong>On-chain</strong></div>
+            <div class="world-kv"><span>Latest block</span><strong>${fmtNum(perpsVolume.latestBlock || 0)}</strong></div>
+          </div>
+        </div>
+        <div class="world-chip-row">
+          ${(lending.lendOrderbooks || []).map((book) => `<span class="world-chip">${escapeHTML(book.token)} <strong>${shortAddress(book.address)}</strong></span>`).join('')}
+        </div>
+        <div class="world-source-list">${worldSourceLinks(data.sources)}</div>
+      </article>
+    `;
+    bindBrixChartTooltips(grid);
+  }
+
+  function totalAppDashboards() {
+    return APP_DASHBOARD_CATALOG.reduce((sum, app) => sum + app.dashboards.length, 0);
+  }
+
+  function renderAppsNav() {
+    const list = document.getElementById('appsList');
+    const railMeta = document.getElementById('appsRailMeta');
+    const count = document.getElementById('appsDashboardCount');
+    if (railMeta) railMeta.textContent = APP_DASHBOARD_CATALOG.length + ' apps';
+    if (count) count.textContent = totalAppDashboards() + ' dashboards';
+    if (!list) return;
+    list.innerHTML = APP_DASHBOARD_CATALOG.map((app) => `
+      <button class="app-nav-item${app.id === activeAppId ? ' active' : ''}" type="button" data-app-id="${app.id}" style="--app-accent:${app.accent}" aria-pressed="${app.id === activeAppId ? 'true' : 'false'}">
+        ${appIconMarkup(app)}
+        <span>
+          <span class="app-name">${app.name}</span>
+          <span class="app-kind">${app.kind} · ${app.health}</span>
+        </span>
+        <span class="app-dash-count">${app.dashboards.length}</span>
+      </button>
+    `).join('');
+    list.querySelectorAll('[data-app-id]').forEach((button) => {
+      button.addEventListener('click', () => selectApp(button.dataset.appId));
+    });
+  }
+
+  function renderActiveApp() {
+    const app = APP_DASHBOARD_CATALOG.find((entry) => entry.id === activeAppId) || APP_DASHBOARD_CATALOG[0];
+    if (!app) return;
+    const title = document.getElementById('activeAppTitle');
+    const meta = document.getElementById('activeAppMeta');
+    const summary = document.getElementById('activeAppSummary');
+    const grid = document.getElementById('dashboardGrid');
+    if (title) title.textContent = app.name;
+    if (meta) meta.textContent = app.kind + ' workspace · ' + app.dashboards.length + ' dashboards';
+    if (summary) {
+      summary.style.setProperty('--app-accent', app.accent);
+      const stats = Array.isArray(app.stats) && app.stats.length
+        ? app.stats.slice(0, 3)
+        : [['TVL / Treasury', app.tvl], ['Users', app.users], ['Volume', app.volume]];
+      summary.innerHTML = `
+        <div class="app-identity">
+          ${appIconMarkup(app)}
+          <div>
+            <h3>${app.name}</h3>
+            <p>${app.kind} analytics workspace · ${app.health}</p>
+          </div>
+        </div>
+        ${stats.map(([label, value]) => `<div class="app-stat${['brix', 'world-markets'].includes(app.id) ? ' app-stat-tight' : ''}"><div class="app-stat-label">${label}</div><div class="app-stat-value">${value}</div></div>`).join('')}
+      `;
+    }
+    if (grid) {
+      if (app.id === 'brix') {
+        renderBrixDashboards(grid);
+        return;
+      }
+      if (app.id === 'world-markets') {
+        renderWorldMarketsDashboards(grid);
+        return;
+      }
+      grid.className = 'dashboard-grid';
+      grid.innerHTML = app.dashboards.map(([name, copy, status, metric]) => {
+        const bars = dashboardBars(app.id + name).map((height) => `<i style="--h:${height}%"></i>`).join('');
+        return `
+          <article class="dashboard-card" style="--dash-accent:${app.accent}">
+            <div class="dashboard-card-head">
+              <h4>${name}</h4>
+              <span class="dashboard-status">${status}</span>
+            </div>
+            <p class="dashboard-copy">${copy}</p>
+            <div class="dashboard-mini-chart" aria-hidden="true">${bars}</div>
+            <div class="dashboard-meta-row"><span>${app.kind}</span><span class="dashboard-metric">${metric}</span></div>
+          </article>
+        `;
+      }).join('');
+    }
+  }
+
+  function selectApp(appId) {
+    if (!APP_DASHBOARD_CATALOG.some((app) => app.id === appId)) return;
+    activeAppId = appId;
+    renderAppsNav();
+    renderActiveApp();
+  }
+
+  function selectSiteTab(tab) {
+    if (!['network', 'apps'].includes(tab)) return;
+    activeSiteTab = tab;
+    document.querySelectorAll('[data-site-tab]').forEach((button) => {
+      const active = button.dataset.siteTab === tab;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    document.querySelectorAll('[data-site-panel]').forEach((panel) => {
+      const active = panel.dataset.sitePanel === tab;
+      panel.classList.toggle('active', active);
+      panel.hidden = !active;
+    });
+    if (tab === 'network') {
+      requestAnimationFrame(() => renderCategory(activeCategory));
+    } else {
+      renderAppsNav();
+      renderActiveApp();
+    }
+  }
+
+  document.querySelectorAll('[data-site-tab]').forEach((button) => {
+    button.addEventListener('click', () => selectSiteTab(button.dataset.siteTab));
+  });
+
+  renderAppsNav();
+  renderActiveApp();
 
   // Category cards drive the stacked chart browser.
   const CATEGORY_META = {
