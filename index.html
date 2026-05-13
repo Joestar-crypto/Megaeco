@@ -1978,7 +1978,7 @@
   }
   .leaderboard-summary {
     display: grid;
-    grid-template-columns: 1.15fr 1.15fr repeat(2, minmax(0, 0.85fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
     margin-bottom: 14px;
   }
@@ -2351,7 +2351,7 @@
     background: transparent;
     color: var(--muted);
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
     font-family: var(--mono);
   }
@@ -3698,7 +3698,7 @@
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
-          <span class="category-stat-label" id="kpi-terminal-projected-label">Total + 7d ×28.57</span>
+          <span class="category-stat-label" id="kpi-terminal-projected-label">Seed + avg ×28.57</span>
           <span class="category-stat-value" id="kpi-terminal-projected">—</span>
         </div>
       </div>
@@ -3901,7 +3901,7 @@
           <div class="category-chart-head">
             <div class="category-chart-copy">
               <h3><span class="token-logo rank">#</span>Terminal Points</h3>
-              <div class="desc">Initial Terminal points plus projected weekly distributions, with implied MEGA and USD per point.</div>
+              <div class="desc">Initial Terminal seed plus projected two-week average distributions, with implied MEGA and USD per point.</div>
             </div>
           </div>
           <div class="leaderboard-summary">
@@ -3914,7 +3914,7 @@
               <div class="leaderboard-metric-value leaderboard-metric-accent" id="terminalPointValue">—</div>
             </div>
             <div class="leaderboard-metric">
-              <div class="leaderboard-metric-label">7d distributed points</div>
+              <div class="leaderboard-metric-label">2-week avg points</div>
               <div class="leaderboard-metric-value leaderboard-metric-pink" id="terminalRecentPoints">—</div>
             </div>
             <div class="leaderboard-metric">
@@ -3923,7 +3923,7 @@
             </div>
           </div>
           <div class="leaderboard-scenarios">
-            <div class="leaderboard-scenario-copy" id="terminalScenarioCopy">Scenario: <strong>4 seasons</strong> · initial points + 50-day seasons</div>
+            <div class="leaderboard-scenario-copy" id="terminalScenarioCopy">Scenario: <strong>4 seasons</strong> · seed + two-week average</div>
             <div class="leaderboard-scenario-toggle" id="terminalScenarioToggle" role="tablist" aria-label="Terminal season scenario">
               <button type="button" data-seasons="3">3 seasons</button>
               <button type="button" data-seasons="4" class="active">4 seasons</button>
@@ -3969,7 +3969,7 @@
           <div class="category-chart-head">
             <div class="category-chart-copy">
               <h3>Top Players</h3>
-              <div class="desc">Top all-time profiles, recent 7-day points, and projected scenario contribution.</div>
+              <div class="desc">Top all-time profiles, current-week points, and projected scenario contribution.</div>
             </div>
           </div>
           <div class="leaderboard-tier-section" id="leaderboardTierSection">
@@ -3997,8 +3997,8 @@
                   <th>Rank</th>
                   <th>User</th>
                   <th>All Time Points</th>
-                  <th>Recent Points</th>
-                  <th id="terminalProjectedColumnHeader">Total + recent ×28.57</th>
+                  <th>Current Week Points</th>
+                  <th id="terminalProjectedColumnHeader">Total + this week ×28.57</th>
                 </tr>
               </thead>
               <tbody id="leaderboardBody">
@@ -4159,15 +4159,16 @@
   const MEGA_TOTAL_SUPPLY = 10_000_000_000;
   const MEGA_BASE_UNITS = 10n ** 18n;
   const MEGA_HOLDER_BUCKETS = [
-    { key: 'gt1k', label: '1k+ holders', thresholdRaw: 1_000n * MEGA_BASE_UNITS, color: '#90D79F' },
-    { key: 'gt10k', label: '10k+ holders', thresholdRaw: 10_000n * MEGA_BASE_UNITS, color: '#F4D35E' },
-    { key: 'gt100k', label: '100k+ holders', thresholdRaw: 100_000n * MEGA_BASE_UNITS, color: '#FF9F6E' },
-    { key: 'gt1m', label: '1M+ holders', thresholdRaw: 1_000_000n * MEGA_BASE_UNITS, color: '#FF6F91' },
+    { key: 'gt1k', label: '1k+ holders', thresholdRaw: 1_000n * MEGA_BASE_UNITS, color: '#90D79F', animal: 'crayfish' },
+    { key: 'gt10k', label: '10k+ holders', thresholdRaw: 10_000n * MEGA_BASE_UNITS, color: '#F4D35E', animal: 'fish' },
+    { key: 'gt100k', label: '100k+ holders', thresholdRaw: 100_000n * MEGA_BASE_UNITS, color: '#FF9F6E', animal: 'dolphin' },
+    { key: 'gt1m', label: '1M+ holders', thresholdRaw: 1_000_000n * MEGA_BASE_UNITS, color: '#FF6F91', animal: 'whale' },
   ];
   const TERMINAL_SEASONS = 4;
   const TERMINAL_CAMPAIGN_SUPPLY_SHARE = 0.025;
   const TERMINAL_DAYS_PER_SEASON = 50;
   const TERMINAL_DISTRIBUTION_WINDOW_DAYS = 7;
+  const TERMINAL_FIRST_WEEK_POINTS = 2_500_000;
   const TERMINAL_SCENARIO_OPTIONS = [3, 4, 5];
   const TERMINAL_POINT_TIER_CONFIG = [
     { key: 'whales', label: 'Whales', color: '#FF8AA8' },
@@ -5065,7 +5066,6 @@
   async function fetchTerminalLeaderboard() {
     const cacheKey = 'terminal-leaderboard:v2';
     const cachedFresh = cacheGet(cacheKey);
-    if (cachedFresh && Array.isArray(cachedFresh?.all) && Array.isArray(cachedFresh?.weekly)) return cachedFresh;
     try {
       const res = await corsFetch(TERMINAL_LEADERBOARD_PAGE);
       if (!res.ok) throw new Error('Terminal leaderboard ' + res.status);
@@ -5078,6 +5078,7 @@
       return payload;
     } catch (e) {
       console.warn('Terminal leaderboard fetch failed:', e);
+      if (cachedFresh && Array.isArray(cachedFresh?.all) && Array.isArray(cachedFresh?.weekly)) return cachedFresh;
       const cached = cachePeek(cacheKey);
       if (cached && Array.isArray(cached?.all) && Array.isArray(cached?.weekly)) return cached;
       return null;
@@ -6464,6 +6465,137 @@
     return g;
   }
 
+  const legendAnimalIconCache = new Map();
+
+  function makeLegendAnimalIcon(animal, color) {
+    if (!animal || !color) return null;
+    const cacheKey = animal + ':' + color;
+    if (legendAnimalIconCache.has(cacheKey)) return legendAnimalIconCache.get(cacheKey);
+    const canvas = document.createElement('canvas');
+    canvas.width = 28;
+    canvas.height = 18;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = color;
+    ctx.strokeStyle = 'rgba(236,232,232,0.9)';
+    ctx.lineWidth = 1.1;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    if (animal === 'whale') {
+      ctx.beginPath();
+      ctx.moveTo(3, 11);
+      ctx.quadraticCurveTo(7, 4, 17, 5);
+      ctx.quadraticCurveTo(23, 5, 25, 9);
+      ctx.quadraticCurveTo(22, 14, 16, 14);
+      ctx.quadraticCurveTo(8, 15, 3, 11);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(2, 10);
+      ctx.lineTo(0.8, 6);
+      ctx.lineTo(4.4, 7.8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(22, 7);
+      ctx.lineTo(25.5, 4.5);
+      ctx.lineTo(24.8, 8.2);
+      ctx.lineTo(27, 10.6);
+      ctx.lineTo(22.4, 9.4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(13, 5.7);
+      ctx.lineTo(12, 2.8);
+      ctx.moveTo(14.7, 5.3);
+      ctx.lineTo(14.3, 2.1);
+      ctx.stroke();
+    } else if (animal === 'dolphin') {
+      ctx.beginPath();
+      ctx.moveTo(2.5, 11.5);
+      ctx.quadraticCurveTo(8, 4, 16, 5.5);
+      ctx.quadraticCurveTo(20, 6.5, 24, 9.2);
+      ctx.quadraticCurveTo(18, 10, 12, 12.5);
+      ctx.quadraticCurveTo(7, 14, 2.5, 11.5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(11.5, 7.8);
+      ctx.lineTo(13.5, 4.2);
+      ctx.lineTo(15.2, 8.1);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(2.5, 11.2);
+      ctx.lineTo(0.8, 7.5);
+      ctx.lineTo(4.8, 9.2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    } else if (animal === 'fish') {
+      ctx.beginPath();
+      ctx.moveTo(5, 9);
+      ctx.quadraticCurveTo(10, 3.5, 18, 5.5);
+      ctx.quadraticCurveTo(23, 9, 18, 12.5);
+      ctx.quadraticCurveTo(10, 14.5, 5, 9);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(5.2, 9);
+      ctx.lineTo(1.5, 5.2);
+      ctx.lineTo(1.5, 12.8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(18.5, 7.2);
+      ctx.lineTo(20.8, 9);
+      ctx.lineTo(18.5, 10.8);
+      ctx.stroke();
+    } else if (animal === 'crayfish') {
+      ctx.beginPath();
+      ctx.roundRect(9, 5, 9, 8, 4);
+      ctx.fill();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(8.2, 7);
+      ctx.lineTo(4.6, 4.8);
+      ctx.lineTo(5.8, 7.7);
+      ctx.moveTo(8.2, 11);
+      ctx.lineTo(4.4, 13.3);
+      ctx.lineTo(6.1, 10.2);
+      ctx.moveTo(18.8, 7);
+      ctx.lineTo(22.4, 4.8);
+      ctx.lineTo(21.1, 7.7);
+      ctx.moveTo(18.8, 11);
+      ctx.lineTo(22.6, 13.3);
+      ctx.lineTo(20.9, 10.2);
+      ctx.moveTo(11, 13.2);
+      ctx.lineTo(9.6, 16);
+      ctx.moveTo(13.5, 13.2);
+      ctx.lineTo(13.5, 16.2);
+      ctx.moveTo(16, 13.2);
+      ctx.lineTo(17.3, 16);
+      ctx.moveTo(11.2, 5.2);
+      ctx.lineTo(10, 2.4);
+      ctx.moveTo(15.8, 5.2);
+      ctx.lineTo(17, 2.4);
+      ctx.stroke();
+    }
+
+    legendAnimalIconCache.set(cacheKey, canvas);
+    return canvas;
+  }
+
   function makeLineChart(canvasId, datasets, dates, opts = {}) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
@@ -6482,6 +6614,7 @@
     const pointHoverRadius = Number.isFinite(opts.pointHoverRadius)
       ? Number(opts.pointHoverRadius)
       : Math.max(pointRadius, 5);
+    const usePointStyle = datasets.some((dataset) => !!dataset.pointStyle);
 
     let renderDatasets = datasets;
     if (percent) {
@@ -6512,6 +6645,7 @@
       pointHoverBackgroundColor: d.color,
       pointHoverBorderColor: '#19191A',
       pointHoverBorderWidth: 2,
+      pointStyle: d.pointStyle,
       stack: stacked ? 'stack0' : undefined,
     }));
     chartInstances[canvasId] = new Chart(ctx, {
@@ -6524,7 +6658,14 @@
         plugins: {
           legend: {
             display: datasets.length > 1,
-            labels: { color: '#ECE8E8', font: { family: 'Helvetica Neue' }, boxWidth: 12, boxHeight: 12 }
+            labels: {
+              color: '#ECE8E8',
+              font: { family: 'Helvetica Neue' },
+              boxWidth: 12,
+              boxHeight: 12,
+              usePointStyle,
+              pointStyleWidth: usePointStyle ? 20 : undefined,
+            }
           },
           tooltip: {
             backgroundColor: '#1E1E20',
@@ -6696,24 +6837,28 @@
         values: gt1kValues.map((value, index) => Math.max(0, Number(value || 0) - Number(gt10kValues[index] || 0))),
         color: '#90D79F',
         fill: true,
+        pointStyle: makeLegendAnimalIcon('crayfish', '#90D79F'),
       },
       {
         label: '10k-100k holders',
         values: gt10kValues.map((value, index) => Math.max(0, Number(value || 0) - Number(gt100kValues[index] || 0))),
         color: '#F4D35E',
         fill: true,
+        pointStyle: makeLegendAnimalIcon('fish', '#F4D35E'),
       },
       {
         label: '100k-1M holders',
         values: gt100kValues.map((value, index) => Math.max(0, Number(value || 0) - Number(gt1mValues[index] || 0))),
         color: '#FF9F6E',
         fill: true,
+        pointStyle: makeLegendAnimalIcon('dolphin', '#FF9F6E'),
       },
       {
         label: '1M+ holders',
         values: gt1mValues.map((value) => Math.max(0, Number(value || 0))),
         color: '#FF6F91',
         fill: true,
+        pointStyle: makeLegendAnimalIcon('whale', '#FF6F91'),
       },
     ];
   }
@@ -6790,6 +6935,7 @@
         values: bucketValues,
         color: bucket.color,
         fill: false,
+        pointStyle: makeLegendAnimalIcon(bucket.animal, bucket.color),
       });
     });
     const isPercent = megaHoldersState.mode === 'pct';
@@ -7462,6 +7608,10 @@
     if (!entries.length || !weeklyEntries.length) return null;
     const totalPoints = entries.reduce((sum, row) => sum + (Number(row.totalPoints) || 0), 0);
     const recentPoints = weeklyEntries.reduce((sum, row) => sum + (Number(row.weeklyPointsChange) || 0), 0);
+    const firstWeekPoints = TERMINAL_FIRST_WEEK_POINTS;
+    const pointsAfterFirstWeek = Math.max(0, totalPoints - recentPoints);
+    const initialDistributionPoints = Math.max(0, pointsAfterFirstWeek - firstWeekPoints);
+    const averageWeeklyPoints = (firstWeekPoints + recentPoints) / 2;
     const campaignAllocation = MEGA_TOTAL_SUPPLY * TERMINAL_CAMPAIGN_SUPPLY_SHARE;
     const sortedTotals = entries.map((row) => Number(row.totalPoints) || 0).sort((a, b) => b - a);
     return {
@@ -7471,6 +7621,11 @@
       weeklyParticipantCount: weeklyEntries.length,
       totalPoints,
       recentPoints,
+      pointsAfterFirstWeek,
+      initialDistributionPoints,
+      firstWeekPoints,
+      currentWeekPoints: recentPoints,
+      averageWeeklyPoints,
       campaignAllocation,
       thresholds: [1, 10, 100, 500, 1000, 5000]
         .map((rank) => ({ rank, points: sortedTotals[rank - 1] }))
@@ -7487,14 +7642,18 @@
     if (!model) return null;
     const selectedSeasons = TERMINAL_SCENARIO_OPTIONS.includes(Number(seasons)) ? Number(seasons) : TERMINAL_SEASONS;
     const multiplier = terminalScenarioMultiplier(selectedSeasons);
-    const initialPoints = Number(model.totalPoints || 0);
-    const weeklyProjectedPoints = Number(model.recentPoints || 0) * multiplier;
+    const initialPoints = Number(model.initialDistributionPoints || 0);
+    const averageWeeklyPoints = Number(model.averageWeeklyPoints || 0);
+    const weeklyProjectedPoints = averageWeeklyPoints * multiplier;
     const projectedCampaignPoints = initialPoints + weeklyProjectedPoints;
     const pointValue = projectedCampaignPoints > 0 ? Number(model.campaignAllocation || 0) / projectedCampaignPoints : null;
     return {
       seasons: selectedSeasons,
       multiplier,
       initialPoints,
+      firstWeekPoints: Number(model.firstWeekPoints || 0),
+      currentWeekPoints: Number(model.currentWeekPoints || 0),
+      averageWeeklyPoints,
       weeklyProjectedPoints,
       projectedDays: selectedSeasons * TERMINAL_DAYS_PER_SEASON,
       projectedCampaignPoints,
@@ -7726,8 +7885,9 @@
         <button type="button" class="leaderboard-scenario-card${active ? ' active' : ''}" data-season-card="${seasons}" aria-pressed="${active ? 'true' : 'false'}">
           <div class="leaderboard-scenario-name">${seasons} seasons</div>
           <div class="leaderboard-scenario-primary">${fmtTokenCompact(scenario.projectedCampaignPoints)}</div>
-          <div class="leaderboard-scenario-sub">Initial + weekly projection</div>
+          <div class="leaderboard-scenario-sub">Seed + two-week avg projection</div>
           <div class="leaderboard-scenario-line"><span>MEGA / point</span><strong>${fmtMegaPointNumber(scenario.pointValue)}</strong></div>
+          <div class="leaderboard-scenario-line"><span>Weekly avg</span><strong>${fmtTokenCompact(scenario.averageWeeklyPoints)}</strong></div>
           <div class="leaderboard-scenario-line"><span>Days</span><strong>${fmtNum(scenario.projectedDays)}</strong></div>
           <div class="leaderboard-scenario-line"><span>USD / point</span><strong>${Number.isFinite(usdPerPoint) ? fmtUsdPerPoint(usdPerPoint) : '—'}</strong></div>
         </button>`;
@@ -7741,8 +7901,9 @@
     const copy = document.getElementById('terminalScenarioCopy');
     const scenario = terminalScenarioProjection(model, terminalLeaderboardState.seasons);
     if (copy && scenario) {
-      copy.innerHTML = 'Scenario: <strong>' + scenario.seasons + ' seasons</strong> · initial <strong>'
-        + fmtTokenCompact(scenario.initialPoints) + '</strong> + 7d points × <strong>'
+      copy.innerHTML = 'Scenario: <strong>' + scenario.seasons + ' seasons</strong> · seed <strong>'
+        + fmtTokenCompact(scenario.initialPoints) + '</strong> + 2-week avg <strong>'
+        + fmtTokenCompact(scenario.averageWeeklyPoints) + '</strong> × <strong>'
         + scenario.multiplier.toFixed(2).replace(/\.00$/, '') + '</strong>';
     }
   }
@@ -7812,12 +7973,16 @@
       ? scenario.pointValue * Number(terminalLeaderboardState.megaPrice)
       : null;
     if (pointUsdValueEl) pointUsdValueEl.textContent = Number.isFinite(pointUsdValue) ? fmtUsdPerPoint(pointUsdValue) : '—';
-    if (recentEl) recentEl.textContent = fmtNum(Math.round(model.recentPoints));
+    if (recentEl) {
+      recentEl.textContent = fmtNum(Math.round(model.averageWeeklyPoints));
+      recentEl.title = 'Week 1: ' + fmtNum(Math.round(model.firstWeekPoints))
+        + ' · Current week: ' + fmtNum(Math.round(model.currentWeekPoints));
+    }
     if (projectedEl) projectedEl.textContent = fmtNum(Math.round(scenario.projectedCampaignPoints));
     if (pointValueEl) pointValueEl.textContent = pointValueText;
     if (projectedKpi) projectedKpi.textContent = projectedText;
-    if (projectedKpiLabel) projectedKpiLabel.textContent = 'Total + 7d ×' + scenarioMultiplierText;
-    if (projectedColumnHeader) projectedColumnHeader.textContent = 'Total + recent ×' + scenarioMultiplierText;
+    if (projectedKpiLabel) projectedKpiLabel.textContent = 'Seed + avg ×' + scenarioMultiplierText;
+    if (projectedColumnHeader) projectedColumnHeader.textContent = 'Total + this week ×' + scenarioMultiplierText;
     setCategoryPrimarySource('kpi-terminal-points', 'total', fmtTokenCompact(model.totalPoints), 'Total Points');
     setCategoryPrimarySource('kpi-terminal-points', 'value', fmtMegaPointNumber(scenario.pointValue), 'MEGA / Point');
 
@@ -7838,17 +8003,20 @@
     }
 
     if (note) {
-      note.title = 'Source: terminal.megaeth.com/leaderboard. Recent points sum the weekly top ' + fmtNum(model.weeklyParticipantCount)
+      note.title = 'Source: terminal.megaeth.com/leaderboard. Current-week points sum the weekly top ' + fmtNum(model.weeklyParticipantCount)
+        + '. Week 1 is fixed at ' + fmtNum(model.firstWeekPoints) + ' points by manual assumption. Seed points = all-time total - week 1 - current week.'
         + '. Scenario: ' + scenario.seasons + ' seasons × ' + TERMINAL_DAYS_PER_SEASON + ' days = '
-        + fmtNum(scenario.projectedDays) + ' days. Total projected points = initial top-' + fmtNum(model.participantCount)
-        + ' all-time points + 7-day points × ' + scenarioMultiplierText
+        + fmtNum(scenario.projectedDays) + ' days. Total projected campaign points = seed points + two-week average points × ' + scenarioMultiplierText
         + '. Allocation assumption: ' + fmtToken(model.campaignAllocation, 'MEGA', 0)
         + ' total across the selected scenario. Points are not a guaranteed token allocation.';
       note.innerHTML = `
         <div class="leaderboard-assumption"><span>Source</span><strong>Terminal top ${fmtNum(model.participantCount)}</strong></div>
-        <div class="leaderboard-assumption"><span>Initial</span><strong>${fmtTokenCompact(scenario.initialPoints)} points</strong></div>
-        <div class="leaderboard-assumption"><span>7d base</span><strong>${fmtTokenCompact(model.recentPoints)} points</strong></div>
-        <div class="leaderboard-assumption"><span>Weekly projection</span><strong>${fmtTokenCompact(scenario.weeklyProjectedPoints)} points</strong></div>
+        <div class="leaderboard-assumption"><span>After week 1</span><strong>${fmtNum(Math.round(model.pointsAfterFirstWeek))} points</strong></div>
+        <div class="leaderboard-assumption"><span>Start seed</span><strong>${fmtNum(Math.round(model.initialDistributionPoints))} points</strong></div>
+        <div class="leaderboard-assumption"><span>Week 1</span><strong>${fmtNum(Math.round(model.firstWeekPoints))} points</strong></div>
+        <div class="leaderboard-assumption"><span>This week</span><strong>${fmtNum(Math.round(model.currentWeekPoints))} points</strong></div>
+        <div class="leaderboard-assumption"><span>Weekly avg</span><strong>${fmtNum(Math.round(model.averageWeeklyPoints))} points</strong></div>
+        <div class="leaderboard-assumption"><span>Avg × window</span><strong>${fmtNum(Math.round(scenario.weeklyProjectedPoints))} points</strong></div>
         <div class="leaderboard-assumption"><span>Allocation</span><strong>${fmtTokenCompact(model.campaignAllocation)} MEGA</strong></div>
         <div class="leaderboard-assumption warn"><span>Status</span><strong>Estimate only</strong></div>`;
     }
