@@ -2827,6 +2827,33 @@
     text-transform: uppercase;
     opacity: 0.7;
   }
+  .app-link-strip {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 7px;
+    max-width: min(440px, 50%);
+  }
+  .app-link {
+    border: 1px solid color-mix(in srgb, var(--app-accent) 38%, rgba(255,255,255,0.10));
+    color: var(--text);
+    background: color-mix(in srgb, var(--app-accent) 8%, rgba(255,255,255,0.018));
+    padding: 7px 9px;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .app-link:hover,
+  .app-link:focus-visible {
+    border-color: color-mix(in srgb, var(--app-accent) 68%, rgba(255,255,255,0.18));
+    color: var(--app-accent);
+    outline: none;
+  }
   .apps-list {
     display: grid;
     gap: 8px;
@@ -2886,6 +2913,16 @@
     box-shadow: inset 0 0 0 1px rgba(109,208,169,0.12), 0 0 18px rgba(91,167,255,0.18);
   }
   .app-icon-world-markets img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .app-icon-euphoria {
+    background: #F9BADD;
+    border-color: rgba(249,186,221,0.62);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.20), 0 0 20px rgba(249,186,221,0.26);
+  }
+  .app-icon-euphoria img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -3199,12 +3236,34 @@
   .brix-chart-figure {
     position: relative;
     width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .brix-chart-figure::after {
+    content: 'MEGAFEES.COM';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
+    font-size: clamp(22px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    line-height: 1;
+    color: rgba(236, 232, 232, 0.065);
+    text-shadow: 0 0 22px rgba(144, 215, 159, 0.03);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
   }
   .brix-chart svg {
+    position: relative;
     display: block;
     width: 100%;
     height: auto;
     min-height: 240px;
+    z-index: 2;
   }
   .brix-hover-point {
     position: absolute;
@@ -3213,6 +3272,7 @@
     border-radius: 50%;
     transform: translate(-50%, -50%);
     cursor: crosshair;
+    z-index: 3;
   }
   .brix-hover-point::before {
     content: '';
@@ -3297,11 +3357,33 @@
     width: min(220px, 100%);
     aspect-ratio: 1;
     margin: 0 auto;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .brix-donut-wrap::after {
+    content: 'MEGAFEES.COM';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
+    font-size: clamp(14px, 2vw, 22px);
+    font-weight: 800;
+    letter-spacing: 0.20em;
+    line-height: 1;
+    color: rgba(236, 232, 232, 0.055);
+    text-shadow: 0 0 18px rgba(144, 215, 159, 0.025);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
   }
   .brix-donut-wrap svg {
+    position: relative;
     width: 100%;
     height: 100%;
     transform: rotate(-90deg);
+    z-index: 2;
   }
   .brix-donut-segment {
     transition: stroke-width 0.14s ease, filter 0.14s ease;
@@ -3321,6 +3403,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    z-index: 3;
   }
   .brix-donut-center span {
     color: var(--muted);
@@ -3405,6 +3488,19 @@
   .world-dashboard-grid .brix-panel:nth-child(2) { --brix-accent: #6DD0A9; }
   .world-dashboard-grid .brix-panel:nth-child(3) { --brix-accent: #7EAAD4; }
   .world-dashboard-grid .brix-panel:nth-child(4) { --brix-accent: #F4D35E; }
+  .euphoria-dashboard-grid {
+    --brix-accent: #F9BADD;
+  }
+  .euphoria-dashboard-grid .brix-panel {
+    --brix-accent: #F9BADD;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
+      radial-gradient(90% 66% at 100% 0%, rgba(249,186,221,0.19), transparent 60%),
+      radial-gradient(70% 50% at 0% 100%, rgba(124,42,82,0.20), transparent 64%);
+  }
+  .euphoria-dashboard-grid .brix-panel:nth-child(2) { --brix-accent: #FF8FCC; }
+  .euphoria-dashboard-grid .brix-panel:nth-child(3) { --brix-accent: #D94D96; }
+  .euphoria-dashboard-grid .brix-panel:nth-child(4) { --brix-accent: #FFF1F8; }
   .world-dual-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(250px, 0.44fr);
@@ -3547,6 +3643,11 @@
   @media (max-width: 720px) {
     .site-switcher { grid-template-columns: 1fr; }
     .site-tab { min-height: 68px; padding: 13px; }
+    .dashboards-head { flex-direction: column; }
+    .app-link-strip {
+      justify-content: flex-start;
+      max-width: none;
+    }
     .apps-list,
     .app-hero-row,
     .dashboard-grid { grid-template-columns: 1fr; }
@@ -4064,7 +4165,7 @@
       <div class="chart-header">
         <div class="title-block">
           <h2><span>Apps</span></h2>
-          <div class="desc">Ten app workspaces with ready-to-fill dashboard slots, grouped by product area.</div>
+          <div class="desc">Application dashboards grouped by product area, with live protocol views where data is available.</div>
         </div>
       </div>
       <div class="apps-shell">
@@ -4083,6 +4184,7 @@
               <div class="dashboards-title" id="activeAppTitle">—</div>
               <div class="dashboards-meta" id="activeAppMeta">—</div>
             </div>
+            <div class="app-link-strip" id="activeAppLinks"></div>
           </div>
           <div class="app-hero-row" id="activeAppSummary"></div>
           <div class="dashboard-grid" id="dashboardGrid"></div>
@@ -8687,6 +8789,36 @@
 
   const APP_DASHBOARD_CATALOG = [
     {
+      id: 'euphoria',
+      name: 'Euphoria',
+      kind: 'Tap Trading',
+      initials: 'EU',
+      logo: 'logos/euphoria-logo-app-icon-Chs2gTNr.png',
+      accent: '#F9BADD',
+      health: 'Blockscout data',
+      tvl: '776K',
+      users: '426',
+      volume: '128K',
+      links: [
+        ['Website', 'https://euphoria.finance/'],
+        ['Docs', 'https://docs.euphoria.finance/'],
+        ['X', 'https://x.com/Euphoria_fi'],
+        ['Discord', 'https://discord.gg/euphoriafi'],
+        ['Telegram', 'https://t.me/euphoria_fi'],
+      ],
+      stats: [
+        ['Total Transfers', '776K'],
+        ['Profitable', '26.1%'],
+        ['Daily Volume', '128K'],
+      ],
+      dashboards: [
+        ['Daily Volume', 'USDM routed through Euphoria per UTC day.', 'Live', '128K'],
+        ['Daily Users', 'Unique wallets tracked from the first daily point.', 'Live', '426'],
+        ['Profit Split', 'Wallets in profit vs all other wallets.', 'Live', '26.1%'],
+        ['Wallet PnL Distribution', 'Wallet counts by realized USDM outcome range.', 'Live', '426'],
+      ],
+    },
+    {
       id: 'brix',
       name: 'Brix',
       kind: 'Tokenized FX',
@@ -8697,6 +8829,12 @@
       tvl: '$6.13M',
       users: '$0.0228',
       volume: '43.7%',
+      links: [
+        ['Website', 'https://brix.money/'],
+        ['Docs', 'https://docs.brix.money/'],
+        ['X', 'https://x.com/brix_money'],
+        ['Telegram', 'https://t.me/BrixDotMoney'],
+      ],
       stats: [
         ['iTRY MCAP', '$6.13M'],
         ['wiTRY Price', '$0.0228'],
@@ -8719,6 +8857,10 @@
       tvl: '$8.16M',
       users: '$617K',
       volume: '$36.2M',
+      links: [
+        ['Website', 'https://world.inc/'],
+        ['X', 'https://x.com/worldmarketsinc'],
+      ],
       stats: [
         ['Perps Notional 24h', '$36.2M'],
         ['Lending TVL', '$617K'],
@@ -8902,11 +9044,38 @@
     return `<span class="app-icon">${app.initials}</span>`;
   }
 
+  function appLinksMarkup(app) {
+    const links = Array.isArray(app?.links) ? app.links : [];
+    return links.map(([label, href]) => `
+      <a class="app-link" href="${escapeHTML(href)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)}</a>
+    `).join('');
+  }
+
   const BRIX_DASHBOARD_DATA_URL = 'data/brix-dashboard-data.json';
   const BRIX_TOKEN_DATA_URL = 'data/brix-tokens.json';
   const brixDataState = { dashboard: null, tokens: null, promise: null, error: null };
   const WORLD_MARKETS_DASHBOARD_DATA_URL = 'data/world-markets-dashboard-data.json';
   const worldMarketsDataState = { dashboard: null, promise: null, error: null };
+  const EUPHORIA_DASHBOARD_DATA_URL = 'data/euphoria-dashboard-data.json';
+  const euphoriaDataState = { dashboard: null, promise: null, error: null };
+
+  function loadEuphoriaData() {
+    if (euphoriaDataState.promise) return euphoriaDataState.promise;
+    euphoriaDataState.promise = fetch(EUPHORIA_DASHBOARD_DATA_URL, { cache: 'no-store' })
+      .then((res) => res.ok ? res.json() : null)
+      .then((dashboard) => {
+        euphoriaDataState.dashboard = dashboard;
+        euphoriaDataState.error = null;
+        if (activeAppId === 'euphoria') renderActiveApp();
+      }).catch((error) => {
+        console.warn('Euphoria data load failed', error);
+        euphoriaDataState.error = error;
+        if (activeAppId === 'euphoria') renderActiveApp();
+      }).finally(() => {
+        euphoriaDataState.promise = null;
+      });
+    return euphoriaDataState.promise;
+  }
 
   function loadBrixData() {
     if (brixDataState.promise) return brixDataState.promise;
@@ -9453,6 +9622,211 @@
     bindBrixChartTooltips(grid);
   }
 
+  function euphoriaPct(value, digits = 1) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return '—';
+    return n.toFixed(digits).replace(/\.0$/, '') + '%';
+  }
+
+  function euphoriaTransferTotal(data) {
+    return Number(data?.transactions?.totalTokenTransfers || data?.transactions?.tokenTransfersTotal || data?.transactions?.total || 0);
+  }
+
+  function euphoriaTransferToday(data) {
+    return Number(data?.transactions?.tokenTransfersToday || data?.transactions?.today || 0);
+  }
+
+  function euphoriaUsdm(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return '—';
+    return fmtTokenCompact(amount) + ' USDM';
+  }
+
+  function euphoriaNetText(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return '—';
+    const sign = amount > 0 ? '+' : amount < 0 ? '-' : '';
+    return sign + euphoriaUsdm(Math.abs(amount));
+  }
+
+  function euphoriaDailyPoints(points, valueKey) {
+    const rows = (Array.isArray(points) ? points : [])
+      .map((point) => ({
+        timestamp: Date.parse(String(point.date) + 'T00:00:00Z'),
+        value: Number(point[valueKey]) || 0,
+        label: String(point.date || ''),
+      }))
+      .filter((point) => Number.isFinite(point.timestamp))
+      .sort((a, b) => a.timestamp - b.timestamp);
+    if (rows.length === 1) {
+      rows.unshift({
+        timestamp: rows[0].timestamp - 86400000,
+        value: 0,
+        label: 'Anchor',
+      });
+    }
+    return rows;
+  }
+
+  function euphoriaSummaryStats(data) {
+    if (!data) {
+      return [
+        ['Total Transfers', '776K'],
+        ['Profitable', '26.1%'],
+        ['Daily Volume', '128K'],
+      ];
+    }
+    return [
+      ['Total Transfers', fmtTokenCompact(euphoriaTransferTotal(data))],
+      ['Profitable', euphoriaPct(data.players?.profitablePct)],
+      ['Daily Volume', fmtTokenCompact(Number(data.volume?.todayUsdm || 0))],
+    ];
+  }
+
+  function euphoriaDonutMarkup(segments, options = {}) {
+    const rows = (Array.isArray(segments) ? segments : [])
+      .map((segment) => ({
+        label: segment.label,
+        value: Math.max(0, Number(segment.value) || 0),
+        color: segment.color || '#FF7EC3',
+        detail: segment.detail || '',
+      }))
+      .filter((segment) => segment.value > 0);
+    const total = rows.reduce((sum, segment) => sum + segment.value, 0);
+    if (!total) return '<div class="brix-loading">No wallet data</div>';
+    const circumference = 2 * Math.PI * 58;
+    let offset = 0;
+    const segmentMarkup = rows.map((segment) => {
+      const dash = (segment.value / total) * circumference;
+      const title = `${segment.label}: ${fmtNum(segment.value)} ${options.unit || 'wallets'} (${((segment.value / total) * 100).toFixed(1)}%)${segment.detail ? ' · ' + segment.detail : ''}`;
+      const markup = `<circle class="brix-donut-segment" cx="80" cy="80" r="58" fill="none" stroke="${segment.color}" stroke-width="24" stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${-offset}" tabindex="0"><title>${escapeHTML(title)}</title></circle>`;
+      offset += dash;
+      return markup;
+    }).join('');
+    return `
+      <div class="brix-holder-layout">
+        <div class="brix-donut-wrap">
+          <svg viewBox="0 0 160 160" role="img" aria-label="${escapeHTML(options.label || 'Euphoria wallet distribution')}">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="24"/>
+            ${segmentMarkup}
+          </svg>
+          <div class="brix-donut-center"><span>${escapeHTML(options.centerLabel || 'Wallets')}</span><strong>${fmtNum(total)}</strong></div>
+        </div>
+        <div class="brix-tier-list">
+          ${rows.map((segment) => `
+            <div class="brix-tier-row" title="${escapeHTML(segment.detail || segment.label)}">
+              <span class="brix-tier-dot" style="color:${segment.color}"></span>
+              <div><div class="brix-tier-name">${escapeHTML(segment.label)}</div><div class="brix-tier-range">${((segment.value / total) * 100).toFixed(1)}% of wallets</div></div>
+              <div class="brix-tier-value"><strong>${fmtNum(segment.value)}</strong><br/>${escapeHTML(segment.detail || '')}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderEuphoriaDashboards(grid) {
+    grid.className = 'brix-dashboard-grid euphoria-dashboard-grid';
+    const data = euphoriaDataState.dashboard;
+    if (!data) {
+      loadEuphoriaData();
+      grid.innerHTML = '<div class="brix-loading">Loading Euphoria dashboards</div>';
+      return;
+    }
+
+    const players = data.players || {};
+    const totalTransfers = euphoriaTransferTotal(data);
+    const todayTransfers = euphoriaTransferToday(data);
+    const dailyVolume = Number(data.volume?.todayUsdm || 0);
+    const walletCount = Number(players.total || 0);
+    const profitable = Number(players.profitable || 0);
+    const notProfitable = Number(players.notProfitable || 0);
+    const profitablePct = Number(players.profitablePct || 0);
+    const volumePoints = euphoriaDailyPoints(data.volume?.points, 'volumeUsdm');
+    const userPoints = euphoriaDailyPoints(data.users?.points, 'users');
+    const gainPalette = {
+      loss: '#2A0D1C',
+      flat: '#FFF1F8',
+      'gain-small': '#F9BADD',
+      'gain-mid': '#FF8FCC',
+      'gain-high': '#D94D96',
+      'gain-whale': '#7C2A52',
+    };
+    const gainSegments = (Array.isArray(players.bands) ? players.bands : [])
+      .filter((band) => Number(band.count) > 0)
+      .map((band) => ({
+        label: band.label,
+        value: Number(band.count) || 0,
+        color: gainPalette[band.key] || band.color || '#FF7EC3',
+        detail: euphoriaNetText(band.netUsdm),
+      }));
+    const sourceText = data.dataWindowUtc?.to
+      ? 'Snapshot ' + data.dataWindowUtc.from.slice(0, 10) + ' UTC through ' + data.dataWindowUtc.to.slice(11, 16) + ' UTC.'
+      : 'Snapshot from bundled Blockscout data.';
+
+    grid.innerHTML = `
+      <article class="brix-panel wide">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Daily Volume</div><h4>${fmtTokenCompact(dailyVolume)} USDM</h4></div>
+          <p class="brix-panel-copy">USDM routed through Euphoria by UTC day. The first point is anchored to zero until the next daily snapshot lands.</p>
+        </div>
+        <div class="brix-metric-row">
+          <div class="brix-metric"><div class="brix-metric-label">Total transfers</div><div class="brix-metric-value accent">${fmtTokenCompact(totalTransfers)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Transfers today</div><div class="brix-metric-value">${fmtNum(todayTransfers)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Daily volume</div><div class="brix-metric-value">${fmtTokenCompact(dailyVolume)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Wallets</div><div class="brix-metric-value">${fmtNum(walletCount)}</div></div>
+        </div>
+        <div class="brix-chart">${brixLineChart(volumePoints, {
+          label: 'Euphoria daily volume',
+          gradientId: 'euphoriaVolumeArea',
+          color: '#F9BADD',
+          baseline: 0,
+          formatY: (value) => fmtTokenCompact(value),
+          tooltip: (point) => `<span class="brix-tooltip-title">${point.label === 'Anchor' ? 'Previous day anchor' : brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Volume</span><span>${fmtToken(point.value, 'USDM', 0)}</span></span>`,
+        })}</div>
+        <div class="brix-note">${escapeHTML(sourceText)} Volume excludes the Euphoria pool and counts wallet USDM sent to the contract.</div>
+      </article>
+
+      <article class="brix-panel">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Daily Users</div><h4>${fmtNum(walletCount)}</h4></div>
+          <p class="brix-panel-copy">Unique wallets seen in today's Euphoria flow, ready to extend as new daily snapshots are added.</p>
+        </div>
+        <div class="brix-chart">${brixLineChart(userPoints, {
+          label: 'Euphoria daily users',
+          gradientId: 'euphoriaUsersArea',
+          color: '#FF8FCC',
+          baseline: 0,
+          formatY: (value) => fmtNum(Math.round(value)),
+          tooltip: (point) => `<span class="brix-tooltip-title">${point.label === 'Anchor' ? 'Previous day anchor' : brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Users</span><span>${fmtNum(Math.round(point.value))}</span></span>`,
+        })}</div>
+        <div class="brix-note">Daily users count unique wallets; the first tracked day uses a zero anchor for a readable line.</div>
+      </article>
+
+      <article class="brix-panel">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Profit Split</div><h4>${euphoriaPct(profitablePct)}</h4></div>
+          <p class="brix-panel-copy">Wallets in profit versus wallets at breakeven or loss, from USDM paid out minus USDM staked.</p>
+        </div>
+        ${euphoriaDonutMarkup([
+          { label: 'Profitable', value: profitable, color: '#F9BADD', detail: euphoriaPct(profitablePct) },
+          { label: 'Not profitable', value: notProfitable, color: '#7C2A52', detail: euphoriaPct(100 - profitablePct) },
+        ], { label: 'Euphoria profit split', centerLabel: 'Wallets' })}
+        <div class="brix-note">${escapeHTML(sourceText)} Pool flows are excluded from wallet outcome calculations.</div>
+      </article>
+
+      <article class="brix-panel wide">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Wallet PnL Distribution</div><h4>${fmtNum(walletCount)}</h4></div>
+          <p class="brix-panel-copy">Wallet counts by realized USDM outcome range for the current UTC window.</p>
+        </div>
+        ${euphoriaDonutMarkup(gainSegments, { label: 'Euphoria wallet PnL distribution', centerLabel: 'Wallets' })}
+        <div class="brix-note">Outcome ranges are computed from wallet payouts minus wallet stakes, excluding pool flows.</div>
+      </article>
+    `;
+    bindBrixChartTooltips(grid);
+  }
+
   function totalAppDashboards() {
     return APP_DASHBOARD_CATALOG.reduce((sum, app) => sum + app.dashboards.length, 0);
   }
@@ -9484,13 +9858,20 @@
     if (!app) return;
     const title = document.getElementById('activeAppTitle');
     const meta = document.getElementById('activeAppMeta');
+    const links = document.getElementById('activeAppLinks');
     const summary = document.getElementById('activeAppSummary');
     const grid = document.getElementById('dashboardGrid');
     if (title) title.textContent = app.name;
     if (meta) meta.textContent = app.kind + ' workspace · ' + app.dashboards.length + ' dashboards';
+    if (links) {
+      links.innerHTML = appLinksMarkup(app);
+      links.hidden = !Array.isArray(app.links) || !app.links.length;
+    }
     if (summary) {
       summary.style.setProperty('--app-accent', app.accent);
-      const stats = Array.isArray(app.stats) && app.stats.length
+      const stats = app.id === 'euphoria'
+        ? euphoriaSummaryStats(euphoriaDataState.dashboard)
+        : Array.isArray(app.stats) && app.stats.length
         ? app.stats.slice(0, 3)
         : [['TVL / Treasury', app.tvl], ['Users', app.users], ['Volume', app.volume]];
       summary.innerHTML = `
@@ -9501,10 +9882,14 @@
             <p>${app.kind} analytics workspace · ${app.health}</p>
           </div>
         </div>
-        ${stats.map(([label, value]) => `<div class="app-stat${['brix', 'world-markets'].includes(app.id) ? ' app-stat-tight' : ''}"><div class="app-stat-label">${label}</div><div class="app-stat-value">${value}</div></div>`).join('')}
+        ${stats.map(([label, value]) => `<div class="app-stat${['euphoria', 'brix', 'world-markets'].includes(app.id) ? ' app-stat-tight' : ''}"><div class="app-stat-label">${label}</div><div class="app-stat-value">${value}</div></div>`).join('')}
       `;
     }
     if (grid) {
+      if (app.id === 'euphoria') {
+        renderEuphoriaDashboards(grid);
+        return;
+      }
       if (app.id === 'brix') {
         renderBrixDashboards(grid);
         return;
