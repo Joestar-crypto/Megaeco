@@ -9628,12 +9628,12 @@
     return n.toFixed(digits).replace(/\.0$/, '') + '%';
   }
 
-  function euphoriaTransferTotal(data) {
-    return Number(data?.transactions?.totalTokenTransfers || data?.transactions?.tokenTransfersTotal || data?.transactions?.total || 0);
-  }
-
   function euphoriaTransferToday(data) {
     return Number(data?.transactions?.tokenTransfersToday || data?.transactions?.today || 0);
+  }
+
+  function euphoriaContractTxToday(data) {
+    return Number(data?.transactions?.today || 0);
   }
 
   function euphoriaUsdm(value) {
@@ -9671,13 +9671,13 @@
   function euphoriaSummaryStats(data) {
     if (!data) {
       return [
-        ['Total Transfers', '776K'],
+        ['Since Live', '185K'],
         ['Profitable', '26.1%'],
         ['Daily Volume', '128K'],
       ];
     }
     return [
-      ['Total Transfers', fmtTokenCompact(euphoriaTransferTotal(data))],
+      ['Since Live', fmtTokenCompact(euphoriaTransferToday(data))],
       ['Profitable', euphoriaPct(data.players?.profitablePct)],
       ['Daily Volume', fmtTokenCompact(Number(data.volume?.todayUsdm || 0))],
     ];
@@ -9735,8 +9735,8 @@
     }
 
     const players = data.players || {};
-    const totalTransfers = euphoriaTransferTotal(data);
-    const todayTransfers = euphoriaTransferToday(data);
+    const launchTransfers = euphoriaTransferToday(data);
+    const todayContractTx = euphoriaContractTxToday(data);
     const dailyVolume = Number(data.volume?.todayUsdm || 0);
     const walletCount = Number(players.total || 0);
     const profitable = Number(players.profitable || 0);
@@ -9771,8 +9771,8 @@
           <p class="brix-panel-copy">USDM routed through Euphoria by UTC day. The first point is anchored to zero until the next daily snapshot lands.</p>
         </div>
         <div class="brix-metric-row">
-          <div class="brix-metric"><div class="brix-metric-label">Total transfers</div><div class="brix-metric-value accent">${fmtTokenCompact(totalTransfers)}</div></div>
-          <div class="brix-metric"><div class="brix-metric-label">Transfers today</div><div class="brix-metric-value">${fmtNum(todayTransfers)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Since live</div><div class="brix-metric-value accent">${fmtTokenCompact(launchTransfers)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Contract tx today</div><div class="brix-metric-value">${fmtNum(todayContractTx)}</div></div>
           <div class="brix-metric"><div class="brix-metric-label">Daily volume</div><div class="brix-metric-value">${fmtTokenCompact(dailyVolume)}</div></div>
           <div class="brix-metric"><div class="brix-metric-label">Wallets</div><div class="brix-metric-value">${fmtNum(walletCount)}</div></div>
         </div>
@@ -9784,7 +9784,7 @@
           formatY: (value) => fmtTokenCompact(value),
           tooltip: (point) => `<span class="brix-tooltip-title">${point.label === 'Anchor' ? 'Previous day anchor' : brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Volume</span><span>${fmtToken(point.value, 'USDM', 0)}</span></span>`,
         })}</div>
-        <div class="brix-note">${escapeHTML(sourceText)} Volume excludes the Euphoria pool and counts wallet USDM sent to the contract.</div>
+        <div class="brix-note">${escapeHTML(sourceText)} Volume excludes the Euphoria pool and the transfer KPI is scoped to the official live window starting today, not the contract's full history.</div>
       </article>
 
       <article class="brix-panel">
