@@ -2346,42 +2346,46 @@
   #leaderboardTable .leaderboard-projected { color: var(--blue); }
   #terminalLeaderboardNote.leaderboard-assumptions {
     margin-top: 12px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-    font-family: var(--mono);
-  }
-  .leaderboard-assumption {
-    min-width: 0;
-    padding: 9px 10px;
-    border: 1px solid rgba(255,255,255,0.07);
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 8px;
     background: rgba(255,255,255,0.018);
-  }
-  .leaderboard-assumption span {
+    color: var(--muted);
     display: block;
+    font-family: var(--mono);
+  }
+  .leaderboard-distribution-list {
+    list-style: none;
+    display: grid;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+  }
+  .leaderboard-distribution-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    min-width: 0;
+  }
+  .leaderboard-distribution-label {
     color: var(--muted);
     font-size: 9px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     opacity: 0.78;
   }
-  .leaderboard-assumption strong {
-    display: block;
-    margin-top: 5px;
+  .leaderboard-distribution-value {
     color: var(--text);
     font-size: 11px;
     line-height: 1.2;
+    text-align: right;
     overflow: visible;
     text-overflow: clip;
     white-space: normal;
     overflow-wrap: anywhere;
+    font-weight: 800;
   }
-  .leaderboard-assumption.warn strong { color: var(--peach); }
   @media (max-width: 1120px) {
     .category-cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3950,7 +3954,7 @@
                   <div class="leaderboard-sim-value leaderboard-metric-blue" id="terminalSimUsd">—</div>
                 </div>
                 <div class="leaderboard-sim-pill">
-                  <div class="leaderboard-sim-label">Estimated rank</div>
+                  <div class="leaderboard-sim-label">Rank / Top %</div>
                   <div class="leaderboard-sim-value leaderboard-metric-pink" id="terminalSimRank">—</div>
                 </div>
               </div>
@@ -3974,12 +3978,12 @@
           </div>
           <div class="leaderboard-tier-section" id="leaderboardTierSection">
             <div class="leaderboard-tier-head">
-              <h4 class="leaderboard-tier-title">Player Distribution by Point Tier</h4>
-              <div class="desc">Users grouped by total points into Whale, Dolphin, Fish, Crab, and Shrimp tiers.</div>
+              <h4 class="leaderboard-tier-title">Player Distribution by Total Points</h4>
+              <div class="desc">Users grouped by current total points into Whale, Dolphin, Fish, Crab, and Shrimp tiers.</div>
             </div>
             <div class="leaderboard-tier-layout">
               <div class="leaderboard-tier-chart-wrap">
-                <svg id="leaderboardTierChart" viewBox="0 0 160 160" role="img" aria-label="Player distribution by point tier"></svg>
+                <svg id="leaderboardTierChart" viewBox="0 0 160 160" role="img" aria-label="Player distribution by total point tier"></svg>
                 <div class="leaderboard-tier-chart-center">
                   <span>Tracked users</span>
                   <strong id="leaderboardTierTotal">—</strong>
@@ -7688,6 +7692,34 @@
     return Math.min(model.rows.length + 1, better + 1);
   }
 
+  function estimateTerminalPlacement(model, points) {
+    const rank = estimateTerminalRank(model, points);
+    const participantCount = Number(model?.participantCount || model?.rows?.length || 0);
+    if (!rank || !(participantCount > 0)) return null;
+    return {
+      rank,
+      participantCount,
+      topPercent: Math.min(100, (rank / participantCount) * 100),
+    };
+  }
+
+  function fmtTopPercent(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return '—';
+    const decimals = n < 1 ? 2 : 2;
+    return 'Top ' + n.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }) + '%';
+  }
+
+  function terminalScenarioPlayerPoints(row, scenario) {
+    const totalPoints = Number(row?.totalPoints) || 0;
+    const weeklyPointsChange = Number(row?.weeklyPointsChange) || 0;
+    const multiplier = Number(scenario?.multiplier) || 0;
+    return Math.max(0, totalPoints + (weeklyPointsChange * multiplier));
+  }
+
   function niceTierThreshold(value) {
     const n = Number(value);
     if (!Number.isFinite(n) || n <= 1) return 1;
@@ -7704,8 +7736,8 @@
 
   function formatTierRange(minPoints, maxPoints) {
     if (maxPoints == null) return fmtTokenCompact(minPoints) + '+ pts';
-    if (minPoints <= 0) return 'Below ' + fmtTokenCompact(maxPoints + 1) + ' pts';
-    return fmtTokenCompact(minPoints) + ' to ' + fmtTokenCompact(maxPoints) + ' pts';
+    if (minPoints <= 0) return 'Below ' + fmtTokenCompact(maxPoints) + ' pts';
+    return fmtTokenCompact(minPoints) + ' to <' + fmtTokenCompact(maxPoints) + ' pts';
   }
 
   function buildTerminalPointTiers(rows) {
@@ -7729,8 +7761,8 @@
 
     return TERMINAL_POINT_TIER_CONFIG.map((tier, index) => {
       const minPoints = starts[index];
-      const maxPointsForTier = index === 0 ? null : Math.max(0, starts[index - 1] - 1);
-      const count = values.filter((value) => value >= minPoints && (maxPointsForTier == null || value <= maxPointsForTier)).length;
+      const maxPointsForTier = index === 0 ? null : starts[index - 1];
+      const count = values.filter((value) => value >= minPoints && (maxPointsForTier == null || value < maxPointsForTier)).length;
       return {
         ...tier,
         minPoints,
@@ -7781,7 +7813,7 @@
     `;
     svg.setAttribute(
       'aria-label',
-      'Player distribution by point tier: ' + tiers
+      'Player distribution by total point tier: ' + tiers
         .filter((tier) => tier.count > 0)
         .map((tier) => tier.label + ' ' + fmtPctCompact(totalUsers > 0 ? (tier.count / totalUsers) * 100 : 0))
         .join(', ')
@@ -7846,12 +7878,15 @@
     const usd = Number.isFinite(mega) && Number(terminalLeaderboardState.megaPrice) > 0
       ? mega * Number(terminalLeaderboardState.megaPrice)
       : null;
-    const rank = estimateTerminalRank(model, points);
+    const placement = estimateTerminalPlacement(model, points);
     megaEl.textContent = Number.isFinite(mega) ? fmtTokenCompact(mega) + ' MEGA' : '—';
     megaEl.title = Number.isFinite(mega) ? fmtToken(mega, 'MEGA', 2) : '';
     usdEl.textContent = Number.isFinite(usd) ? fmtUSDCompact(usd) : '—';
     usdEl.title = Number.isFinite(usd) ? fmtUSD(usd, 2) : '';
-    rankEl.textContent = rank ? '#' + fmtNum(rank) : '—';
+    rankEl.textContent = placement ? '#' + fmtNum(placement.rank) + ' · ' + fmtTopPercent(placement.topPercent) : '—';
+    rankEl.title = placement
+      ? 'Rank #' + fmtNum(placement.rank) + ' of ' + fmtNum(placement.participantCount) + ' tracked Terminal users'
+      : '';
   }
 
   function bindTerminalPointSimulator() {
@@ -7997,28 +8032,25 @@
             <td class="leaderboard-user" title="${safeTitle}">${safeUser}</td>
             <td class="leaderboard-total">${fmtNum(Math.round(row.totalPoints))}</td>
             <td class="leaderboard-recent">+${fmtNum(Math.round(row.weeklyPointsChange))}</td>
-            <td class="leaderboard-projected">${fmtNum(Math.round(row.totalPoints + (row.weeklyPointsChange * scenario.multiplier)))}</td>
+            <td class="leaderboard-projected">${fmtNum(Math.round(terminalScenarioPlayerPoints(row, scenario)))}</td>
           </tr>`;
       }).join('');
     }
 
     if (note) {
-      note.title = 'Source: terminal.megaeth.com/leaderboard. Current-week points sum the weekly top ' + fmtNum(model.weeklyParticipantCount)
-        + '. Week 1 is fixed at ' + fmtNum(model.firstWeekPoints) + ' points by manual assumption. Seed points = all-time total - week 1 - current week.'
-        + '. Scenario: ' + scenario.seasons + ' seasons × ' + TERMINAL_DAYS_PER_SEASON + ' days = '
-        + fmtNum(scenario.projectedDays) + ' days. Total projected campaign points = seed points + two-week average points × ' + scenarioMultiplierText
-        + '. Allocation assumption: ' + fmtToken(model.campaignAllocation, 'MEGA', 0)
-        + ' total across the selected scenario. Points are not a guaranteed token allocation.';
-      note.innerHTML = `
-        <div class="leaderboard-assumption"><span>Source</span><strong>Terminal top ${fmtNum(model.participantCount)}</strong></div>
-        <div class="leaderboard-assumption"><span>After week 1</span><strong>${fmtNum(Math.round(model.pointsAfterFirstWeek))} points</strong></div>
-        <div class="leaderboard-assumption"><span>Start seed</span><strong>${fmtNum(Math.round(model.initialDistributionPoints))} points</strong></div>
-        <div class="leaderboard-assumption"><span>Week 1</span><strong>${fmtNum(Math.round(model.firstWeekPoints))} points</strong></div>
-        <div class="leaderboard-assumption"><span>This week</span><strong>${fmtNum(Math.round(model.currentWeekPoints))} points</strong></div>
-        <div class="leaderboard-assumption"><span>Weekly avg</span><strong>${fmtNum(Math.round(model.averageWeeklyPoints))} points</strong></div>
-        <div class="leaderboard-assumption"><span>Avg × window</span><strong>${fmtNum(Math.round(scenario.weeklyProjectedPoints))} points</strong></div>
-        <div class="leaderboard-assumption"><span>Allocation</span><strong>${fmtTokenCompact(model.campaignAllocation)} MEGA</strong></div>
-        <div class="leaderboard-assumption warn"><span>Status</span><strong>Estimate only</strong></div>`;
+      note.title = 'Weekly distribution breakdown used for Terminal point value estimates.';
+      const distributions = [
+        { label: 'Initial', value: model.initialDistributionPoints },
+        { label: 'Week 1', value: model.firstWeekPoints },
+        { label: 'Week 2', value: model.currentWeekPoints },
+      ];
+      note.innerHTML = '<ul class="leaderboard-distribution-list">'
+        + distributions.map((row) => `
+          <li class="leaderboard-distribution-item">
+            <span class="leaderboard-distribution-label">${row.label}</span>
+            <strong class="leaderboard-distribution-value">${fmtNum(Math.round(row.value))} points</strong>
+          </li>`).join('')
+        + '</ul>';
     }
     bindTerminalPointSimulator();
     bindTerminalScenarioToggle();
