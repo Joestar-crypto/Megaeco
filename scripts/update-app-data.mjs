@@ -11,6 +11,7 @@ const WORLD_FILE = path.join(DATA_DIR, 'world-markets-dashboard-data.json');
 
 const USER_AGENT = 'MegaFees App Data Refresh/1.0';
 const DEFAULT_TIMEOUT_MS = 45000;
+const RPC_TIMEOUT_MS = 90000;
 const MEGAETH_RPC = 'https://mainnet.megaeth.com/rpc';
 
 const EUPHORIA_CONTRACT = '0x12759afca690637b425ffba3265f0dc2f6242a8d';
@@ -141,9 +142,12 @@ async function fetchJson(url, options = {}, retries = 3) {
 async function rpc(method, params = [], retries = 5) {
   let lastError;
   for (let attempt = 1; attempt <= retries; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), RPC_TIMEOUT_MS);
     try {
       const response = await fetch(MEGAETH_RPC, {
         method: 'POST',
+        signal: controller.signal,
         headers: {
           'content-type': 'application/json',
           'user-agent': USER_AGENT,
@@ -167,6 +171,8 @@ async function rpc(method, params = [], retries = 5) {
       lastError = error;
       if (attempt >= retries) break;
       await sleep(1200 * attempt);
+    } finally {
+      clearTimeout(timeout);
     }
   }
   throw lastError;
@@ -365,18 +371,46 @@ async function findFirstBlockAtOrAfter(targetTimestamp, latestKnownBlock) {
   return low;
 }
 
-async function fetchLogsInChunks(filter, chunkSize = 6000) {
+async function fetchLogsInChunks(filter, chunkSize = 120000) {
   const logs = [];
-  for (let start = filter.fromBlock; start <= filter.toBlock; start += chunkSize) {
-    const end = Math.min(filter.toBlock, start + chunkSize - 1);
-    const chunkLogs = await rpc('eth_getLogs', [{
-      address: filter.address,
-      fromBlock: '0x' + start.toString(16),
-      toBlock: '0x' + end.toString(16),
-      topics: filter.topics,
-    }]);
-    logs.push(...chunkLogs);
-    await sleep(180);
+  const minimumChunkSize = 250;
+  const absoluteMinimumChunkSize = 1;
+  const targetChunkSize = Math.max(minimumChunkSize, chunkSize);
+  let currentChunkSize = targetChunkSize;
+  let start = filter.fromBlock;
+  let smallestChunkRetries = 0;
+
+  while (start <= filter.toBlock) {
+    const end = Math.min(filter.toBlock, start + currentChunkSize - 1);
+    try {
+      const chunkLogs = await rpc('eth_getLogs', [{
+        address: filter.address,
+        fromBlock: '0x' + start.toString(16),
+        toBlock: '0x' + end.toString(16),
+        topics: filter.topics,
+      }]);
+      logs.push(...chunkLogs);
+      start = end + 1;
+      smallestChunkRetries = 0;
+      if (currentChunkSize < targetChunkSize) {
+        currentChunkSize = Math.min(targetChunkSize, currentChunkSize * 2);
+      }
+      await sleep(180);
+    } catch (error) {
+      if (currentChunkSize > minimumChunkSize) {
+        currentChunkSize = Math.max(minimumChunkSize, Math.floor(currentChunkSize / 2));
+        continue;
+      }
+      if (currentChunkSize > absoluteMinimumChunkSize) {
+        currentChunkSize = Math.max(absoluteMinimumChunkSize, Math.floor(currentChunkSize / 2));
+        continue;
+      }
+      smallestChunkRetries += 1;
+      if (smallestChunkRetries >= 3) {
+        throw new Error(`RPC eth_getLogs failed for blocks ${start}-${end}: ${error?.message || error}`);
+      }
+      await sleep(1500 * smallestChunkRetries);
+    }
   }
   return logs;
 }
