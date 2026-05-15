@@ -2702,9 +2702,9 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px 14px;
-    align-items: center;
-    min-height: 78px;
-    padding: 16px;
+    align-items: start;
+    min-height: 88px;
+    padding: 18px;
     border: 1px solid rgba(255,255,255,0.06);
     background: rgba(255,255,255,0.018);
     color: var(--text);
@@ -2746,32 +2746,26 @@
   .site-tab-title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     min-width: 0;
-    font-family: var(--mono);
-    font-size: clamp(16px, 1.55vw, 22px);
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
+    font-size: clamp(24px, 2.35vw, 36px);
     font-weight: 800;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--side-accent);
-    line-height: 1.1;
+    line-height: 0.96;
   }
   .site-tab-title .br {
     color: var(--side-accent);
     opacity: 0.82;
   }
   .site-tab-copy {
-    grid-column: 1 / -1;
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    line-height: 1.5;
-    opacity: 0.72;
+    display: none;
   }
   .site-tab-count {
     justify-self: end;
+    align-self: start;
     padding: 6px 10px;
     border: 1px solid rgba(255,255,255,0.08);
     background: rgba(255,255,255,0.024);
@@ -2811,12 +2805,13 @@
   }
   .apps-rail-title,
   .dashboards-title {
-    font-family: var(--mono);
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
     color: var(--text);
-    font-size: 12px;
+    font-size: clamp(18px, 1.8vw, 28px);
     font-weight: 800;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    line-height: 0.98;
   }
   .apps-rail-meta,
   .dashboards-meta {
@@ -2832,27 +2827,95 @@
     align-items: center;
     justify-content: flex-end;
     flex-wrap: wrap;
-    gap: 7px;
-    max-width: min(440px, 50%);
+    gap: 18px;
+    max-width: none;
   }
   .app-link {
-    border: 1px solid color-mix(in srgb, var(--app-accent) 38%, rgba(255,255,255,0.10));
+    min-width: auto;
+    height: auto;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    border: none;
     color: var(--text);
-    background: color-mix(in srgb, var(--app-accent) 8%, rgba(255,255,255,0.018));
-    padding: 7px 9px;
-    font-family: var(--mono);
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.11em;
-    line-height: 1;
-    text-transform: uppercase;
+    border-radius: 0;
+    background: transparent;
     text-decoration: none;
+    box-shadow: none;
+    transition: transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+    position: relative;
+    overflow: visible;
+    isolation: auto;
+    opacity: 0.9;
+  }
+  .app-link::before {
+    display: none;
+  }
+  .app-link-media {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: center;
+    border-radius: 0;
+    border: none;
+    background: transparent;
+    position: relative;
+    z-index: 1;
+  }
+  .app-link img {
+    width: auto;
+    height: 28px;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    object-fit: contain;
+    object-position: center top;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.24));
+  }
+  .app-link-label {
+    display: none;
+  }
+  .app-link-primary {
+    opacity: 1;
+  }
+  .app-link-primary .app-link-media {
+    width: 34px;
+    height: 34px;
   }
   .app-link:hover,
   .app-link:focus-visible {
-    border-color: color-mix(in srgb, var(--app-accent) 68%, rgba(255,255,255,0.18));
     color: var(--app-accent);
+    transform: translateY(-1px) scale(1.06);
+    opacity: 1;
+    filter: saturate(1.08);
     outline: none;
+  }
+  .app-link-social {
+    opacity: 0.82;
+  }
+  .app-link-social .app-link-media {
+    width: 34px;
+    height: 34px;
+  }
+  .apps-section .chart-header .desc,
+  .apps-section .dashboards-meta,
+  .apps-section .app-identity p,
+  .apps-section .dashboard-copy,
+  .apps-section .brix-panel-copy,
+  .apps-section .brix-note,
+  .apps-section .world-source-list {
+    display: none;
+  }
+  .apps-section .dashboard-card {
+    gap: 10px;
+  }
+  .apps-section .brix-panel-head {
+    margin-bottom: 14px;
   }
   .apps-list {
     display: grid;
@@ -2927,6 +2990,16 @@
     height: 100%;
     object-fit: cover;
   }
+  .app-icon-hitone {
+    background: #0A0A0E;
+    border-color: rgba(251,191,36,0.58);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.16), 0 0 20px rgba(32,178,170,0.24);
+  }
+  .app-icon-hitone img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   .app-name {
     display: block;
     min-width: 0;
@@ -2992,9 +3065,10 @@
   .app-identity h3 {
     margin: 0;
     color: var(--text);
-    font-size: clamp(20px, 2vw, 30px);
-    line-height: 1.05;
-    letter-spacing: 0.08em;
+    font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
+    font-size: clamp(24px, 2.35vw, 34px);
+    line-height: 0.98;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
   }
   .app-identity p {
@@ -3150,8 +3224,10 @@
     background:
       linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.012)),
       radial-gradient(100% 70% at 100% 0%, color-mix(in srgb, var(--brix-accent) 13%, transparent), transparent 58%);
-    overflow: hidden;
+    overflow: visible;
+    z-index: 0;
   }
+  .brix-panel.has-active-tooltip { z-index: 18; }
   .brix-panel.wide { grid-column: 1 / -1; }
   .brix-panel::before {
     content: '';
@@ -3232,11 +3308,12 @@
     min-height: 280px;
     border-top: 1px solid rgba(255,255,255,0.07);
     padding-top: 12px;
+    overflow: visible;
   }
   .brix-chart-figure {
     position: relative;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
     isolation: isolate;
   }
   .brix-chart-figure::after {
@@ -3265,36 +3342,52 @@
     min-height: 240px;
     z-index: 2;
   }
+  .brix-chart .brix-hover-overlay {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    pointer-events: none;
+    z-index: 3;
+    overflow: visible;
+  }
+  .brix-hover-guide,
+  .brix-hover-marker {
+    opacity: 0;
+    transition: none;
+  }
+  .brix-hover-guide {
+    stroke: color-mix(in srgb, var(--brix-accent) 42%, rgba(255,255,255,0.18));
+    stroke-width: 1;
+  }
+  .brix-hover-marker {
+    fill: transparent;
+    stroke: var(--brix-accent);
+    stroke-width: 2;
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--brix-accent) 54%, transparent));
+  }
   .brix-hover-point {
     position: absolute;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    bottom: 0;
     cursor: crosshair;
     z-index: 3;
   }
   .brix-hover-point::before {
-    content: '';
-    position: absolute;
-    inset: 5px;
-    border-radius: 50%;
-    background: var(--brix-accent);
-    box-shadow: 0 0 12px color-mix(in srgb, var(--brix-accent) 62%, transparent);
-    opacity: 0;
-    transition: none;
+    display: none;
   }
-  .brix-hover-point:hover::before,
-  .brix-hover-point.is-active::before,
-  .brix-hover-point:focus::before,
-  .brix-hover-point:focus-visible::before { opacity: 1 !important; }
+  .brix-hover-point::after {
+    display: none;
+  }
   .brix-chart-tooltip {
     position: absolute;
-    left: 50%;
-    bottom: calc(100% + 9px);
+    left: var(--marker-x, 50%);
+    top: var(--marker-y, 50%);
     width: max-content;
     max-width: min(260px, 72vw);
-    padding: 10px 11px;
+    padding: 11px 12px;
     border: 1px solid color-mix(in srgb, var(--brix-accent) 42%, rgba(255,255,255,0.12));
     background: rgba(30,30,32,0.98);
     color: var(--text);
@@ -3305,10 +3398,14 @@
     text-transform: uppercase;
     pointer-events: none;
     opacity: 0;
-    transform: translate(var(--tooltip-shift, -50%), 6px);
+    transform: translate(calc(var(--tooltip-shift, -50%) + var(--tooltip-shift-runtime, 0px)), var(--tooltip-translate-y, calc(-100% - 18px)));
     transition: none;
-    z-index: 4;
-    box-shadow: 0 14px 34px rgba(0,0,0,0.34);
+    z-index: 6;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.42), 0 0 26px color-mix(in srgb, var(--brix-accent) 14%, transparent);
+    border-radius: 14px;
+  }
+  .brix-hover-point.is-below .brix-chart-tooltip {
+    --tooltip-translate-y: 18px;
   }
   .brix-chart-tooltip strong { color: var(--brix-accent); font-weight: 800; }
   .brix-tooltip-title {
@@ -3332,7 +3429,7 @@
   .brix-hover-point:focus .brix-chart-tooltip,
   .brix-hover-point:focus-visible .brix-chart-tooltip {
     opacity: 1 !important;
-    transform: translate(var(--tooltip-shift, -50%), 0) !important;
+    transform: translate(calc(var(--tooltip-shift, -50%) + var(--tooltip-shift-runtime, 0px)), var(--tooltip-translate-y, calc(-100% - 18px))) !important;
   }
   .brix-note {
     margin-top: 12px;
@@ -3501,6 +3598,20 @@
   .euphoria-dashboard-grid .brix-panel:nth-child(2) { --brix-accent: #FF8FCC; }
   .euphoria-dashboard-grid .brix-panel:nth-child(3) { --brix-accent: #D94D96; }
   .euphoria-dashboard-grid .brix-panel:nth-child(4) { --brix-accent: #FFF1F8; }
+  .hitone-dashboard-grid {
+    --brix-accent: #FBBF24;
+  }
+  .hitone-dashboard-grid .brix-panel {
+    --brix-accent: #FBBF24;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
+      radial-gradient(90% 66% at 100% 0%, rgba(251,191,36,0.18), transparent 60%),
+      radial-gradient(70% 52% at 4% 100%, rgba(32,178,170,0.20), transparent 64%),
+      radial-gradient(72% 60% at 0% 0%, rgba(255,89,89,0.14), transparent 62%);
+  }
+  .hitone-dashboard-grid .brix-panel:nth-child(2) { --brix-accent: #22C55E; }
+  .hitone-dashboard-grid .brix-panel:nth-child(3) { --brix-accent: #20B2AA; }
+  .hitone-dashboard-grid .brix-panel:nth-child(4) { --brix-accent: #0B5EA8; }
   .world-dual-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(250px, 0.44fr);
@@ -3643,10 +3754,34 @@
   @media (max-width: 720px) {
     .site-switcher { grid-template-columns: 1fr; }
     .site-tab { min-height: 68px; padding: 13px; }
+    .site-tab-title { font-size: clamp(20px, 6vw, 28px); }
     .dashboards-head { flex-direction: column; }
     .app-link-strip {
       justify-content: flex-start;
       max-width: none;
+    }
+    .app-link {
+      padding: 0;
+    }
+    .app-link-media {
+      width: 30px;
+      height: 30px;
+    }
+    .app-link img {
+      height: 24px;
+    }
+    .app-link-primary {
+      min-width: auto;
+      height: auto;
+      padding: 0;
+    }
+    .app-link-primary .app-link-media {
+      width: 30px;
+      height: 30px;
+    }
+    .app-link-social .app-link-media {
+      width: 30px;
+      height: 30px;
     }
     .apps-list,
     .app-hero-row,
@@ -3697,12 +3832,10 @@
     <button class="site-tab active" type="button" data-site-tab="network" aria-selected="true">
       <span class="site-tab-title"><span class="br">[</span>Network<span class="br">]</span></span>
       <span class="site-tab-count">15 charts</span>
-      <span class="site-tab-copy">Cards, network economics, revenue, token flows, and leaderboard data.</span>
     </button>
     <button class="site-tab" type="button" data-site-tab="apps" aria-selected="false">
       <span class="site-tab-title"><span class="br">[</span>Apps<span class="br">]</span></span>
       <span class="site-tab-count" id="appsDashboardCount">— dashboards</span>
-      <span class="site-tab-copy">A dedicated surface for app-level analytics and future product dashboards.</span>
     </button>
   </nav>
 
@@ -4165,7 +4298,6 @@
       <div class="chart-header">
         <div class="title-block">
           <h2><span>Apps</span></h2>
-          <div class="desc">Application dashboards grouped by product area, with live protocol views where data is available.</div>
         </div>
       </div>
       <div class="apps-shell">
@@ -4182,7 +4314,6 @@
           <div class="dashboards-head">
             <div>
               <div class="dashboards-title" id="activeAppTitle">—</div>
-              <div class="dashboards-meta" id="activeAppMeta">—</div>
             </div>
             <div class="app-link-strip" id="activeAppLinks"></div>
           </div>
@@ -8800,7 +8931,7 @@
       users: '426',
       volume: '128K',
       links: [
-        ['Website', 'https://euphoria.finance/'],
+        ['Website', 'https://euphoria.finance/@disabledtextbook860'],
         ['Docs', 'https://docs.euphoria.finance/'],
         ['X', 'https://x.com/Euphoria_fi'],
         ['Discord', 'https://discord.gg/euphoriafi'],
@@ -8816,6 +8947,36 @@
         ['Daily Users', 'Unique wallets tracked from the first daily point.', 'Live', '426'],
         ['Profit Split', 'Wallets in profit vs all other wallets.', 'Live', '26.1%'],
         ['Wallet PnL Distribution', 'Wallet counts by realized USDM outcome range.', 'Live', '426'],
+      ],
+    },
+    {
+      id: 'hitone',
+      name: 'HitOne',
+      kind: 'One-Tap Trading',
+      initials: 'HO',
+      logo: 'logos/hitone-app-icon.png',
+      accent: '#FBBF24',
+      health: 'Blockscout data',
+      tvl: '272K',
+      users: 'Live',
+      volume: 'USDM',
+      links: [
+        ['Website', 'https://app.hit.one/r/CYP8SS'],
+        ['App', 'https://app.hit.one/'],
+        ['X', 'https://x.com/hitdotone'],
+        ['Contract', 'https://megaeth.blockscout.com/address/0xdf248BafE6fe9a73F201A125641e5C8Bb20472F7'],
+      ],
+      stats: [
+        ['Since Live', '272K'],
+        ['Profitable', 'Live'],
+        ['Daily Volume', 'USDM'],
+      ],
+      dashboards: [
+        ['Daily Volume', 'USDM routed through HitOne per UTC day.', 'Live', 'USDM'],
+        ['Daily Users', 'Unique wallets tracked from the latest daily snapshot.', 'Live', 'Wallets'],
+        ['Project Fees', '1% on each trade plus 5% on realized profits.', 'Live', 'USDM'],
+        ['Profit Split', 'Wallets in profit vs all other wallets.', 'Live', 'Live'],
+        ['Wallet PnL Distribution', 'Wallet counts by realized USDM outcome range.', 'Live', 'Wallets'],
       ],
     },
     {
@@ -8873,162 +9034,6 @@
         ['Lending TVL', 'Active lending positions decoded on-chain.', 'On-chain', '$617K'],
       ],
     },
-    {
-      id: 'mintpark',
-      name: 'MintPark',
-      kind: 'NFT',
-      initials: 'MP',
-      accent: '#FF8AA8',
-      health: 'Designing',
-      tvl: '$7.4M',
-      users: '31.2K',
-      volume: '$1.2M',
-      dashboards: [
-        ['Collection Pulse', 'Floor movement, listings, bids, and owner distribution.', 'Schema', '124 sets'],
-        ['Mint Funnel', 'Wallet conversion from allowlist to reveal and secondary sale.', 'Draft', '38%'],
-        ['Creator Revenue', 'Primary sale, royalty, and marketplace fee breakdowns.', 'Queue', '$84K'],
-      ],
-    },
-    {
-      id: 'vaultline',
-      name: 'VaultLine',
-      kind: 'Yield',
-      initials: 'VL',
-      accent: '#7EAAD4',
-      health: 'Live-ready',
-      tvl: '$62.8M',
-      users: '9.6K',
-      volume: '$3.1M',
-      dashboards: [
-        ['Strategy TVL', 'Deposits, withdrawals, and vault share by strategy family.', 'Schema', '$62.8M'],
-        ['Yield Quality', 'APY sources, subsidy share, volatility, and realized spread.', 'Draft', '8.4%'],
-        ['Risk Limits', 'Exposure caps, oracle drift, and liquidation proximity.', 'Queue', 'Low'],
-        ['Allocator Mix', 'Retail, vault, and whale balances across active products.', 'Schema', '9.6K'],
-        ['Revenue Waterfall', 'Gross yield, keeper costs, protocol take, and user net.', 'Draft', '$122K'],
-      ],
-    },
-    {
-      id: 'hypernest',
-      name: 'HyperNest',
-      kind: 'Perps',
-      initials: 'HN',
-      accent: '#C586FF',
-      health: 'Designing',
-      tvl: '$35.5M',
-      users: '22.1K',
-      volume: '$41.6M',
-      dashboards: [
-        ['Open Interest', 'Long/short skew, funding, and leverage by market.', 'Schema', '$19.4M'],
-        ['Trader PnL', 'Realized PnL, win rate, and whale concentration.', 'Draft', '51%'],
-        ['Liquidation Radar', 'Price bands, cascading risk, and insurance buffer.', 'Queue', '$2.8M'],
-        ['Market Quality', 'Spread, depth, and oracle update health per instrument.', 'Schema', '12 mkts'],
-      ],
-    },
-    {
-      id: 'loopforge',
-      name: 'LoopForge',
-      kind: 'Lending',
-      initials: 'LF',
-      accent: '#F5AF94',
-      health: 'Live-ready',
-      tvl: '$54.9M',
-      users: '13.8K',
-      volume: '$6.4M',
-      dashboards: [
-        ['Borrow Book', 'Utilization, borrow APR, and supplier yield by market.', 'Schema', '$28.7M'],
-        ['Collateral Heat', 'Collateral mix, health factors, and liquidation bands.', 'Draft', '1.72 HF'],
-        ['Rate Engine', 'Interest model changes and utilization sensitivity.', 'Queue', '84%'],
-        ['Bad Debt Watch', 'Dust, shortfall, and liquidation recovery tracking.', 'Schema', '$0'],
-        ['Wallet Segments', 'Borrower retention and supply-side cohort behavior.', 'Draft', '13.8K'],
-        ['Oracle Monitor', 'Feed latency, deviation, and fallback activation history.', 'Queue', 'Green'],
-      ],
-    },
-    {
-      id: 'pixelgate',
-      name: 'PixelGate',
-      kind: 'Gaming',
-      initials: 'PG',
-      accent: '#F4D35E',
-      health: 'Designing',
-      tvl: '$4.8M',
-      users: '74.5K',
-      volume: '$880K',
-      dashboards: [
-        ['Player Economy', 'Active players, sinks, faucets, and token velocity.', 'Schema', '74.5K'],
-        ['Match Loop', 'Sessions, completion, retries, and reward claim behavior.', 'Draft', '12.7m'],
-        ['Asset Market', 'Crafting, trades, floor prices, and inventory turnover.', 'Queue', '$880K'],
-      ],
-    },
-    {
-      id: 'flowdesk',
-      name: 'FlowDesk',
-      kind: 'Payments',
-      initials: 'FD',
-      accent: '#6DD0A9',
-      health: 'Live-ready',
-      tvl: '$22.6M',
-      users: '40.3K',
-      volume: '$15.1M',
-      dashboards: [
-        ['Payment Rails', 'Transfer volume, settlement time, and stablecoin split.', 'Schema', '$15.1M'],
-        ['Merchant Panel', 'Merchant cohorts, refunds, chargebacks, and net inflow.', 'Draft', '842'],
-        ['User Paths', 'Deposit source, first payment, repeat usage, and churn.', 'Queue', '40.3K'],
-        ['Treasury Float', 'Idle balance, sweep cadence, and yield contribution.', 'Schema', '$2.2M'],
-      ],
-    },
-    {
-      id: 'signalbay',
-      name: 'SignalBay',
-      kind: 'Social',
-      initials: 'SB',
-      accent: '#9AA7C2',
-      health: 'Designing',
-      tvl: '$3.6M',
-      users: '96.1K',
-      volume: '$510K',
-      dashboards: [
-        ['Creator Graph', 'Creator earnings, fan purchases, and content velocity.', 'Schema', '2.4K'],
-        ['Engagement Loop', 'Daily active wallets, posting cadence, and retention.', 'Draft', '96.1K'],
-        ['Social Trading', 'Signal purchases, copy volume, and top curator share.', 'Queue', '$510K'],
-        ['Reputation', 'Score distribution, abuse flags, and verified identity rate.', 'Schema', '87%'],
-        ['Campaigns', 'Quest conversion, referral depth, and reward cost per user.', 'Draft', '$0.19'],
-      ],
-    },
-    {
-      id: 'orbitlend',
-      name: 'OrbitLend',
-      kind: 'Credit',
-      initials: 'OL',
-      accent: '#FFB26B',
-      health: 'Live-ready',
-      tvl: '$17.9M',
-      users: '6.7K',
-      volume: '$2.3M',
-      dashboards: [
-        ['Credit Lines', 'Issued limits, active utilization, and repayment cadence.', 'Schema', '$11.2M'],
-        ['Borrower Risk', 'Default probability, late payments, and exposure buckets.', 'Draft', '2.1%'],
-        ['Pool Returns', 'Senior/junior tranche return and drawdown history.', 'Queue', '6.8%'],
-      ],
-    },
-    {
-      id: 'zappkit',
-      name: 'ZappKit',
-      kind: 'Automation',
-      initials: 'ZK',
-      accent: '#E56B6F',
-      health: 'Designing',
-      tvl: '$12.4M',
-      users: '16.9K',
-      volume: '$4.9M',
-      dashboards: [
-        ['Task Volume', 'Executions, failure reasons, retries, and gas sponsorship.', 'Schema', '1.8M'],
-        ['Bot Revenue', 'Subscription, task fee, and integrator revenue streams.', 'Draft', '$61K'],
-        ['Integration Health', 'Protocol endpoints, stale jobs, and latency windows.', 'Queue', '94%'],
-        ['User Automations', 'Most-used templates, retention, and upgrade behavior.', 'Schema', '16.9K'],
-        ['Keeper Market', 'Keeper competition, payout variance, and uptime.', 'Draft', '99.2%'],
-        ['Alert Center', 'Anomaly triggers and incident history by integration.', 'Queue', '7 alerts'],
-      ],
-    },
   ];
 
   let activeSiteTab = 'network';
@@ -9044,11 +9049,31 @@
     return `<span class="app-icon">${app.initials}</span>`;
   }
 
+  const APP_LINK_ICON_MAP = {
+    website: 'logos/social-website.svg',
+    x: 'logos/social-x.png',
+    discord: 'logos/social-discord.svg',
+    telegram: 'logos/social-telegram.svg',
+  };
+
+  function appLinkIconSrc(app, label) {
+    const normalizedLabel = String(label || '').toLowerCase();
+    return APP_LINK_ICON_MAP[normalizedLabel] || APP_LINK_ICON_MAP.website;
+  }
+
+  const APP_LINK_WHITELIST = new Set(['website', 'x', 'discord', 'telegram']);
+
   function appLinksMarkup(app) {
-    const links = Array.isArray(app?.links) ? app.links : [];
-    return links.map(([label, href]) => `
-      <a class="app-link" href="${escapeHTML(href)}" target="_blank" rel="noopener noreferrer">${escapeHTML(label)}</a>
-    `).join('');
+    const links = (Array.isArray(app?.links) ? app.links : []).filter(([label]) => APP_LINK_WHITELIST.has(String(label || '').toLowerCase()));
+    return links.map(([label, href]) => {
+      const normalizedLabel = String(label || '').toLowerCase();
+      const isWebsite = normalizedLabel === 'website';
+      return `
+      <a class="app-link${isWebsite ? ' app-link-primary' : ' app-link-social'}" href="${escapeHTML(href)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHTML(app.name + ' ' + label)}" title="${escapeHTML(label)}">
+        <span class="app-link-media"><img src="${escapeHTML(appLinkIconSrc(app, label))}" alt="" aria-hidden="true" loading="lazy" /></span>
+      </a>
+    `;
+    }).join('');
   }
 
   const BRIX_DASHBOARD_DATA_URL = 'data/brix-dashboard-data.json';
@@ -9058,6 +9083,8 @@
   const worldMarketsDataState = { dashboard: null, promise: null, error: null };
   const EUPHORIA_DASHBOARD_DATA_URL = 'data/euphoria-dashboard-data.json';
   const euphoriaDataState = { dashboard: null, promise: null, error: null };
+  const HITONE_DASHBOARD_DATA_URL = 'data/hitone-dashboard-data.json';
+  const hitoneDataState = { dashboard: null, promise: null, error: null };
 
   function loadEuphoriaData() {
     if (euphoriaDataState.promise) return euphoriaDataState.promise;
@@ -9075,6 +9102,24 @@
         euphoriaDataState.promise = null;
       });
     return euphoriaDataState.promise;
+  }
+
+  function loadHitoneData() {
+    if (hitoneDataState.promise) return hitoneDataState.promise;
+    hitoneDataState.promise = fetch(HITONE_DASHBOARD_DATA_URL, { cache: 'no-store' })
+      .then((res) => res.ok ? res.json() : null)
+      .then((dashboard) => {
+        hitoneDataState.dashboard = dashboard;
+        hitoneDataState.error = null;
+        if (activeAppId === 'hitone') renderActiveApp();
+      }).catch((error) => {
+        console.warn('HitOne data load failed', error);
+        hitoneDataState.error = error;
+        if (activeAppId === 'hitone') renderActiveApp();
+      }).finally(() => {
+        hitoneDataState.promise = null;
+      });
+    return hitoneDataState.promise;
   }
 
   function loadBrixData() {
@@ -9193,8 +9238,17 @@
       : ((point) => `<span class="brix-tooltip-title">${brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Value</span><span>${escapeHTML(String(formatY(point.value)))}</span></span>`);
     const xLabel = typeof options.xLabel === 'function' ? options.xLabel : ((point) => brixDateLabel(point.timestamp));
     const hotspots = coords.map((coord, index) => {
-      const tooltipShift = index < 3 ? '0' : index > coords.length - 4 ? '-100%' : '-50%';
-      return `<span class="brix-hover-point" tabindex="0" aria-label="${escapeHTML(options.label || 'Chart point')}" style="left:${(coord.x / width * 100).toFixed(3)}%;top:${(coord.y / height * 100).toFixed(3)}%;--tooltip-shift:${tooltipShift}"><span class="brix-chart-tooltip">${tooltipFor(points[index], index)}</span></span>`;
+      const bandStart = index === 0 ? pad.left : (coords[index - 1].x + coord.x) / 2;
+      const bandEnd = index === coords.length - 1 ? width - pad.right : (coord.x + coords[index + 1].x) / 2;
+      const bandWidth = Math.max(0.000001, bandEnd - bandStart);
+      const markerX = Math.min(100, Math.max(0, ((coord.x - bandStart) / bandWidth) * 100));
+      const leftCoord = index === 0 ? coord : coords[index - 1];
+      const rightCoord = index === coords.length - 1 ? coord : coords[index + 1];
+      const leftY = index === 0 ? coord.y : (leftCoord.y + coord.y) / 2;
+      const rightY = index === coords.length - 1 ? coord.y : (coord.y + rightCoord.y) / 2;
+      const centerYPct = (coord.y / height) * 100;
+      const tooltipShift = index < 1 ? '0%' : index > coords.length - 2 ? '-100%' : '-50%';
+      return `<span class="brix-hover-point" tabindex="0" aria-label="${escapeHTML(options.label || 'Chart point')}" data-base-marker-x="${markerX.toFixed(3)}" data-left-y-pct="${((leftY / height) * 100).toFixed(3)}" data-center-y-pct="${centerYPct.toFixed(3)}" data-right-y-pct="${((rightY / height) * 100).toFixed(3)}" style="left:${(bandStart / width * 100).toFixed(3)}%;width:${((bandEnd - bandStart) / width * 100).toFixed(3)}%;--marker-x:${markerX.toFixed(3)}%;--marker-y:${centerYPct.toFixed(3)}%;--tooltip-shift:${tooltipShift}"><span class="brix-chart-tooltip">${tooltipFor(points[index], index)}</span></span>`;
     }).join('');
     return `
       <div class="brix-chart-figure">
@@ -9218,6 +9272,10 @@
             const x = index === 0 ? pad.left : index === 1 ? width / 2 : width - pad.right;
             return `<text x="${x}" y="${height - 8}" text-anchor="${index === 0 ? 'start' : index === 1 ? 'middle' : 'end'}" fill="rgba(223,217,217,0.52)" font-family="Courier New" font-size="11">${escapeHTML(xLabel(point, index))}</text>`;
           }).join('')}
+        </svg>
+        <svg class="brix-hover-overlay" viewBox="0 0 ${width} ${height}" aria-hidden="true" focusable="false">
+          <line class="brix-hover-guide" x1="0" y1="0" x2="0" y2="0"></line>
+          <circle class="brix-hover-marker" cx="0" cy="0" r="5"></circle>
         </svg>
         ${hotspots}
       </div>
@@ -9289,23 +9347,172 @@
   }
 
   function bindBrixChartTooltips(scope) {
+    const pathMetricCache = new WeakMap();
+
+    const chartPathMetrics = (point) => {
+      const figure = point.closest('.brix-chart-figure');
+      if (!figure) return null;
+      if (pathMetricCache.has(figure)) return pathMetricCache.get(figure);
+      const svg = figure.querySelector('svg');
+      const path = svg?.querySelector('path[stroke]:not([stroke-dasharray])');
+      const viewBox = svg?.viewBox?.baseVal;
+      const metrics = svg && path && viewBox?.width && viewBox?.height
+        ? {
+            figure,
+            path,
+            width: viewBox.width,
+            height: viewBox.height,
+            totalLength: typeof path.getTotalLength === 'function' ? path.getTotalLength() : 0,
+            guide: figure.querySelector('.brix-hover-guide'),
+            marker: figure.querySelector('.brix-hover-marker'),
+          }
+        : null;
+      pathMetricCache.set(figure, metrics);
+      return metrics;
+    };
+
+    const renderOverlayMarker = (point, position) => {
+      const metrics = chartPathMetrics(point);
+      if (!metrics?.guide || !metrics?.marker || !position) return;
+      const figureRect = metrics.figure.getBoundingClientRect();
+      if (!(figureRect.height > 0)) return;
+      const topInset = 14 * (metrics.height / figureRect.height);
+      const bottomInset = 12 * (metrics.height / figureRect.height);
+      metrics.guide.setAttribute('x1', position.x.toFixed(3));
+      metrics.guide.setAttribute('x2', position.x.toFixed(3));
+      metrics.guide.setAttribute('y1', topInset.toFixed(3));
+      metrics.guide.setAttribute('y2', (metrics.height - bottomInset).toFixed(3));
+      metrics.marker.setAttribute('cx', position.x.toFixed(3));
+      metrics.marker.setAttribute('cy', position.y.toFixed(3));
+      metrics.guide.style.opacity = '1';
+      metrics.marker.style.opacity = '1';
+    };
+
+    const hideOverlayMarker = (point) => {
+      const metrics = chartPathMetrics(point);
+      if (!metrics?.guide || !metrics?.marker) return;
+      metrics.guide.style.opacity = '';
+      metrics.marker.style.opacity = '';
+    };
+
+    const exactMarkerPosition = (point, clientX) => {
+      const metrics = chartPathMetrics(point);
+      if (!metrics?.totalLength) return null;
+      const figureRect = metrics.figure.getBoundingClientRect();
+      if (!(figureRect.width > 0)) return null;
+      const targetX = Math.min(metrics.width, Math.max(0, ((clientX - figureRect.left) / figureRect.width) * metrics.width));
+      let start = 0;
+      let end = metrics.totalLength;
+      for (let index = 0; index < 18; index += 1) {
+        const mid = (start + end) / 2;
+        const probe = metrics.path.getPointAtLength(mid);
+        if (probe.x < targetX) start = mid;
+        else end = mid;
+      }
+      const pointOnPath = metrics.path.getPointAtLength((start + end) / 2);
+      return {
+        x: pointOnPath.x,
+        y: pointOnPath.y,
+        yPct: Math.min(100, Math.max(0, (pointOnPath.y / metrics.height) * 100)),
+      };
+    };
+
+    const resetMarkerPosition = (point) => {
+      const baseMarkerX = Number(point.dataset.baseMarkerX || 50);
+      const centerYPct = Number(point.dataset.centerYPct || 50);
+      point.style.setProperty('--marker-x', baseMarkerX.toFixed(3) + '%');
+      point.style.setProperty('--marker-y', centerYPct.toFixed(3) + '%');
+      const rect = point.getBoundingClientRect();
+      const fallbackClientX = rect.left + rect.width * (baseMarkerX / 100);
+      const exactPosition = exactMarkerPosition(point, fallbackClientX);
+      if (exactPosition) renderOverlayMarker(point, exactPosition);
+      else hideOverlayMarker(point);
+    };
+
+    const updateMarkerPosition = (point, clientX) => {
+      const rect = point.getBoundingClientRect();
+      const baseMarkerX = Number(point.dataset.baseMarkerX || 50);
+      const leftYPct = Number(point.dataset.leftYPct || point.dataset.centerYPct || 50);
+      const centerYPct = Number(point.dataset.centerYPct || 50);
+      const rightYPct = Number(point.dataset.rightYPct || point.dataset.centerYPct || 50);
+      const localPct = rect.width > 0
+        ? Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100))
+        : baseMarkerX;
+      const exactPosition = exactMarkerPosition(point, clientX);
+      let markerYPct = exactPosition?.yPct;
+      if (Number.isFinite(exactPosition?.x) && Number.isFinite(exactPosition?.y)) renderOverlayMarker(point, exactPosition);
+      if (!Number.isFinite(markerYPct)) {
+        markerYPct = centerYPct;
+        if (localPct <= baseMarkerX && baseMarkerX > 0) {
+          const progress = localPct / baseMarkerX;
+          markerYPct = leftYPct + (centerYPct - leftYPct) * progress;
+        } else if (localPct > baseMarkerX && baseMarkerX < 100) {
+          const progress = (localPct - baseMarkerX) / (100 - baseMarkerX);
+          markerYPct = centerYPct + (rightYPct - centerYPct) * progress;
+        }
+        const metrics = chartPathMetrics(point);
+        if (metrics?.width && metrics?.height) {
+          const figureRect = metrics.figure.getBoundingClientRect();
+          if (figureRect.width > 0) {
+            const chartX = Math.min(metrics.width, Math.max(0, ((clientX - figureRect.left) / figureRect.width) * metrics.width));
+            renderOverlayMarker(point, { x: chartX, y: (markerYPct / 100) * metrics.height });
+          }
+        }
+      }
+      point.style.setProperty('--marker-x', localPct.toFixed(3) + '%');
+      point.style.setProperty('--marker-y', markerYPct.toFixed(3) + '%');
+    };
+
+    const syncTooltipBounds = (point, tooltip) => {
+      if (!tooltip) return;
+      point.classList.remove('is-below');
+      tooltip.style.opacity = '1';
+      tooltip.style.visibility = 'hidden';
+      tooltip.style.removeProperty('--tooltip-shift-runtime');
+      let rect = tooltip.getBoundingClientRect();
+      const viewportPad = 12;
+      if (rect.top < viewportPad) {
+        point.classList.add('is-below');
+        rect = tooltip.getBoundingClientRect();
+      }
+      let shiftPx = 0;
+      if (rect.left < viewportPad) shiftPx = viewportPad - rect.left;
+      if (rect.right > window.innerWidth - viewportPad) shiftPx = (window.innerWidth - viewportPad) - rect.right;
+      tooltip.style.setProperty('--tooltip-shift-runtime', shiftPx.toFixed(2) + 'px');
+      tooltip.style.visibility = '';
+    };
+
     scope.querySelectorAll('.brix-hover-point').forEach((point) => {
       const tooltip = point.querySelector('.brix-chart-tooltip');
-      const show = () => {
+      const panel = point.closest('.brix-panel');
+      const show = (event) => {
         point.classList.add('is-active');
-        if (tooltip) {
-          tooltip.style.opacity = '1';
-          tooltip.style.transform = 'translate(var(--tooltip-shift, -50%), 0)';
-        }
+        if (panel) panel.classList.add('has-active-tooltip');
+        if (!tooltip) return;
+        if (event?.clientX != null) updateMarkerPosition(point, event.clientX);
+        else resetMarkerPosition(point);
+        syncTooltipBounds(point, tooltip);
+      };
+      const move = (event) => {
+        if (!tooltip || event?.clientX == null) return;
+        updateMarkerPosition(point, event.clientX);
+        syncTooltipBounds(point, tooltip);
       };
       const hide = () => {
         point.classList.remove('is-active');
+        point.classList.remove('is-below');
         if (tooltip) {
           tooltip.style.opacity = '';
-          tooltip.style.transform = '';
+          tooltip.style.visibility = '';
+          tooltip.style.removeProperty('--tooltip-shift-runtime');
         }
+        hideOverlayMarker(point);
+        point.style.setProperty('--marker-x', (Number(point.dataset.baseMarkerX || 50)).toFixed(3) + '%');
+        point.style.setProperty('--marker-y', (Number(point.dataset.centerYPct || 50)).toFixed(3) + '%');
+        if (panel && !panel.querySelector('.brix-hover-point.is-active')) panel.classList.remove('has-active-tooltip');
       };
       point.addEventListener('pointerenter', show);
+      point.addEventListener('pointermove', move);
       point.addEventListener('pointerleave', hide);
       point.addEventListener('focus', show);
       point.addEventListener('blur', hide);
@@ -9628,12 +9835,16 @@
     return n.toFixed(digits).replace(/\.0$/, '') + '%';
   }
 
-  function euphoriaTransferToday(data) {
+  function euphoriaTransferSinceLive(data) {
+    const explicit = Number(data?.transactions?.sinceLaunchTokenTransfers || data?.transactions?.sinceLiveTokenTransfers || 0);
+    if (Number.isFinite(explicit) && explicit > 0) return explicit;
+    const points = Array.isArray(data?.volume?.points) ? data.volume.points : [];
+    if (points.length) return points.reduce((total, point) => total + Number(point.transferCount || 0), 0);
     return Number(data?.transactions?.tokenTransfersToday || data?.transactions?.today || 0);
   }
 
-  function euphoriaContractTxToday(data) {
-    return Number(data?.transactions?.today || 0);
+  function euphoriaTransferToday(data) {
+    return Number(data?.transactions?.tokenTransfersToday || data?.transactions?.today || 0);
   }
 
   function euphoriaUsdm(value) {
@@ -9649,15 +9860,25 @@
     return sign + euphoriaUsdm(Math.abs(amount));
   }
 
-  function euphoriaDailyPoints(points, valueKey) {
+  function tapTradingOpenUtcDate(data) {
+    const snapshotIso = String(data?.fetchedAt || data?.dataWindowUtc?.to || '').trim();
+    const snapshotTime = Date.parse(snapshotIso);
+    if (!Number.isFinite(snapshotTime)) return '';
+    return new Date(snapshotTime).toISOString().slice(0, 10);
+  }
+
+  function euphoriaDailyPoints(points, valueKey, options = {}) {
+    const openUtcDate = String(options.openUtcDate || '');
     const rows = (Array.isArray(points) ? points : [])
       .map((point) => ({
+        ...point,
         timestamp: Date.parse(String(point.date) + 'T00:00:00Z'),
         value: Number(point[valueKey]) || 0,
         label: String(point.date || ''),
       }))
       .filter((point) => Number.isFinite(point.timestamp))
-      .sort((a, b) => a.timestamp - b.timestamp);
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .filter((point) => !openUtcDate || point.label !== openUtcDate);
     if (rows.length === 1) {
       rows.unshift({
         timestamp: rows[0].timestamp - 86400000,
@@ -9668,19 +9889,32 @@
     return rows;
   }
 
-  function euphoriaSummaryStats(data) {
+  function tapTradingSummaryStats(data, fallbackStats) {
     if (!data) {
-      return [
-        ['Since Live', '185K'],
-        ['Profitable', '26.1%'],
-        ['Daily Volume', '128K'],
-      ];
+      return fallbackStats;
     }
+    const latestDailyVolume = Number(euphoriaDailyPoints(data.volume?.points, 'volumeUsdm', { openUtcDate: tapTradingOpenUtcDate(data) }).at(-1)?.value || 0);
     return [
-      ['Since Live', fmtTokenCompact(euphoriaTransferToday(data))],
+      ['Since Live', fmtTokenCompact(euphoriaTransferSinceLive(data))],
       ['Profitable', euphoriaPct(data.players?.profitablePct)],
-      ['Daily Volume', fmtTokenCompact(Number(data.volume?.todayUsdm || 0))],
+      ['Daily Volume', fmtTokenCompact(latestDailyVolume)],
     ];
+  }
+
+  function euphoriaSummaryStats(data) {
+    return tapTradingSummaryStats(data, [
+      ['Since Live', '185K'],
+      ['Profitable', '26.1%'],
+      ['Daily Volume', '128K'],
+    ]);
+  }
+
+  function hitoneSummaryStats(data) {
+    return tapTradingSummaryStats(data, [
+      ['Since Live', '272K'],
+      ['Profitable', 'Live'],
+      ['Daily Volume', 'USDM'],
+    ]);
   }
 
   function euphoriaDonutMarkup(segments, options = {}) {
@@ -9725,83 +9959,157 @@
     `;
   }
 
-  function renderEuphoriaDashboards(grid) {
-    grid.className = 'brix-dashboard-grid euphoria-dashboard-grid';
-    const data = euphoriaDataState.dashboard;
+  const TAP_TRADING_DASHBOARD_CONFIGS = {
+    euphoria: {
+      className: 'brix-dashboard-grid euphoria-dashboard-grid',
+      loading: 'Loading Euphoria dashboards',
+      name: 'Euphoria',
+      primary: '#F9BADD',
+      secondary: '#FF8FCC',
+      notProfit: '#7C2A52',
+      gainPalette: {
+        loss: '#2A0D1C',
+        flat: '#FFF1F8',
+        'gain-small': '#F9BADD',
+        'gain-mid': '#FF8FCC',
+        'gain-high': '#D94D96',
+        'gain-whale': '#7C2A52',
+      },
+      volumeCopy: 'USDM routed through Euphoria by closed UTC day. The open day appears only after the next refresh.',
+      usersCopy: 'Unique wallets from the latest closed UTC day. The open day is held back until the next refresh.',
+      volumeNote: 'Volume excludes the Euphoria pool and the daily KPIs hold back the open UTC day until it closes.',
+      outcomeNote: 'Pool flows are excluded from wallet outcome calculations.',
+      distributionNote: 'Outcome ranges are computed from wallet payouts minus wallet stakes, excluding pool flows.',
+    },
+    hitone: {
+      className: 'brix-dashboard-grid hitone-dashboard-grid',
+      loading: 'Loading HitOne dashboards',
+      name: 'HitOne',
+      primary: '#FBBF24',
+      secondary: '#22C55E',
+      notProfit: '#0B5EA8',
+      gainPalette: {
+        loss: '#2A1110',
+        flat: '#F7F2DE',
+        'gain-small': '#FBBF24',
+        'gain-mid': '#22C55E',
+        'gain-high': '#20B2AA',
+        'gain-whale': '#0B5EA8',
+      },
+      volumeCopy: 'USDM routed through HitOne by closed UTC day. The open day appears only after the next refresh.',
+      usersCopy: 'Unique wallets from the latest closed UTC day. The open day is held back until the next refresh.',
+      volumeNote: 'Since Live uses the all-time Blockscout transfer counter; daily HitOne charts wait for the UTC day to close before updating.',
+      feeCopy: 'Daily project revenue from closed UTC days using 1% trade fees plus 5% of realized profits.',
+      feeNote: 'Profit fees are reconstructed by returning each wallet\'s remaining net principal first, then treating any payout excess as profit already net of the 5% fee.',
+      outcomeNote: 'Wallet outcomes use USDM sent to HitOne as stakes and USDM sent from HitOne as payouts.',
+      distributionNote: 'Outcome ranges are computed from tracked wallet payouts minus tracked wallet stakes for the refreshed window.',
+    },
+  };
+
+  function renderTapTradingDashboards(grid, appId, dataState, loadData) {
+    const config = TAP_TRADING_DASHBOARD_CONFIGS[appId] || TAP_TRADING_DASHBOARD_CONFIGS.euphoria;
+    grid.className = config.className;
+    const data = dataState.dashboard;
     if (!data) {
-      loadEuphoriaData();
-      grid.innerHTML = '<div class="brix-loading">Loading Euphoria dashboards</div>';
+      loadData();
+      grid.innerHTML = `<div class="brix-loading">${escapeHTML(config.loading)}</div>`;
       return;
     }
 
     const players = data.players || {};
-    const launchTransfers = euphoriaTransferToday(data);
-    const todayContractTx = euphoriaContractTxToday(data);
-    const dailyVolume = Number(data.volume?.todayUsdm || 0);
+  const openUtcDate = tapTradingOpenUtcDate(data);
+    const sinceLiveTransfers = euphoriaTransferSinceLive(data);
+  const volumePoints = euphoriaDailyPoints(data.volume?.points, 'volumeUsdm', { openUtcDate });
+  const userPoints = euphoriaDailyPoints(data.users?.points, 'users', { openUtcDate });
+  const latestVolumePoint = volumePoints.at(-1) || { value: 0, transferCount: 0, label: '' };
+  const latestUserPoint = userPoints.at(-1) || { value: 0, label: '' };
+  const latestDailyTransfers = Number(latestVolumePoint.txCount || latestVolumePoint.transferCount || 0);
+  const dailyVolume = Number(latestVolumePoint.value || 0);
     const walletCount = Number(players.total || 0);
     const profitable = Number(players.profitable || 0);
     const notProfitable = Number(players.notProfitable || 0);
     const profitablePct = Number(players.profitablePct || 0);
-    const volumePoints = euphoriaDailyPoints(data.volume?.points, 'volumeUsdm');
-    const userPoints = euphoriaDailyPoints(data.users?.points, 'users');
-    const gainPalette = {
-      loss: '#2A0D1C',
-      flat: '#FFF1F8',
-      'gain-small': '#F9BADD',
-      'gain-mid': '#FF8FCC',
-      'gain-high': '#D94D96',
-      'gain-whale': '#7C2A52',
-    };
+  const latestDailyUsers = Number(latestUserPoint.value || 0);
+    const feePoints = appId === 'hitone'
+      ? euphoriaDailyPoints(data.fees?.points, 'totalFeeUsdm', { openUtcDate })
+      : [];
+    const latestFeePoint = feePoints.at(-1) || { value: 0 };
+    const feeTotals = data.fees?.totals || {};
     const gainSegments = (Array.isArray(players.bands) ? players.bands : [])
       .filter((band) => Number(band.count) > 0)
       .map((band) => ({
         label: band.label,
         value: Number(band.count) || 0,
-        color: gainPalette[band.key] || band.color || '#FF7EC3',
+        color: config.gainPalette[band.key] || band.color || config.primary,
         detail: euphoriaNetText(band.netUsdm),
       }));
-    const sourceText = data.dataWindowUtc?.to
-      ? 'Snapshot ' + data.dataWindowUtc.from.slice(0, 10) + ' UTC through ' + data.dataWindowUtc.to.slice(11, 16) + ' UTC.'
+    const windowFrom = data.dataWindowUtc?.from;
+    const windowTo = data.dataWindowUtc?.to;
+    const sourceText = windowFrom && windowTo
+      ? 'Snapshot ' + windowFrom.slice(0, 10) + ' UTC through ' + windowTo.slice(11, 16) + ' UTC.'
       : 'Snapshot from bundled Blockscout data.';
 
     grid.innerHTML = `
       <article class="brix-panel wide">
         <div class="brix-panel-head">
           <div><div class="brix-eyebrow">Daily Volume</div><h4>${fmtTokenCompact(dailyVolume)} USDM</h4></div>
-          <p class="brix-panel-copy">USDM routed through Euphoria by UTC day. The first point is anchored to zero until the next daily snapshot lands.</p>
+          <p class="brix-panel-copy">${escapeHTML(config.volumeCopy)}</p>
         </div>
         <div class="brix-metric-row">
-          <div class="brix-metric"><div class="brix-metric-label">Since live</div><div class="brix-metric-value accent">${fmtTokenCompact(launchTransfers)}</div></div>
-          <div class="brix-metric"><div class="brix-metric-label">Contract tx today</div><div class="brix-metric-value">${fmtNum(todayContractTx)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Since live</div><div class="brix-metric-value accent">${fmtTokenCompact(sinceLiveTransfers)}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Last full day tx</div><div class="brix-metric-value">${fmtNum(latestDailyTransfers)}</div></div>
           <div class="brix-metric"><div class="brix-metric-label">Daily volume</div><div class="brix-metric-value">${fmtTokenCompact(dailyVolume)}</div></div>
           <div class="brix-metric"><div class="brix-metric-label">Wallets</div><div class="brix-metric-value">${fmtNum(walletCount)}</div></div>
         </div>
         <div class="brix-chart">${brixLineChart(volumePoints, {
-          label: 'Euphoria daily volume',
-          gradientId: 'euphoriaVolumeArea',
-          color: '#F9BADD',
+          label: `${config.name} daily volume`,
+          gradientId: `${appId}VolumeArea`,
+          color: config.primary,
           baseline: 0,
           formatY: (value) => fmtTokenCompact(value),
           tooltip: (point) => `<span class="brix-tooltip-title">${point.label === 'Anchor' ? 'Previous day anchor' : brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Volume</span><span>${fmtToken(point.value, 'USDM', 0)}</span></span>`,
         })}</div>
-        <div class="brix-note">${escapeHTML(sourceText)} Volume excludes the Euphoria pool and the transfer KPI is scoped to the official live window starting today, not the contract's full history.</div>
+        <div class="brix-note">${escapeHTML(sourceText)} ${escapeHTML(config.volumeNote)}</div>
       </article>
 
       <article class="brix-panel">
         <div class="brix-panel-head">
-          <div><div class="brix-eyebrow">Daily Users</div><h4>${fmtNum(walletCount)}</h4></div>
-          <p class="brix-panel-copy">Unique wallets seen in today's Euphoria flow, ready to extend as new daily snapshots are added.</p>
+          <div><div class="brix-eyebrow">Daily Users</div><h4>${fmtNum(Math.round(latestDailyUsers))}</h4></div>
+          <p class="brix-panel-copy">${escapeHTML(config.usersCopy)}</p>
         </div>
         <div class="brix-chart">${brixLineChart(userPoints, {
-          label: 'Euphoria daily users',
-          gradientId: 'euphoriaUsersArea',
-          color: '#FF8FCC',
+          label: `${config.name} daily users`,
+          gradientId: `${appId}UsersArea`,
+          color: config.secondary,
           baseline: 0,
           formatY: (value) => fmtNum(Math.round(value)),
           tooltip: (point) => `<span class="brix-tooltip-title">${point.label === 'Anchor' ? 'Previous day anchor' : brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Users</span><span>${fmtNum(Math.round(point.value))}</span></span>`,
         })}</div>
-        <div class="brix-note">Daily users count unique wallets; the first tracked day uses a zero anchor for a readable line.</div>
+        <div class="brix-note">Daily users count unique wallets from the latest closed UTC day; the first tracked day uses a zero anchor for a readable line.</div>
       </article>
+
+      ${feePoints.length ? `
+      <article class="brix-panel">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Project Fees</div><h4>${fmtTokenCompact(latestFeePoint.value || 0)} USDM</h4></div>
+          <p class="brix-panel-copy">${escapeHTML(config.feeCopy || 'Project revenue from closed UTC days.')}</p>
+        </div>
+        <div class="brix-metric-row brix-metric-row-apy">
+          <div class="brix-metric"><div class="brix-metric-label">Since May 1</div><div class="brix-metric-value accent">${fmtTokenCompact(Number(feeTotals.totalFeeUsdm || 0))}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Trade fees</div><div class="brix-metric-value">${fmtTokenCompact(Number(feeTotals.tradeFeeUsdm || 0))}</div></div>
+          <div class="brix-metric"><div class="brix-metric-label">Profit fees</div><div class="brix-metric-value">${fmtTokenCompact(Number(feeTotals.profitFeeUsdm || 0))}</div></div>
+        </div>
+        <div class="brix-chart">${brixLineChart(feePoints, {
+          label: `${config.name} project fees`,
+          gradientId: `${appId}FeesArea`,
+          color: '#20B2AA',
+          baseline: 0,
+          formatY: (value) => fmtTokenCompact(value),
+          tooltip: (point) => `<span class="brix-tooltip-title">${point.label === 'Anchor' ? 'Previous day anchor' : brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Total fees</span><span>${fmtToken(Number(point.totalFeeUsdm || point.value || 0), 'USDM', 2)}</span></span><span class="brix-tooltip-row"><span>Trade fees</span><span>${fmtToken(Number(point.tradeFeeUsdm || 0), 'USDM', 2)}</span></span><span class="brix-tooltip-row"><span>Profit fees</span><span>${fmtToken(Number(point.profitFeeUsdm || 0), 'USDM', 2)}</span></span>`,
+        })}</div>
+        <div class="brix-note">${escapeHTML(config.feeNote || data.fees?.methodology || '')}</div>
+      </article>
+      ` : ''}
 
       <article class="brix-panel">
         <div class="brix-panel-head">
@@ -9809,10 +10117,10 @@
           <p class="brix-panel-copy">Wallets in profit versus wallets at breakeven or loss, from USDM paid out minus USDM staked.</p>
         </div>
         ${euphoriaDonutMarkup([
-          { label: 'Profitable', value: profitable, color: '#F9BADD', detail: euphoriaPct(profitablePct) },
-          { label: 'Not profitable', value: notProfitable, color: '#7C2A52', detail: euphoriaPct(100 - profitablePct) },
-        ], { label: 'Euphoria profit split', centerLabel: 'Wallets' })}
-        <div class="brix-note">${escapeHTML(sourceText)} Pool flows are excluded from wallet outcome calculations.</div>
+          { label: 'Profitable', value: profitable, color: config.primary, detail: euphoriaPct(profitablePct) },
+          { label: 'Not profitable', value: notProfitable, color: config.notProfit, detail: euphoriaPct(100 - profitablePct) },
+        ], { label: `${config.name} profit split`, centerLabel: 'Wallets' })}
+        <div class="brix-note">${escapeHTML(sourceText)} ${escapeHTML(config.outcomeNote)}</div>
       </article>
 
       <article class="brix-panel wide">
@@ -9820,11 +10128,19 @@
           <div><div class="brix-eyebrow">Wallet PnL Distribution</div><h4>${fmtNum(walletCount)}</h4></div>
           <p class="brix-panel-copy">Wallet counts by realized USDM outcome range for the current UTC window.</p>
         </div>
-        ${euphoriaDonutMarkup(gainSegments, { label: 'Euphoria wallet PnL distribution', centerLabel: 'Wallets' })}
-        <div class="brix-note">Outcome ranges are computed from wallet payouts minus wallet stakes, excluding pool flows.</div>
+        ${euphoriaDonutMarkup(gainSegments, { label: `${config.name} wallet PnL distribution`, centerLabel: 'Wallets' })}
+        <div class="brix-note">${escapeHTML(config.distributionNote)}</div>
       </article>
     `;
     bindBrixChartTooltips(grid);
+  }
+
+  function renderEuphoriaDashboards(grid) {
+    renderTapTradingDashboards(grid, 'euphoria', euphoriaDataState, loadEuphoriaData);
+  }
+
+  function renderHitoneDashboards(grid) {
+    renderTapTradingDashboards(grid, 'hitone', hitoneDataState, loadHitoneData);
   }
 
   function totalAppDashboards() {
@@ -9843,7 +10159,7 @@
         ${appIconMarkup(app)}
         <span>
           <span class="app-name">${app.name}</span>
-          <span class="app-kind">${app.kind} · ${app.health}</span>
+          <span class="app-kind">${app.kind}</span>
         </span>
         <span class="app-dash-count">${app.dashboards.length}</span>
       </button>
@@ -9857,12 +10173,10 @@
     const app = APP_DASHBOARD_CATALOG.find((entry) => entry.id === activeAppId) || APP_DASHBOARD_CATALOG[0];
     if (!app) return;
     const title = document.getElementById('activeAppTitle');
-    const meta = document.getElementById('activeAppMeta');
     const links = document.getElementById('activeAppLinks');
     const summary = document.getElementById('activeAppSummary');
     const grid = document.getElementById('dashboardGrid');
     if (title) title.textContent = app.name;
-    if (meta) meta.textContent = app.kind + ' workspace · ' + app.dashboards.length + ' dashboards';
     if (links) {
       links.innerHTML = appLinksMarkup(app);
       links.hidden = !Array.isArray(app.links) || !app.links.length;
@@ -9871,6 +10185,8 @@
       summary.style.setProperty('--app-accent', app.accent);
       const stats = app.id === 'euphoria'
         ? euphoriaSummaryStats(euphoriaDataState.dashboard)
+        : app.id === 'hitone'
+        ? hitoneSummaryStats(hitoneDataState.dashboard)
         : Array.isArray(app.stats) && app.stats.length
         ? app.stats.slice(0, 3)
         : [['TVL / Treasury', app.tvl], ['Users', app.users], ['Volume', app.volume]];
@@ -9879,15 +10195,18 @@
           ${appIconMarkup(app)}
           <div>
             <h3>${app.name}</h3>
-            <p>${app.kind} analytics workspace · ${app.health}</p>
           </div>
         </div>
-        ${stats.map(([label, value]) => `<div class="app-stat${['euphoria', 'brix', 'world-markets'].includes(app.id) ? ' app-stat-tight' : ''}"><div class="app-stat-label">${label}</div><div class="app-stat-value">${value}</div></div>`).join('')}
+        ${stats.map(([label, value]) => `<div class="app-stat${['euphoria', 'hitone', 'brix', 'world-markets'].includes(app.id) ? ' app-stat-tight' : ''}"><div class="app-stat-label">${label}</div><div class="app-stat-value">${value}</div></div>`).join('')}
       `;
     }
     if (grid) {
       if (app.id === 'euphoria') {
         renderEuphoriaDashboards(grid);
+        return;
+      }
+      if (app.id === 'hitone') {
+        renderHitoneDashboards(grid);
         return;
       }
       if (app.id === 'brix') {
