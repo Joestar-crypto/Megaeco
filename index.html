@@ -3081,6 +3081,39 @@
     line-height: 1.5;
     opacity: 0.74;
   }
+  .app-source-note {
+    margin-top: 8px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    opacity: 0.76;
+  }
+  .app-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .app-chip {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    padding: 6px 9px;
+    border: 1px solid color-mix(in srgb, var(--app-accent) 36%, rgba(255,255,255,0.10));
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .app-chip:hover {
+    border-color: color-mix(in srgb, var(--app-accent) 58%, rgba(255,255,255,0.14));
+    color: var(--app-accent);
+  }
   .app-stat-label {
     color: var(--muted);
     font-family: var(--mono);
@@ -9131,10 +9164,12 @@
       brixDataState.dashboard = dashboard;
       brixDataState.tokens = tokens;
       brixDataState.error = null;
+      if (activeSiteTab === 'apps') renderAppsNav();
       if (activeAppId === 'brix') renderActiveApp();
     }).catch((error) => {
       console.warn('Brix data load failed', error);
       brixDataState.error = error;
+      if (activeSiteTab === 'apps') renderAppsNav();
       if (activeAppId === 'brix') renderActiveApp();
     }).finally(() => {
       brixDataState.promise = null;
@@ -9149,15 +9184,114 @@
       .then((dashboard) => {
         worldMarketsDataState.dashboard = dashboard;
         worldMarketsDataState.error = null;
+        if (activeSiteTab === 'apps') renderAppsNav();
         if (activeAppId === 'world-markets') renderActiveApp();
       }).catch((error) => {
         console.warn('World Markets data load failed', error);
         worldMarketsDataState.error = error;
+        if (activeSiteTab === 'apps') renderAppsNav();
         if (activeAppId === 'world-markets') renderActiveApp();
       }).finally(() => {
         worldMarketsDataState.promise = null;
       });
     return worldMarketsDataState.promise;
+  }
+
+  function appDataTimestamp(value) {
+    const parsed = Date.parse(String(value || ''));
+    if (!Number.isFinite(parsed)) return null;
+    return new Date(parsed).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC',
+    }) + ' UTC';
+  }
+
+  function getBrixTokenByRole(role) {
+    return brixDataState.tokens?.tokens?.find((token) => token.role === role) || null;
+  }
+
+  function renderAppContractRefs(refs) {
+    return (refs || [])
+      .filter((ref) => ref?.address)
+      .map((ref) => `<a class="app-chip" href="${BS_ADDRESS(ref.address)}" target="_blank" rel="noopener">${escapeHTML(ref.label)} ${escapeHTML(shortAddress(ref.address))}</a>`)
+      .join('');
+  }
+
+  function resolveAppView(app) {
+    if (!app) return app;
+
+    if (app.id === 'brix') {
+      const dashboard = brixDataState.dashboard;
+      const itryToken = getBrixTokenByRole('current_itry_candidate');
+      const witryToken = getBrixTokenByRole('current_witry_candidate');
+      const brixToken = getBrixTokenByRole('brix_token_candidate');
+      const marketCap = Number(dashboard?.itryMarketCap?.usd);
+      const witryPrice = Number(dashboard?.price?.usd);
+      const stakingApy = Number(dashboard?.apySnapshot?.stakingApy);
+      const holderBalance = Number(dashboard?.holderTiers?.totalBalance);
+      return {
+        ...app,
+        health: brixDataState.error ? 'Source error' : (dashboard && brixDataState.tokens ? 'Contract-backed' : 'Loading source data'),
+        sourceNote: dashboard
+          ? 'Brix dashboard / Blockscout / ' + (appDataTimestamp(dashboard.asOf) || 'timestamp unavailable')
+          : 'Brix dashboard / Blockscout',
+        contractRefs: [
+          { label: 'iTRY', address: itryToken?.address },
+          { label: 'wiTRY', address: witryToken?.address },
+          { label: 'BRIX', address: brixToken?.address },
+        ],
+        stats: [
+          ['iTRY MCAP', Number.isFinite(marketCap) && marketCap > 0 ? fmtUSDCompact(marketCap) : app.stats[0][1]],
+          ['wiTRY Price', Number.isFinite(witryPrice) && witryPrice > 0 ? fmtUsdPerPoint(witryPrice) : app.stats[1][1]],
+          ['APY', Number.isFinite(stakingApy) ? brixApyPct(stakingApy, 1) : app.stats[2][1]],
+        ],
+        dashboards: [
+          ['Market Cap Growth', 'iTRY supply x TRY/USD.', 'Live', Number.isFinite(marketCap) && marketCap > 0 ? fmtUSDCompact(marketCap) : app.dashboards[0][3]],
+          ['wiTRY APY', 'Official 7d staking APY.', 'Live', Number.isFinite(stakingApy) ? brixApyPct(stakingApy, 1) : app.dashboards[1][3]],
+          ['Supply Tiers', 'EOA supply plus World Markets.', 'Live', Number.isFinite(holderBalance) && holderBalance > 0 ? brixCompactToken(holderBalance) : app.dashboards[2][3]],
+        ],
+      };
+    }
+
+    if (app.id === 'world-markets') {
+      const data = worldMarketsDataState.dashboard;
+      const spotTvl = Number(data?.spotTvl?.blockscoutLiveUsd || data?.spotTvl?.defillamaCurrentUsd);
+      const lendingTvl = Number(data?.lending?.tvlUsd);
+      const perpsNotional = Number(data?.perps?.volume?.notional24hUsd);
+      const perpsFees = Number(data?.perps?.fees?.total24hUsd);
+      const exchangeAddress = data?.project?.exchangeAddress;
+      const perpMarket = data?.perps?.volume?.markets?.[0];
+      const lendBook = data?.lending?.lendOrderbooks?.[0];
+      return {
+        ...app,
+        health: worldMarketsDataState.error ? 'Source error' : (data ? 'Contract-backed' : 'Loading source data'),
+        sourceNote: data
+          ? 'MegaETH logs / Blockscout / DefiLlama / ' + (appDataTimestamp(data.asOf || data?.spotTvl?.asOf) || 'timestamp unavailable')
+          : 'MegaETH logs / Blockscout / DefiLlama',
+        contractRefs: [
+          { label: 'Exchange', address: exchangeAddress },
+          { label: perpMarket?.symbol ? 'Perp ' + perpMarket.symbol : 'Perp', address: perpMarket?.orderbook },
+          { label: lendBook?.token ? 'Lend ' + lendBook.token : 'Lend', address: lendBook?.address },
+        ],
+        stats: [
+          ['Perps Notional 24h', Number.isFinite(perpsNotional) && perpsNotional > 0 ? fmtUSDCompact(perpsNotional) : app.stats[0][1]],
+          ['Lending TVL', Number.isFinite(lendingTvl) && lendingTvl > 0 ? fmtUSDCompact(lendingTvl) : app.stats[1][1]],
+          ['Spot TVL', Number.isFinite(spotTvl) && spotTvl > 0 ? fmtUSDCompact(spotTvl) : app.stats[2][1]],
+        ],
+        dashboards: [
+          ['Perps Volume', 'Notional USD and raw base volume from NewTrade logs.', 'On-chain', Number.isFinite(perpsNotional) && perpsNotional > 0 ? fmtUSDCompact(perpsNotional) : app.dashboards[0][3]],
+          ['Fees', 'Perps, lending interest, liquidation, and spot fees.', 'Live', Number.isFinite(perpsFees) && perpsFees > 0 ? fmtUSDCompact(perpsFees) : app.dashboards[1][3]],
+          ['Spot TVL', 'Exchange balance composition from DefiLlama and Blockscout.', 'Live', Number.isFinite(spotTvl) && spotTvl > 0 ? fmtUSDCompact(spotTvl) : app.dashboards[2][3]],
+          ['Lending TVL', 'Active lending positions decoded on-chain.', 'On-chain', Number.isFinite(lendingTvl) && lendingTvl > 0 ? fmtUSDCompact(lendingTvl) : app.dashboards[3][3]],
+        ],
+      };
+    }
+
+    return app;
   }
 
   function brixPct(value, digits = 1) {
@@ -10144,17 +10278,18 @@
   }
 
   function totalAppDashboards() {
-    return APP_DASHBOARD_CATALOG.reduce((sum, app) => sum + app.dashboards.length, 0);
+    return APP_DASHBOARD_CATALOG.reduce((sum, app) => sum + resolveAppView(app).dashboards.length, 0);
   }
 
   function renderAppsNav() {
     const list = document.getElementById('appsList');
     const railMeta = document.getElementById('appsRailMeta');
     const count = document.getElementById('appsDashboardCount');
-    if (railMeta) railMeta.textContent = APP_DASHBOARD_CATALOG.length + ' apps';
+    const apps = APP_DASHBOARD_CATALOG.map((app) => resolveAppView(app));
+    if (railMeta) railMeta.textContent = apps.length + ' sourced apps';
     if (count) count.textContent = totalAppDashboards() + ' dashboards';
     if (!list) return;
-    list.innerHTML = APP_DASHBOARD_CATALOG.map((app) => `
+    list.innerHTML = apps.map((app) => `
       <button class="app-nav-item${app.id === activeAppId ? ' active' : ''}" type="button" data-app-id="${app.id}" style="--app-accent:${app.accent}" aria-pressed="${app.id === activeAppId ? 'true' : 'false'}">
         ${appIconMarkup(app)}
         <span>
@@ -10170,7 +10305,8 @@
   }
 
   function renderActiveApp() {
-    const app = APP_DASHBOARD_CATALOG.find((entry) => entry.id === activeAppId) || APP_DASHBOARD_CATALOG[0];
+    const apps = APP_DASHBOARD_CATALOG.map((entry) => resolveAppView(entry));
+    const app = apps.find((entry) => entry.id === activeAppId) || apps[0];
     if (!app) return;
     const title = document.getElementById('activeAppTitle');
     const links = document.getElementById('activeAppLinks');
@@ -10189,12 +10325,15 @@
         ? hitoneSummaryStats(hitoneDataState.dashboard)
         : Array.isArray(app.stats) && app.stats.length
         ? app.stats.slice(0, 3)
-        : [['TVL / Treasury', app.tvl], ['Users', app.users], ['Volume', app.volume]];
+        : [['Source', app.health], ['Contracts', String((app.contractRefs || []).length)], ['Dashboards', String(app.dashboards.length)]];
       summary.innerHTML = `
         <div class="app-identity">
           ${appIconMarkup(app)}
           <div>
             <h3>${app.name}</h3>
+            <p>${app.kind} analytics workspace · ${app.health}</p>
+            ${app.sourceNote ? `<div class="app-source-note">${escapeHTML(app.sourceNote)}</div>` : ''}
+            ${app.contractRefs?.length ? `<div class="app-chip-row">${renderAppContractRefs(app.contractRefs)}</div>` : ''}
           </div>
         </div>
         ${stats.map(([label, value]) => `<div class="app-stat${['euphoria', 'hitone', 'brix', 'world-markets'].includes(app.id) ? ' app-stat-tight' : ''}"><div class="app-stat-label">${label}</div><div class="app-stat-value">${value}</div></div>`).join('')}
@@ -10258,6 +10397,8 @@
     if (tab === 'network') {
       requestAnimationFrame(() => renderCategory(activeCategory));
     } else {
+      loadBrixData();
+      loadWorldMarketsData();
       renderAppsNav();
       renderActiveApp();
     }

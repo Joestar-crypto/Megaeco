@@ -597,7 +597,7 @@ async function updateTapTradingData(current = {}, config) {
   const pointStartDate = rebuildRecentWindow
     ? laterDate(config.launchDate || initialBackfillDate, minimumBackfillStart)
     : hasIncrementalState
-    ? nextDateString(current.sync.lastSyncedDate)
+    ? current.sync.lastSyncedDate
     : initialBackfillDate;
   const currentFeePoints = Array.isArray(current.fees?.points) ? current.fees.points : [];
   const earliestTrackedFeeDate = currentFeePoints[0]?.date || null;
@@ -616,7 +616,7 @@ async function updateTapTradingData(current = {}, config) {
     ? null
     : needsFeeBackfill
     ? feeWarmupStartDate
-    : nextDateString(current.fees.syncLastProcessedDate);
+    : current.fees.syncLastProcessedDate;
   const processingStartDate = earlierDate(pointStartDate, feeStartDate);
   const datesToProcess = processingStartDate > today ? [] : enumerateDates(processingStartDate, today);
 
