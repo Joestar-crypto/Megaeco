@@ -54,6 +54,13 @@ const TAP_TRADING_APPS = {
     excludedCounterparties: [EUPHORIA_POOL],
     bandColors: EUPHORIA_BAND_COLORS,
     sinceLaunchMode: 'points',
+    userSnapshot: {
+      type: 'miniblocks',
+      dappId: 40,
+      source: 'MiniBlocks unique callers',
+      sourceUrl: 'https://miniblocks.io/dapps/euphoria',
+      label: 'Unique transaction callers over the last 24h from MiniBlocks.',
+    },
     methodology: 'Daily snapshots use MegaETH USDM Transfer logs involving the Euphoria contract. Player volume and PnL exclude the Euphoria pool, while raw transfer counts keep every USDM transfer touching the contract. Since-live totals start from the official 2026-05-14 UTC launch window.',
   },
   hitone: {
@@ -68,6 +75,12 @@ const TAP_TRADING_APPS = {
     sinceLaunchMode: 'counter',
     tradeFeePct: 0.01,
     profitFeePct: 0.05,
+    userSnapshot: {
+      type: 'blockscout-usdm-transfers',
+      source: 'MegaETH Blockscout USDM token transfers',
+      sourceUrl: `https://megaeth.blockscout.com/address/${HITONE_CONTRACT}`,
+      label: 'Unique USDM transfer counterparties over the last 24h from Blockscout.',
+    },
     feeWarmupStartDate: HITONE_LAUNCH_DATE,
     feeReportStartDate: HITONE_FEE_REPORT_START_DATE,
     methodology: 'Daily snapshots use MegaETH USDM Transfer logs involving the HitOne address. Player volume and PnL treat USDM sent to HitOne as stakes and USDM sent from HitOne as payouts. Since-live transfer totals use the all-time Blockscout counter because HitOne predates MegaFees daily snapshots.',
@@ -335,6 +348,94 @@ async function fetchBlockscoutAddressCounters(address) {
 
 async function fetchBlockscoutAddressTokenBalances(address) {
   return fetchBlockscoutJson(`addresses/${address}/token-balances`);
+}
+
+function parseApiTimestampMs(value) {
+  const normalized = String(value || '').replace(/\.\d+Z$/, 'Z');
+  const timestamp = Date.parse(normalized);
+  return Number.isFinite(timestamp) ? timestamp : null;
+}
+
+async function fetchMiniblocksDappStats(dappId) {
+  const stats = await fetchJson(`https://miniblocks.io/api/dapps/${dappId}/stats?timeframe=24h`);
+  const users = Number(stats?.unique_callers);
+  if (!Number.isFinite(users) || users < 0) return null;
+  return {
+    users: Math.round(users),
+    txCount: safeNumber(stats?.tx_count),
+    failedCount: safeNumber(stats?.failed_count),
+    totalGasUsed: safeNumber(stats?.total_gas_used),
+    avgGasPerTx: safeNumber(stats?.avg_gas_per_tx),
+  };
+}
+
+async function fetchRecentUsdmTransferUsers(address, maxPages = 400) {
+  const users = new Set();
+  const contract = normalizeAddress(address);
+  const cutoffMs = Date.now() - 24 * 60 * 60 * 1000;
+  let transferCount = 0;
+  let nextParams = { type: 'ERC-20' };
+
+  for (let page = 0; page < maxPages; page += 1) {
+    const payload = await fetchBlockscoutJson(`addresses/${address}/token-transfers`, nextParams);
+    const items = Array.isArray(payload?.items) ? payload.items : [];
+    if (!items.length) break;
+
+    for (const item of items) {
+      const tokenAddress = normalizeAddress(item?.token?.address_hash);
+      if (tokenAddress !== USDM_TOKEN) continue;
+      const timestampMs = parseApiTimestampMs(item?.timestamp);
+      if (!Number.isFinite(timestampMs) || timestampMs < cutoffMs) continue;
+      transferCount += 1;
+      const from = normalizeAddress(item?.from?.hash);
+      const to = normalizeAddress(item?.to?.hash);
+      if (from && from !== contract) users.add(from);
+      if (to && to !== contract) users.add(to);
+    }
+
+    const lastTimestampMs = parseApiTimestampMs(items.at(-1)?.timestamp);
+    if (!payload?.next_page_params || (Number.isFinite(lastTimestampMs) && lastTimestampMs < cutoffMs)) break;
+    nextParams = { type: 'ERC-20', ...payload.next_page_params };
+    await sleep(120);
+  }
+
+  return {
+    users: users.size,
+    transferCount,
+  };
+}
+
+async function fetchTapTradingUserSnapshot(config) {
+  const snapshotConfig = config.userSnapshot;
+  if (!snapshotConfig?.type) return null;
+  const fetchedAt = new Date().toISOString();
+
+  if (snapshotConfig.type === 'miniblocks') {
+    const stats = await fetchMiniblocksDappStats(snapshotConfig.dappId);
+    if (!stats) return null;
+    return {
+      ...stats,
+      timeframe: '24h',
+      source: snapshotConfig.source,
+      sourceUrl: snapshotConfig.sourceUrl,
+      label: snapshotConfig.label,
+      fetchedAt,
+    };
+  }
+
+  if (snapshotConfig.type === 'blockscout-usdm-transfers') {
+    const stats = await fetchRecentUsdmTransferUsers(config.contract);
+    return {
+      ...stats,
+      timeframe: '24h',
+      source: snapshotConfig.source,
+      sourceUrl: snapshotConfig.sourceUrl,
+      label: snapshotConfig.label,
+      fetchedAt,
+    };
+  }
+
+  return null;
 }
 
 async function fetchAllTokenHolders(address) {
@@ -683,6 +784,13 @@ async function updateTapTradingData(current = {}, config) {
   const sortedPoints = points.sort((left, right) => String(left.date).localeCompare(String(right.date)));
   const sortedUserPoints = userPoints.sort((left, right) => String(left.date).localeCompare(String(right.date)));
   const sortedFeePoints = feePoints.sort((left, right) => String(left.date).localeCompare(String(right.date)));
+  let last24hUsers = null;
+  try {
+    last24hUsers = await fetchTapTradingUserSnapshot(config);
+  } catch (error) {
+    console.warn(`[refresh] ${config.name} 24h user snapshot failed:`, error.message);
+    last24hUsers = current.users?.last24h || null;
+  }
   const latestPoint = sortedPoints.at(-1) || { txCount: 0, transferCount: 0, volumeUsdm: 0 };
   const ledgerRows = Array.from(ledger.entries())
     .map(([address, totals]) => {
@@ -748,6 +856,7 @@ async function updateTapTradingData(current = {}, config) {
       points: sortedPoints,
     },
     users: {
+      ...(last24hUsers ? { last24h: last24hUsers } : {}),
       points: sortedUserPoints,
     },
     players: {

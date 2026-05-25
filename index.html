@@ -1597,7 +1597,7 @@
   /* CATEGORY NAVIGATION + STACKED CATEGORY VIEW */
   .category-cards {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
     margin: 0 0 18px;
   }
@@ -1652,7 +1652,6 @@
   .category-card[data-category="revenue"] { --accent: var(--peach); }
   .category-card[data-category="comparison"] { --accent: #C586FF; }
   .category-card[data-category="mega"] { --accent: var(--blue); }
-  .category-card[data-category="leaderboard"] { --accent: var(--green-2); }
   .category-card-top {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -1775,58 +1774,6 @@
   .category-card[data-category="revenue"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
   .category-card[data-category="comparison"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
   .category-card[data-category="mega"] .category-card-primary { color: var(--blue); text-shadow: 0 0 14px rgba(126,170,212,0.24); }
-  .category-card[data-category="leaderboard"] .category-card-primary { color: var(--green-2); text-shadow: 0 0 14px rgba(109,208,169,0.26); }
-  .category-card[data-category="leaderboard"] .category-card-label {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    line-height: 1.12;
-  }
-  .category-card[data-category="leaderboard"] .category-card-primary {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    gap: 6px 8px;
-    font-size: clamp(20px, 2vw, 30px);
-    line-height: 1.08;
-    letter-spacing: 0;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-  }
-  .category-card[data-category="leaderboard"] .category-card-primary-main,
-  .category-card[data-category="leaderboard"] .category-card-primary-suffix {
-    max-width: 100%;
-    overflow: visible;
-    text-overflow: clip;
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
-  .category-card[data-category="leaderboard"] .category-card-details {
-    gap: 8px;
-  }
-  .category-card[data-category="leaderboard"] .category-card-detail {
-    white-space: normal;
-    overflow-wrap: anywhere;
-    line-height: 1.2;
-  }
-  .category-card[data-category="leaderboard"] .category-stat {
-    align-items: flex-start;
-  }
-  .category-card[data-category="leaderboard"] .category-stat-label {
-    flex: 1 1 auto;
-    min-width: 0;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    line-height: 1.2;
-  }
-  .category-card[data-category="leaderboard"] .category-stat-value {
-    flex: 0 0 auto;
-    min-width: 0;
-    text-align: right;
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
   .category-card-details {
     display: flex;
     flex-wrap: wrap;
@@ -1965,427 +1912,6 @@
     width: 18px;
     height: 18px;
   }
-  .token-logo.rank {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--green-2), var(--peach));
-    color: #19191A;
-    font-family: var(--mono);
-    font-weight: 900;
-    font-size: 10px;
-    box-shadow: 0 0 12px rgba(109,208,169,0.55);
-  }
-  .leaderboard-summary {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-  .leaderboard-metric {
-    min-width: 0;
-    padding: 16px 14px;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.024);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.025);
-  }
-  .leaderboard-metric.primary {
-    border-color: rgba(109,208,169,0.30);
-    background: linear-gradient(180deg, rgba(109,208,169,0.08), rgba(255,255,255,0.018));
-  }
-  .leaderboard-metric-label {
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.82;
-  }
-  .leaderboard-metric-value {
-    margin-top: 9px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 22px;
-    font-weight: 800;
-    line-height: 1.12;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    overflow-wrap: anywhere;
-    font-variant-numeric: tabular-nums;
-  }
-  .leaderboard-metric-accent { color: var(--green-2); text-shadow: 0 0 14px rgba(109,208,169,0.28); }
-  .leaderboard-metric-pink { color: var(--pink); text-shadow: 0 0 14px rgba(255,138,168,0.24); }
-  .leaderboard-metric-blue { color: var(--blue); text-shadow: 0 0 14px rgba(126,170,212,0.24); }
-  .leaderboard-scenarios {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    margin: 0 0 10px;
-    padding: 12px 14px;
-    border: 1px solid rgba(109,208,169,0.18);
-    border-radius: 8px;
-    background: rgba(109,208,169,0.035);
-  }
-  .leaderboard-scenario-copy {
-    min-width: 0;
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    line-height: 1.5;
-  }
-  .leaderboard-scenario-copy strong { color: var(--green-2); }
-  .leaderboard-scenario-toggle {
-    flex-shrink: 0;
-    display: inline-flex;
-    gap: 4px;
-    padding: 4px;
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    background: rgba(144,215,159,0.04);
-    font-family: var(--mono);
-  }
-  .leaderboard-scenario-toggle button {
-    border: 0;
-    border-radius: 6px;
-    background: transparent;
-    color: var(--muted);
-    padding: 9px 14px;
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .leaderboard-scenario-toggle button.active {
-    color: var(--green);
-    background: rgba(144,215,159,0.16);
-    box-shadow: 0 0 0 1px rgba(144,215,159,0.4), 0 0 14px rgba(144,215,159,0.22);
-  }
-  .leaderboard-scenario-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin: 0 0 18px;
-  }
-  .leaderboard-scenario-card {
-    appearance: none;
-    width: 100%;
-    text-align: left;
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.018);
-    color: inherit;
-    padding: 13px 12px;
-    font-family: var(--mono);
-    cursor: pointer;
-    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
-  }
-  .leaderboard-scenario-card:hover { border-color: rgba(109,208,169,0.34); background: rgba(109,208,169,0.045); transform: translateY(-1px); }
-  .leaderboard-scenario-card.active { border-color: rgba(109,208,169,0.64); background: rgba(109,208,169,0.075); box-shadow: inset 0 0 20px rgba(109,208,169,0.055), 0 0 0 1px rgba(109,208,169,0.10); }
-  .leaderboard-scenario-name { color: var(--green-2); font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
-  .leaderboard-scenario-primary { margin-top: 9px; color: var(--text); font-size: 22px; font-weight: 900; line-height: 1.12; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
-  .leaderboard-scenario-sub { margin-top: 4px; color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
-  .leaderboard-scenario-line { margin-top: 8px; display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 10px; }
-  .leaderboard-scenario-line strong { color: var(--text); font-weight: 800; text-align: right; }
-  .leaderboard-simulator {
-    display: grid;
-    grid-template-columns: minmax(300px, 1.15fr) minmax(260px, 0.85fr);
-    gap: 12px;
-    margin-top: 18px;
-  }
-  .leaderboard-control,
-  .leaderboard-farmer {
-    min-width: 0;
-    padding: 16px;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.018);
-  }
-  .leaderboard-control-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .leaderboard-control-title,
-  .leaderboard-farmer-title {
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-  .leaderboard-input {
-    width: 168px;
-    min-width: 0;
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 6px;
-    background: rgba(0,0,0,0.22);
-    color: var(--text);
-    padding: 9px 10px;
-    font-family: var(--mono);
-    font-size: 13px;
-    text-align: right;
-    outline: none;
-  }
-  .leaderboard-input:focus { border-color: var(--green-2); box-shadow: 0 0 0 1px rgba(109,208,169,0.20); }
-  .leaderboard-range {
-    width: 100%;
-    accent-color: var(--green-2);
-  }
-  .leaderboard-sim-output {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 14px;
-  }
-  .leaderboard-sim-pill {
-    min-width: 0;
-    padding: 12px 10px;
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.018);
-  }
-  .leaderboard-sim-label {
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.78;
-  }
-  .leaderboard-sim-value {
-    margin-top: 6px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 15px;
-    font-weight: 800;
-    line-height: 1.15;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    overflow-wrap: anywhere;
-    font-variant-numeric: tabular-nums;
-  }
-  .leaderboard-thresholds {
-    display: grid;
-    gap: 10px;
-    margin-top: 12px;
-  }
-  .leaderboard-threshold {
-    display: grid;
-    grid-template-columns: 78px 1fr 86px;
-    gap: 10px;
-    align-items: center;
-    font-family: var(--mono);
-    font-size: 11px;
-  }
-  .leaderboard-threshold-rank { color: var(--green-2); font-weight: 800; }
-  .leaderboard-threshold-track {
-    height: 9px;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 999px;
-    background: rgba(255,255,255,0.025);
-    overflow: hidden;
-  }
-  .leaderboard-threshold-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--green-2), var(--peach));
-    box-shadow: 0 0 14px rgba(109,208,169,0.35);
-  }
-  .leaderboard-threshold-points { color: var(--muted); text-align: right; }
-  .leaderboard-table-wrap { margin-top: 12px; }
-  .leaderboard-tier-section {
-    margin-top: 16px;
-    padding: 16px;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
-    background:
-      radial-gradient(circle at top left, rgba(109,208,169,0.10), transparent 45%),
-      linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.012));
-  }
-  .leaderboard-tier-head {
-    margin-bottom: 14px;
-  }
-  .leaderboard-tier-title {
-    margin: 0;
-    color: var(--text);
-    font-size: 18px;
-    letter-spacing: 0.03em;
-  }
-  .leaderboard-tier-layout {
-    display: grid;
-    grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
-    gap: 18px;
-    align-items: center;
-  }
-  .leaderboard-tier-chart-wrap {
-    position: relative;
-    width: min(100%, 260px);
-    margin: 0 auto;
-    aspect-ratio: 1;
-  }
-  #leaderboardTierChart {
-    width: 100%;
-    height: 100%;
-    display: block;
-    transform: rotate(-90deg);
-  }
-  .leaderboard-tier-chart-center {
-    position: absolute;
-    inset: 50%;
-    width: 46%;
-    height: 46%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    align-content: center;
-    gap: 4px;
-    text-align: center;
-    background: rgba(20,20,22,0.92);
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: inset 0 0 24px rgba(255,255,255,0.02);
-    pointer-events: none;
-  }
-  .leaderboard-tier-chart-center span {
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-  .leaderboard-tier-chart-center strong {
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 18px;
-    line-height: 1;
-  }
-  .leaderboard-tier-legend {
-    display: grid;
-    gap: 10px;
-  }
-  .leaderboard-tier-item {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 12px;
-    align-items: center;
-    padding: 12px;
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.018);
-  }
-  .leaderboard-tier-swatch {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    box-shadow: 0 0 12px currentColor;
-  }
-  .leaderboard-tier-copy {
-    min-width: 0;
-  }
-  .leaderboard-tier-label {
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .leaderboard-tier-range {
-    margin-top: 4px;
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.04em;
-  }
-  .leaderboard-tier-metrics {
-    text-align: right;
-    font-family: var(--mono);
-  }
-  .leaderboard-tier-count {
-    color: var(--text);
-    font-size: 13px;
-    font-weight: 800;
-  }
-  .leaderboard-tier-share {
-    margin-top: 4px;
-    color: var(--muted);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  #leaderboardTable th:not(:nth-child(2)),
-  #leaderboardTable td:not(:nth-child(2)) { text-align: right; }
-  #leaderboardTable th:first-child,
-  #leaderboardTable td:first-child { text-align: left; }
-  #leaderboardTable tbody tr { transition: background 0.16s ease; }
-  #leaderboardTable tbody tr:hover { background: rgba(109,208,169,0.035); }
-  #leaderboardTable tbody td:first-child { color: var(--green-2); font-weight: 800; }
-  #leaderboardTable .leaderboard-rank-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 42px;
-    padding: 4px 7px;
-    border: 1px solid rgba(109,208,169,0.22);
-    border-radius: 999px;
-    background: rgba(109,208,169,0.055);
-    color: var(--green-2);
-  }
-  #leaderboardTable .leaderboard-user { color: var(--text); }
-  #leaderboardTable .leaderboard-recent { color: var(--pink); }
-  #leaderboardTable .leaderboard-total { color: var(--green); font-weight: 800; }
-  #leaderboardTable .leaderboard-projected { color: var(--blue); }
-  #terminalLeaderboardNote.leaderboard-assumptions {
-    margin-top: 12px;
-    padding: 12px 14px;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.018);
-    color: var(--muted);
-    display: block;
-    font-family: var(--mono);
-  }
-  .leaderboard-distribution-list {
-    list-style: none;
-    display: grid;
-    gap: 7px;
-    margin: 0;
-    padding: 0;
-  }
-  .leaderboard-distribution-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    min-width: 0;
-  }
-  .leaderboard-distribution-label {
-    color: var(--muted);
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.78;
-  }
-  .leaderboard-distribution-value {
-    color: var(--text);
-    font-size: 11px;
-    line-height: 1.2;
-    text-align: right;
-    overflow: visible;
-    text-overflow: clip;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    font-weight: 800;
-  }
   @media (max-width: 1120px) {
     .category-cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2429,31 +1955,6 @@
     .mega-card {
       padding: 16px;
     }
-    .leaderboard-summary {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .leaderboard-scenarios {
-      align-items: stretch;
-      flex-direction: column;
-    }
-    .leaderboard-scenario-toggle {
-      width: 100%;
-    }
-    .leaderboard-scenario-toggle button {
-      flex: 1;
-    }
-    .leaderboard-scenario-grid {
-      grid-template-columns: 1fr;
-    }
-    .leaderboard-simulator {
-      grid-template-columns: 1fr;
-    }
-    .leaderboard-tier-layout {
-      grid-template-columns: 1fr;
-    }
-    #terminalLeaderboardNote.leaderboard-assumptions {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
     .category-chart-head {
       gap: 12px;
       margin-bottom: 12px;
@@ -2483,58 +1984,9 @@
       margin-top: 16px;
       font-size: clamp(18px, 7vw, 24px);
     }
-    .category-card[data-category="leaderboard"] .category-card-primary {
-      font-size: 22px;
-    }
-    .category-card[data-category="leaderboard"] .category-stat {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 5px;
-    }
-    .category-card[data-category="leaderboard"] .category-stat-value {
-      text-align: left;
-    }
     .category-chart-card,
     .mega-card {
       padding: 14px 12px;
-    }
-    .leaderboard-summary {
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-    .leaderboard-metric {
-      padding: 12px 10px;
-    }
-    .leaderboard-metric-value {
-      font-size: 20px;
-    }
-    .leaderboard-control-head {
-      align-items: stretch;
-      flex-direction: column;
-    }
-    .leaderboard-input {
-      width: 100%;
-      text-align: left;
-    }
-    .leaderboard-sim-output {
-      display: grid;
-    }
-    .leaderboard-threshold {
-      grid-template-columns: 64px 1fr 70px;
-      font-size: 10px;
-    }
-    .leaderboard-tier-section {
-      padding: 14px 12px;
-    }
-    .leaderboard-tier-item {
-      grid-template-columns: auto minmax(0, 1fr);
-    }
-    .leaderboard-tier-metrics {
-      grid-column: 2;
-      text-align: left;
-    }
-    #terminalLeaderboardNote.leaderboard-assumptions {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
@@ -3836,10 +3288,10 @@
 <div id="loadingOverlay" role="status" aria-live="polite" aria-atomic="true">
   <div class="load-logo">
     <span class="bolt">/\</span>MEGA<span class="accent">FEES</span>
-    <span class="load-count" id="loadCount">0/22</span>
+    <span class="load-count" id="loadCount">0/18</span>
   </div>
   <div class="load-bar"></div>
-  <div class="load-status" id="loadStatus">Syncing dashboard · 0/14<span class="blink">_</span></div>
+  <div class="load-status" id="loadStatus">Syncing dashboard · 0/18<span class="blink">_</span></div>
   <div class="load-meta">
     <span class="br">[</span> cards + charts hydrate in parallel · page stays live while slower feeds finish <span class="br">]</span>
   </div>
@@ -3864,7 +3316,7 @@
   <nav class="site-switcher" aria-label="MegaFees site sections">
     <button class="site-tab active" type="button" data-site-tab="network" aria-selected="true">
       <span class="site-tab-title"><span class="br">[</span>Network<span class="br">]</span></span>
-      <span class="site-tab-count">15 charts</span>
+      <span class="site-tab-count">13 charts</span>
     </button>
     <button class="site-tab" type="button" data-site-tab="apps" aria-selected="false">
       <span class="site-tab-title"><span class="br">[</span>Apps<span class="br">]</span></span>
@@ -3953,24 +3405,6 @@
         <div class="category-stat">
           <span class="category-stat-label">Forecast</span>
           <span class="category-stat-value" id="kpi-opium">$ —</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="category-card" data-category="leaderboard" role="button" tabindex="0">
-      <div class="category-card-top">
-        <div class="category-card-label"><span class="token-logo rank">#</span>Leaderboard</div>
-        <div class="category-card-count">2 views</div>
-      </div>
-      <div class="category-card-primary" id="kpi-terminal-points">—</div>
-      <div class="category-card-details">
-        <span class="category-card-detail" data-chart-key="summary" role="button" tabindex="0">Point Value</span>
-        <span class="category-card-detail" data-chart-key="table" role="button" tabindex="0">Top Players</span>
-      </div>
-      <div class="category-card-stats">
-        <div class="category-stat">
-          <span class="category-stat-label" id="kpi-terminal-projected-label">Seed + avg ×28.57</span>
-          <span class="category-stat-value" id="kpi-terminal-projected">—</span>
         </div>
       </div>
     </div>
@@ -4165,121 +3599,6 @@
         </article>
       </div>
     </div>
-
-    <div class="category-panel" data-category="leaderboard">
-      <div class="category-stack">
-        <article class="category-chart-card" id="leaderboard-summary-card">
-          <div class="category-chart-head">
-            <div class="category-chart-copy">
-              <h3><span class="token-logo rank">#</span>Terminal Points</h3>
-              <div class="desc">Initial Terminal seed plus projected two-week average distributions, with implied MEGA and USD per point.</div>
-            </div>
-          </div>
-          <div class="leaderboard-summary">
-            <div class="leaderboard-metric primary">
-              <div class="leaderboard-metric-label">Total projected points</div>
-              <div class="leaderboard-metric-value leaderboard-metric-blue" id="terminalProjectedPoints">—</div>
-            </div>
-            <div class="leaderboard-metric primary">
-              <div class="leaderboard-metric-label">Estimated MEGA / point</div>
-              <div class="leaderboard-metric-value leaderboard-metric-accent" id="terminalPointValue">—</div>
-            </div>
-            <div class="leaderboard-metric">
-              <div class="leaderboard-metric-label">2-week avg points</div>
-              <div class="leaderboard-metric-value leaderboard-metric-pink" id="terminalRecentPoints">—</div>
-            </div>
-            <div class="leaderboard-metric">
-              <div class="leaderboard-metric-label">Estimated USD / point</div>
-              <div class="leaderboard-metric-value leaderboard-metric-blue" id="terminalPointUsdValue">—</div>
-            </div>
-          </div>
-          <div class="leaderboard-scenarios">
-            <div class="leaderboard-scenario-copy" id="terminalScenarioCopy">Scenario: <strong>4 seasons</strong> · seed + two-week average</div>
-            <div class="leaderboard-scenario-toggle" id="terminalScenarioToggle" role="tablist" aria-label="Terminal season scenario">
-              <button type="button" data-seasons="3">3 seasons</button>
-              <button type="button" data-seasons="4" class="active">4 seasons</button>
-              <button type="button" data-seasons="5">5 seasons</button>
-            </div>
-          </div>
-          <div class="leaderboard-scenario-grid" id="terminalScenarioGrid">
-            <div class="skeleton">Loading scenarios…</div>
-          </div>
-          <div class="leaderboard-simulator">
-            <div class="leaderboard-control">
-              <div class="leaderboard-control-head">
-                <div class="leaderboard-control-title">Your points</div>
-                <input class="leaderboard-input" id="terminalPointInput" type="number" min="0" step="100" value="10000" inputmode="numeric" aria-label="Terminal points" />
-              </div>
-              <input class="leaderboard-range" id="terminalPointRange" type="range" min="0" max="300000" step="100" value="10000" aria-label="Terminal points slider" />
-              <div class="leaderboard-sim-output">
-                <div class="leaderboard-sim-pill">
-                  <div class="leaderboard-sim-label">Estimated MEGA</div>
-                  <div class="leaderboard-sim-value leaderboard-metric-accent" id="terminalSimMega">—</div>
-                </div>
-                <div class="leaderboard-sim-pill">
-                  <div class="leaderboard-sim-label">Estimated USD</div>
-                  <div class="leaderboard-sim-value leaderboard-metric-blue" id="terminalSimUsd">—</div>
-                </div>
-                <div class="leaderboard-sim-pill">
-                  <div class="leaderboard-sim-label">Rank / Top %</div>
-                  <div class="leaderboard-sim-value leaderboard-metric-pink" id="terminalSimRank">—</div>
-                </div>
-              </div>
-            </div>
-            <div class="leaderboard-farmer">
-              <div class="leaderboard-farmer-title">Rank checkpoints</div>
-              <div class="leaderboard-thresholds" id="terminalThresholds">
-                <div class="skeleton">Loading checkpoints…</div>
-              </div>
-            </div>
-          </div>
-          <div class="leaderboard-assumptions" id="terminalLeaderboardNote">Loading Terminal leaderboard…</div>
-        </article>
-
-        <article class="category-chart-card" id="leaderboard-table-card">
-          <div class="category-chart-head">
-            <div class="category-chart-copy">
-              <h3>Top Players</h3>
-              <div class="desc">Top all-time profiles, current-week points, and projected scenario contribution.</div>
-            </div>
-          </div>
-          <div class="leaderboard-tier-section" id="leaderboardTierSection">
-            <div class="leaderboard-tier-head">
-              <h4 class="leaderboard-tier-title">Player Distribution by Total Points</h4>
-              <div class="desc">Users grouped by current total points into Whale, Dolphin, Fish, Crab, and Shrimp tiers.</div>
-            </div>
-            <div class="leaderboard-tier-layout">
-              <div class="leaderboard-tier-chart-wrap">
-                <svg id="leaderboardTierChart" viewBox="0 0 160 160" role="img" aria-label="Player distribution by total point tier"></svg>
-                <div class="leaderboard-tier-chart-center">
-                  <span>Tracked users</span>
-                  <strong id="leaderboardTierTotal">—</strong>
-                </div>
-              </div>
-              <div class="leaderboard-tier-legend" id="leaderboardTierLegend">
-                <div class="skeleton">Loading distribution…</div>
-              </div>
-            </div>
-          </div>
-          <div class="table-scroll leaderboard-table-wrap">
-            <table id="leaderboardTable">
-              <thead>
-                <tr>
-                  <th>Rank</th>
-                  <th>User</th>
-                  <th>All Time Points</th>
-                  <th>Current Week Points</th>
-                  <th id="terminalProjectedColumnHeader">Total + this week ×28.57</th>
-                </tr>
-              </thead>
-              <tbody id="leaderboardBody">
-                <tr><td colspan="5" class="skeleton">Loading…</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
-      </div>
-    </div>
   </section>
 
   <!-- TX REVENUE TABLE -->
@@ -4425,8 +3744,6 @@
   const DL_FEES_MEGAETH   = 'https://api.llama.fi/summary/fees/megaeth?dataType=dailyFees';
   // DefiLlama — used only for the "all stables on MegaETH" comparison curve
   const DL_ALL_ON_MEGAETH = 'https://stablecoins.llama.fi/stablecoincharts/Megaeth';
-  const TERMINAL_LEADERBOARD_PAGE = 'https://terminal.megaeth.com/leaderboard';
-  const MEGA_TOTAL_SUPPLY = 10_000_000_000;
   const MEGA_BASE_UNITS = 10n ** 18n;
   const MEGA_HOLDER_BUCKETS = [
     { key: 'gt1k', label: '1k+ holders', thresholdRaw: 1_000n * MEGA_BASE_UNITS, color: '#90D79F', animal: 'crayfish' },
@@ -4434,20 +3751,6 @@
     { key: 'gt100k', label: '100k+ holders', thresholdRaw: 100_000n * MEGA_BASE_UNITS, color: '#FF9F6E', animal: 'dolphin' },
     { key: 'gt1m', label: '1M+ holders', thresholdRaw: 1_000_000n * MEGA_BASE_UNITS, color: '#FF6F91', animal: 'whale' },
   ];
-  const TERMINAL_SEASONS = 4;
-  const TERMINAL_CAMPAIGN_SUPPLY_SHARE = 0.025;
-  const TERMINAL_DAYS_PER_SEASON = 50;
-  const TERMINAL_DISTRIBUTION_WINDOW_DAYS = 7;
-  const TERMINAL_FIRST_WEEK_POINTS = 2_500_000;
-  const TERMINAL_SCENARIO_OPTIONS = [3, 4, 5];
-  const TERMINAL_POINT_TIER_CONFIG = [
-    { key: 'whales', label: 'Whales', color: '#FF8AA8' },
-    { key: 'dolphins', label: 'Dolphins', color: '#F4D35E' },
-    { key: 'fish', label: 'Fish', color: '#7EABD4' },
-    { key: 'crabs', label: 'Crabs', color: '#90D79F' },
-    { key: 'shrimp', label: 'Shrimp', color: '#FFB26B' },
-  ];
-
   // -------- HELPERS --------
   const fmtUSD = (n, d = 0) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
   const fmtUSDc = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -4659,7 +3962,7 @@
       ttlMs: 5 * MINUTE_MS,
     },
     {
-      pattern: /^(usdm-history|mega-marketcap-history-v2|defillama-chain-fees:megaeth|eth-price-history|all-stables-on-megaeth|growthepie:megaeth|chain-revenue-leaderboard|terminal-leaderboard:v2|chain-fees-series:|chain-tvl-latest:|chain-marketcap:|megaeth-protocol-tvl-rows:v1)/,
+      pattern: /^(usdm-history|mega-marketcap-history-v2|defillama-chain-fees:megaeth|eth-price-history|all-stables-on-megaeth|growthepie:megaeth|chain-revenue-leaderboard|chain-fees-series:|chain-tvl-latest:|chain-marketcap:|megaeth-protocol-tvl-rows:v1)/,
       ttlMs: 30 * MINUTE_MS,
     },
     {
@@ -5265,94 +4568,6 @@
       total: [...normalized.entries()],
       buckets,
     };
-  }
-
-  function extractTerminalLeaderboardArray(html, key) {
-    if (typeof html !== 'string' || !html) return null;
-    const markers = [
-      '\\"' + key + '\\":[',
-      '"' + key + '":[',
-    ];
-    let marker = '';
-    let idx = -1;
-    for (const candidate of markers) {
-      idx = html.indexOf(candidate);
-      if (idx >= 0) {
-        marker = candidate;
-        break;
-      }
-    }
-    if (idx < 0) return null;
-
-    const start = idx + marker.length - 1;
-    let depth = 0;
-    let end = -1;
-    for (let i = start; i < html.length; i++) {
-      const ch = html[i];
-      if (ch === '[') depth += 1;
-      if (ch === ']') {
-        depth -= 1;
-        if (depth === 0) {
-          end = i;
-          break;
-        }
-      }
-    }
-    if (end < start) return null;
-    const raw = html.slice(start, end + 1);
-    const jsonText = raw.includes('\\"')
-      ? raw.replace(/\\"/g, '"').replace(/\\\\/g, '\\')
-      : raw;
-    try {
-      const parsed = JSON.parse(jsonText);
-      return Array.isArray(parsed) ? parsed : null;
-    } catch (e) {
-      console.warn('Terminal leaderboard JSON parse failed:', e);
-      return null;
-    }
-  }
-
-  function normalizeTerminalLeaderboardRows(rows) {
-    return (Array.isArray(rows) ? rows : [])
-      .map((row) => {
-        const rank = Number(row?.rank);
-        const totalPoints = Number(row?.totalPoints);
-        const weeklyPointsChange = Number(row?.weeklyPointsChange);
-        const address = String(row?.mainWalletAddress || '').trim();
-        const user = String(row?.xAccount || '').trim() || shortAddress(address);
-        if (!Number.isFinite(rank) || !(rank > 0) || !Number.isFinite(totalPoints)) return null;
-        return {
-          rank,
-          user,
-          address,
-          totalPoints: Math.max(0, totalPoints),
-          weeklyPointsChange: Number.isFinite(weeklyPointsChange) ? Math.max(0, weeklyPointsChange) : 0,
-        };
-      })
-      .filter(Boolean)
-      .sort((a, b) => a.rank - b.rank);
-  }
-
-  async function fetchTerminalLeaderboard() {
-    const cacheKey = 'terminal-leaderboard:v2';
-    const cachedFresh = cacheGet(cacheKey);
-    try {
-      const res = await corsFetch(TERMINAL_LEADERBOARD_PAGE);
-      if (!res.ok) throw new Error('Terminal leaderboard ' + res.status);
-      const html = await res.text();
-      const all = normalizeTerminalLeaderboardRows(extractTerminalLeaderboardArray(html, 'all'));
-      const weekly = normalizeTerminalLeaderboardRows(extractTerminalLeaderboardArray(html, 'weekly'));
-      if (!all.length || !weekly.length) throw new Error('Terminal leaderboard payload empty');
-      const payload = { all, weekly };
-      cacheSet(cacheKey, payload);
-      return payload;
-    } catch (e) {
-      console.warn('Terminal leaderboard fetch failed:', e);
-      if (cachedFresh && Array.isArray(cachedFresh?.all) && Array.isArray(cachedFresh?.weekly)) return cachedFresh;
-      const cached = cachePeek(cacheKey);
-      if (cached && Array.isArray(cached?.all) && Array.isArray(cached?.weekly)) return cached;
-      return null;
-    }
   }
 
   let megaTransferLogsPromise = null;
@@ -6478,9 +5693,8 @@
   const chartInstances = {};
   const LOAD_TARGETS = [
     'kpi-tvl', 'kpi-daily', 'kpi-annual', 'kpi-cum', 'kpi-days', 'kpi-opium', 'kpi-rank',
-    'kpi-terminal-points', 'kpi-terminal-projected',
     'panel-tvl', 'panel-revenue', 'panel-cum', 'panel-annual', 'panel-stables', 'panel-opium', 'panel-chainrev', 'panel-pe',
-    'panel-mega-holders', 'panel-mega-float', 'panel-mega-pe', 'panel-leaderboard-summary', 'panel-leaderboard-table',
+    'panel-mega-holders', 'panel-mega-float', 'panel-mega-pe',
   ];
   const LOAD_TARGET_SET = new Set(LOAD_TARGETS);
   const LOAD_LABELS = {
@@ -6491,8 +5705,6 @@
     'kpi-days': 'stables share card',
     'kpi-opium': 'forecast card',
     'kpi-rank': 'rank card',
-    'kpi-terminal-points': 'Terminal points card',
-    'kpi-terminal-projected': 'Terminal projection card',
     'panel-tvl': 'TVL chart',
     'panel-revenue': 'revenue chart',
     'panel-cum': 'cumulative chart',
@@ -6504,8 +5716,6 @@
     'panel-mega-holders': 'MEGA holders chart',
     'panel-mega-float': 'MEGA float chart',
     'panel-mega-pe': 'MEGA P/E chart',
-    'panel-leaderboard-summary': 'Terminal leaderboard summary',
-    'panel-leaderboard-table': 'Terminal leaderboard table',
   };
   const loadTracker = {
     total: LOAD_TARGETS.length,
@@ -6552,14 +5762,12 @@
     'kpi-mega-holders': 1400,
     'kpi-daily': 2800,
     'kpi-rank': 4200,
-    'kpi-terminal-points': 5200,
   };
   const CATEGORY_PRIMARY_SOURCE_ORDER = {
     'kpi-tvl': ['tvl', 'stables', 'concentration', 'appflow'],
     'kpi-mega-holders': ['holders', 'float', 'pe'],
     'kpi-daily': ['daily', 'annual', 'cumulative'],
     'kpi-rank': ['forecast', 'rank', 'pe'],
-    'kpi-terminal-points': ['total', 'value'],
   };
   const categoryPrimarySources = {};
   const categoryPrimaryRotations = {};
@@ -7872,465 +7080,6 @@
     `).join('');
   }
 
-  function buildTerminalLeaderboardModel(payload) {
-    const entries = Array.isArray(payload?.all) ? payload.all : (Array.isArray(payload) ? payload : []);
-    const weeklyEntries = Array.isArray(payload?.weekly) ? payload.weekly : entries;
-    if (!entries.length || !weeklyEntries.length) return null;
-    const totalPoints = entries.reduce((sum, row) => sum + (Number(row.totalPoints) || 0), 0);
-    const recentPoints = weeklyEntries.reduce((sum, row) => sum + (Number(row.weeklyPointsChange) || 0), 0);
-    const firstWeekPoints = TERMINAL_FIRST_WEEK_POINTS;
-    const pointsAfterFirstWeek = Math.max(0, totalPoints - recentPoints);
-    const initialDistributionPoints = Math.max(0, pointsAfterFirstWeek - firstWeekPoints);
-    const averageWeeklyPoints = (firstWeekPoints + recentPoints) / 2;
-    const campaignAllocation = MEGA_TOTAL_SUPPLY * TERMINAL_CAMPAIGN_SUPPLY_SHARE;
-    const sortedTotals = entries.map((row) => Number(row.totalPoints) || 0).sort((a, b) => b - a);
-    return {
-      rows: entries,
-      weeklyRows: weeklyEntries,
-      participantCount: entries.length,
-      weeklyParticipantCount: weeklyEntries.length,
-      totalPoints,
-      recentPoints,
-      pointsAfterFirstWeek,
-      initialDistributionPoints,
-      firstWeekPoints,
-      currentWeekPoints: recentPoints,
-      averageWeeklyPoints,
-      campaignAllocation,
-      thresholds: [1, 10, 100, 500, 1000, 5000]
-        .map((rank) => ({ rank, points: sortedTotals[rank - 1] }))
-        .filter((row) => Number.isFinite(row.points)),
-    };
-  }
-
-  function terminalScenarioMultiplier(seasons) {
-    const value = Number(seasons) || TERMINAL_SEASONS;
-    return (value * TERMINAL_DAYS_PER_SEASON) / TERMINAL_DISTRIBUTION_WINDOW_DAYS;
-  }
-
-  function terminalScenarioProjection(model, seasons) {
-    if (!model) return null;
-    const selectedSeasons = TERMINAL_SCENARIO_OPTIONS.includes(Number(seasons)) ? Number(seasons) : TERMINAL_SEASONS;
-    const multiplier = terminalScenarioMultiplier(selectedSeasons);
-    const initialPoints = Number(model.initialDistributionPoints || 0);
-    const averageWeeklyPoints = Number(model.averageWeeklyPoints || 0);
-    const weeklyProjectedPoints = averageWeeklyPoints * multiplier;
-    const projectedCampaignPoints = initialPoints + weeklyProjectedPoints;
-    const pointValue = projectedCampaignPoints > 0 ? Number(model.campaignAllocation || 0) / projectedCampaignPoints : null;
-    return {
-      seasons: selectedSeasons,
-      multiplier,
-      initialPoints,
-      firstWeekPoints: Number(model.firstWeekPoints || 0),
-      currentWeekPoints: Number(model.currentWeekPoints || 0),
-      averageWeeklyPoints,
-      weeklyProjectedPoints,
-      projectedDays: selectedSeasons * TERMINAL_DAYS_PER_SEASON,
-      projectedCampaignPoints,
-      pointValue,
-      averageSeasonAllocation: Number(model.campaignAllocation || 0) / selectedSeasons,
-    };
-  }
-
-  function fmtMegaPerPoint(value) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return '—';
-    const decimals = n >= 100 ? 1 : n >= 10 ? 2 : n >= 1 ? 3 : 5;
-    return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: decimals }) + ' MEGA';
-  }
-
-  function fmtMegaPointNumber(value) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return '—';
-    const decimals = n >= 100 ? 1 : n >= 10 ? 2 : n >= 1 ? 3 : 5;
-    return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: decimals });
-  }
-
-  const terminalLeaderboardState = {
-    model: null,
-    megaPrice: null,
-    seasons: TERMINAL_SEASONS,
-  };
-
-  function estimateTerminalRank(model, points) {
-    if (!model?.rows?.length || !Number.isFinite(points)) return null;
-    const better = model.rows.filter((row) => Number(row.totalPoints) > points).length;
-    return Math.min(model.rows.length + 1, better + 1);
-  }
-
-  function estimateTerminalPlacement(model, points) {
-    const rank = estimateTerminalRank(model, points);
-    const participantCount = Number(model?.participantCount || model?.rows?.length || 0);
-    if (!rank || !(participantCount > 0)) return null;
-    return {
-      rank,
-      participantCount,
-      topPercent: Math.min(100, (rank / participantCount) * 100),
-    };
-  }
-
-  function fmtTopPercent(value) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return '—';
-    const decimals = n < 1 ? 2 : 2;
-    return 'Top ' + n.toLocaleString('en-US', {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    }) + '%';
-  }
-
-  function terminalScenarioPlayerPoints(row, scenario) {
-    const totalPoints = Number(row?.totalPoints) || 0;
-    const weeklyPointsChange = Number(row?.weeklyPointsChange) || 0;
-    const multiplier = Number(scenario?.multiplier) || 0;
-    return Math.max(0, totalPoints + (weeklyPointsChange * multiplier));
-  }
-
-  function niceTierThreshold(value) {
-    const n = Number(value);
-    if (!Number.isFinite(n) || n <= 1) return 1;
-    const magnitude = 10 ** Math.floor(Math.log10(n));
-    const normalized = n / magnitude;
-    const step = normalized >= 5 ? 5 : normalized >= 2 ? 2 : 1;
-    return Math.max(1, step * magnitude);
-  }
-
-  function fmtPctCompact(value) {
-    if (!Number.isFinite(value)) return '0%';
-    return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: value >= 10 ? 0 : 1 }) + '%';
-  }
-
-  function formatTierRange(minPoints, maxPoints) {
-    if (maxPoints == null) return fmtTokenCompact(minPoints) + '+ pts';
-    if (minPoints <= 0) return 'Below ' + fmtTokenCompact(maxPoints) + ' pts';
-    return fmtTokenCompact(minPoints) + ' to <' + fmtTokenCompact(maxPoints) + ' pts';
-  }
-
-  function buildTerminalPointTiers(rows) {
-    const values = Array.isArray(rows)
-      ? rows.map((row) => Math.max(0, Number(row?.totalPoints) || 0)).filter((value) => Number.isFinite(value))
-      : [];
-    if (!values.length) return [];
-
-    const maxPoints = Math.max(...values, 1);
-    const thresholdsAscending = [1, 2, 3, 4]
-      .map((step) => niceTierThreshold(maxPoints ** (step / 5)))
-      .filter((value, index, arr) => value > 0 && arr.indexOf(value) === index)
-      .sort((a, b) => a - b);
-    const starts = [
-      thresholdsAscending[3] ?? thresholdsAscending[thresholdsAscending.length - 1] ?? 1,
-      thresholdsAscending[2] ?? thresholdsAscending[Math.max(thresholdsAscending.length - 2, 0)] ?? 1,
-      thresholdsAscending[1] ?? thresholdsAscending[Math.max(thresholdsAscending.length - 3, 0)] ?? 1,
-      thresholdsAscending[0] ?? 1,
-      0,
-    ];
-
-    return TERMINAL_POINT_TIER_CONFIG.map((tier, index) => {
-      const minPoints = starts[index];
-      const maxPointsForTier = index === 0 ? null : starts[index - 1];
-      const count = values.filter((value) => value >= minPoints && (maxPointsForTier == null || value < maxPointsForTier)).length;
-      return {
-        ...tier,
-        minPoints,
-        maxPoints: maxPointsForTier,
-        count,
-      };
-    });
-  }
-
-  function renderTerminalPointTierChart(model) {
-    const svg = document.getElementById('leaderboardTierChart');
-    const legend = document.getElementById('leaderboardTierLegend');
-    const totalEl = document.getElementById('leaderboardTierTotal');
-    if (!svg || !legend || !totalEl) return;
-    if (!model?.rows?.length) {
-      svg.innerHTML = '';
-      legend.innerHTML = '<div class="skeleton">Distribution unavailable</div>';
-      totalEl.textContent = '—';
-      return;
-    }
-
-    const tiers = buildTerminalPointTiers(model.rows);
-    const totalUsers = tiers.reduce((sum, tier) => sum + tier.count, 0);
-    totalEl.textContent = fmtNum(totalUsers);
-
-    const radius = 52;
-    const circumference = 2 * Math.PI * radius;
-    let offset = 0;
-    svg.innerHTML = `
-      <circle cx="80" cy="80" r="52" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="24"></circle>
-      ${tiers.map((tier) => {
-        const share = totalUsers > 0 ? tier.count / totalUsers : 0;
-        const dash = Math.max(share * circumference, tier.count > 0 ? 3 : 0);
-        const segment = `
-          <circle
-            cx="80"
-            cy="80"
-            r="52"
-            fill="none"
-            stroke="${tier.color}"
-            stroke-width="24"
-            stroke-linecap="butt"
-            stroke-dasharray="${dash} ${circumference - dash}"
-            stroke-dashoffset="${-offset}"></circle>`;
-        offset += dash;
-        return segment;
-      }).join('')}
-    `;
-    svg.setAttribute(
-      'aria-label',
-      'Player distribution by total point tier: ' + tiers
-        .filter((tier) => tier.count > 0)
-        .map((tier) => tier.label + ' ' + fmtPctCompact(totalUsers > 0 ? (tier.count / totalUsers) * 100 : 0))
-        .join(', ')
-    );
-
-    legend.innerHTML = tiers.map((tier) => {
-      const share = totalUsers > 0 ? (tier.count / totalUsers) * 100 : 0;
-      return `
-        <div class="leaderboard-tier-item">
-          <span class="leaderboard-tier-swatch" style="color:${tier.color};background:${tier.color}"></span>
-          <div class="leaderboard-tier-copy">
-            <div class="leaderboard-tier-label">${escapeHTML(tier.label)}</div>
-            <div class="leaderboard-tier-range">${escapeHTML(formatTierRange(tier.minPoints, tier.maxPoints))}</div>
-          </div>
-          <div class="leaderboard-tier-metrics">
-            <div class="leaderboard-tier-count">${fmtNum(tier.count)} users</div>
-            <div class="leaderboard-tier-share">${fmtPctCompact(share)}</div>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  function renderTerminalThresholds(model) {
-    const host = document.getElementById('terminalThresholds');
-    if (!host) return;
-    if (!model?.thresholds?.length) {
-      host.innerHTML = '<div class="skeleton">Leaderboard checkpoints unavailable</div>';
-      return;
-    }
-    const max = Math.max(...model.thresholds.map((row) => row.points), 1);
-    host.innerHTML = model.thresholds.map((row) => {
-      const pct = Math.max(1, Math.min(100, (row.points / max) * 100));
-      return `
-        <div class="leaderboard-threshold">
-          <span class="leaderboard-threshold-rank">Top ${fmtNum(row.rank)}</span>
-          <span class="leaderboard-threshold-track"><span class="leaderboard-threshold-fill" style="width:${pct}%"></span></span>
-          <span class="leaderboard-threshold-points">${fmtTokenCompact(row.points)}</span>
-        </div>`;
-    }).join('');
-  }
-
-  function renderTerminalPointSimulator() {
-    const model = terminalLeaderboardState.model;
-    const input = document.getElementById('terminalPointInput');
-    const range = document.getElementById('terminalPointRange');
-    const megaEl = document.getElementById('terminalSimMega');
-    const usdEl = document.getElementById('terminalSimUsd');
-    const rankEl = document.getElementById('terminalSimRank');
-    if (!input || !range || !megaEl || !usdEl || !rankEl) return;
-
-    const maxRankPoints = model?.thresholds?.[0]?.points || 300000;
-    const maxInput = Math.max(300000, Math.ceil(maxRankPoints / 1000) * 1000);
-    range.max = String(maxInput);
-
-    const rawPoints = Math.max(0, Number(input.value || range.value || 0));
-    const points = rawPoints;
-    if (String(points) !== input.value) input.value = String(Math.round(points));
-    range.value = String(Math.round(Math.min(points, maxInput)));
-
-    const scenario = terminalScenarioProjection(model, terminalLeaderboardState.seasons);
-    const mega = Number(scenario?.pointValue) > 0 ? points * scenario.pointValue : null;
-    const usd = Number.isFinite(mega) && Number(terminalLeaderboardState.megaPrice) > 0
-      ? mega * Number(terminalLeaderboardState.megaPrice)
-      : null;
-    const placement = estimateTerminalPlacement(model, points);
-    megaEl.textContent = Number.isFinite(mega) ? fmtTokenCompact(mega) + ' MEGA' : '—';
-    megaEl.title = Number.isFinite(mega) ? fmtToken(mega, 'MEGA', 2) : '';
-    usdEl.textContent = Number.isFinite(usd) ? fmtUSDCompact(usd) : '—';
-    usdEl.title = Number.isFinite(usd) ? fmtUSD(usd, 2) : '';
-    rankEl.textContent = placement ? '#' + fmtNum(placement.rank) + ' · ' + fmtTopPercent(placement.topPercent) : '—';
-    rankEl.title = placement
-      ? 'Rank #' + fmtNum(placement.rank) + ' of ' + fmtNum(placement.participantCount) + ' tracked Terminal users'
-      : '';
-  }
-
-  function bindTerminalPointSimulator() {
-    const input = document.getElementById('terminalPointInput');
-    const range = document.getElementById('terminalPointRange');
-    if (!input || !range || input.dataset.bound === '1') return;
-    input.dataset.bound = '1';
-    const syncFromInput = () => renderTerminalPointSimulator();
-    const syncFromRange = () => {
-      input.value = range.value;
-      renderTerminalPointSimulator();
-    };
-    input.addEventListener('input', syncFromInput);
-    range.addEventListener('input', syncFromRange);
-  }
-
-  function renderTerminalScenarioGrid(model) {
-    const host = document.getElementById('terminalScenarioGrid');
-    if (!host) return;
-    if (!model) {
-      host.innerHTML = '<div class="skeleton">Scenarios unavailable</div>';
-      return;
-    }
-    host.innerHTML = TERMINAL_SCENARIO_OPTIONS.map((seasons) => {
-      const scenario = terminalScenarioProjection(model, seasons);
-      const usdPerPoint = Number(terminalLeaderboardState.megaPrice) > 0 && Number(scenario.pointValue) > 0
-        ? scenario.pointValue * Number(terminalLeaderboardState.megaPrice)
-        : null;
-      const active = seasons === terminalLeaderboardState.seasons;
-      return `
-        <button type="button" class="leaderboard-scenario-card${active ? ' active' : ''}" data-season-card="${seasons}" aria-pressed="${active ? 'true' : 'false'}">
-          <div class="leaderboard-scenario-name">${seasons} seasons</div>
-          <div class="leaderboard-scenario-primary">${fmtTokenCompact(scenario.projectedCampaignPoints)}</div>
-          <div class="leaderboard-scenario-sub">Seed + two-week avg projection</div>
-          <div class="leaderboard-scenario-line"><span>MEGA / point</span><strong>${fmtMegaPointNumber(scenario.pointValue)}</strong></div>
-          <div class="leaderboard-scenario-line"><span>Weekly avg</span><strong>${fmtTokenCompact(scenario.averageWeeklyPoints)}</strong></div>
-          <div class="leaderboard-scenario-line"><span>Days</span><strong>${fmtNum(scenario.projectedDays)}</strong></div>
-          <div class="leaderboard-scenario-line"><span>USD / point</span><strong>${Number.isFinite(usdPerPoint) ? fmtUsdPerPoint(usdPerPoint) : '—'}</strong></div>
-        </button>`;
-    }).join('');
-  }
-
-  function syncTerminalScenarioControls(model) {
-    document.querySelectorAll('#terminalScenarioToggle button').forEach((button) => {
-      button.classList.toggle('active', Number(button.dataset.seasons) === terminalLeaderboardState.seasons);
-    });
-    const copy = document.getElementById('terminalScenarioCopy');
-    const scenario = terminalScenarioProjection(model, terminalLeaderboardState.seasons);
-    if (copy && scenario) {
-      copy.innerHTML = 'Scenario: <strong>' + scenario.seasons + ' seasons</strong> · seed <strong>'
-        + fmtTokenCompact(scenario.initialPoints) + '</strong> + 2-week avg <strong>'
-        + fmtTokenCompact(scenario.averageWeeklyPoints) + '</strong> × <strong>'
-        + scenario.multiplier.toFixed(2).replace(/\.00$/, '') + '</strong>';
-    }
-  }
-
-  function bindTerminalScenarioToggle() {
-    const toggle = document.getElementById('terminalScenarioToggle');
-    const grid = document.getElementById('terminalScenarioGrid');
-    const selectSeasons = (seasons) => {
-      if (!TERMINAL_SCENARIO_OPTIONS.includes(seasons)) return;
-      terminalLeaderboardState.seasons = seasons;
-      renderTerminalLeaderboard(terminalLeaderboardState.model, terminalLeaderboardState.megaPrice);
-    };
-    if (toggle && toggle.dataset.bound !== '1') {
-      toggle.dataset.bound = '1';
-      toggle.querySelectorAll('button').forEach((button) => {
-        button.addEventListener('click', () => selectSeasons(Number(button.dataset.seasons)));
-      });
-    }
-    if (grid && grid.dataset.bound !== '1') {
-      grid.dataset.bound = '1';
-      grid.addEventListener('click', (event) => {
-        const card = event.target.closest('[data-season-card]');
-        if (card) selectSeasons(Number(card.dataset.seasonCard));
-      });
-    }
-  }
-
-  function renderTerminalLeaderboard(model = terminalLeaderboardState.model, megaPrice = terminalLeaderboardState.megaPrice) {
-    terminalLeaderboardState.model = model || null;
-    if (Number(megaPrice) > 0) terminalLeaderboardState.megaPrice = Number(megaPrice);
-    const body = document.getElementById('leaderboardBody');
-    const note = document.getElementById('terminalLeaderboardNote');
-    const pointUsdValueEl = document.getElementById('terminalPointUsdValue');
-    const recentEl = document.getElementById('terminalRecentPoints');
-    const projectedEl = document.getElementById('terminalProjectedPoints');
-    const pointValueEl = document.getElementById('terminalPointValue');
-    const projectedKpi = document.getElementById('kpi-terminal-projected');
-    const projectedKpiLabel = document.getElementById('kpi-terminal-projected-label');
-    const projectedColumnHeader = document.getElementById('terminalProjectedColumnHeader');
-
-    if (!model) {
-      setCategoryPrimarySource('kpi-terminal-points', 'total', null);
-      setCategoryPrimarySource('kpi-terminal-points', 'value', null);
-      if (pointUsdValueEl) pointUsdValueEl.textContent = '—';
-      if (recentEl) recentEl.textContent = '—';
-      if (projectedEl) projectedEl.textContent = '—';
-      if (pointValueEl) pointValueEl.textContent = '—';
-      if (projectedKpi) projectedKpi.textContent = '—';
-      if (body) body.innerHTML = '<tr><td colspan="5" class="skeleton">Terminal leaderboard unavailable</td></tr>';
-      if (note) note.textContent = 'Terminal leaderboard data is unavailable right now.';
-      markReady('kpi-terminal-points');
-      markReady('kpi-terminal-projected');
-      markReady('panel-leaderboard-summary');
-      markReady('panel-leaderboard-table');
-      renderTerminalThresholds(null);
-      renderTerminalScenarioGrid(null);
-      renderTerminalPointTierChart(null);
-      renderTerminalPointSimulator();
-      return;
-    }
-
-    const scenario = terminalScenarioProjection(model, terminalLeaderboardState.seasons);
-    const scenarioMultiplierText = scenario.multiplier.toFixed(2).replace(/\.00$/, '');
-    const projectedText = fmtTokenCompact(scenario.projectedCampaignPoints);
-    const pointValueText = fmtMegaPerPoint(scenario.pointValue);
-    const pointUsdValue = Number(terminalLeaderboardState.megaPrice) > 0 && Number(scenario.pointValue) > 0
-      ? scenario.pointValue * Number(terminalLeaderboardState.megaPrice)
-      : null;
-    if (pointUsdValueEl) pointUsdValueEl.textContent = Number.isFinite(pointUsdValue) ? fmtUsdPerPoint(pointUsdValue) : '—';
-    if (recentEl) {
-      recentEl.textContent = fmtNum(Math.round(model.averageWeeklyPoints));
-      recentEl.title = 'Week 1: ' + fmtNum(Math.round(model.firstWeekPoints))
-        + ' · Current week: ' + fmtNum(Math.round(model.currentWeekPoints));
-    }
-    if (projectedEl) projectedEl.textContent = fmtNum(Math.round(scenario.projectedCampaignPoints));
-    if (pointValueEl) pointValueEl.textContent = pointValueText;
-    if (projectedKpi) projectedKpi.textContent = projectedText;
-    if (projectedKpiLabel) projectedKpiLabel.textContent = 'Seed + avg ×' + scenarioMultiplierText;
-    if (projectedColumnHeader) projectedColumnHeader.textContent = 'Total + this week ×' + scenarioMultiplierText;
-    setCategoryPrimarySource('kpi-terminal-points', 'total', fmtTokenCompact(model.totalPoints), 'Total Points');
-    setCategoryPrimarySource('kpi-terminal-points', 'value', fmtMegaPointNumber(scenario.pointValue), 'MEGA / Point');
-
-    if (body) {
-      body.innerHTML = model.rows.slice(0, 25).map((row) => {
-        const user = row.user || shortAddress(row.address);
-        const safeUser = escapeHTML(user);
-        const safeTitle = escapeHTML(row.address || user);
-        return `
-          <tr>
-            <td><span class="leaderboard-rank-badge">#${row.rank}</span></td>
-            <td class="leaderboard-user" title="${safeTitle}">${safeUser}</td>
-            <td class="leaderboard-total">${fmtNum(Math.round(row.totalPoints))}</td>
-            <td class="leaderboard-recent">+${fmtNum(Math.round(row.weeklyPointsChange))}</td>
-            <td class="leaderboard-projected">${fmtNum(Math.round(terminalScenarioPlayerPoints(row, scenario)))}</td>
-          </tr>`;
-      }).join('');
-    }
-
-    if (note) {
-      note.title = 'Weekly distribution breakdown used for Terminal point value estimates.';
-      const distributions = [
-        { label: 'Initial', value: model.initialDistributionPoints },
-        { label: 'Week 1', value: model.firstWeekPoints },
-        { label: 'Week 2', value: model.currentWeekPoints },
-      ];
-      note.innerHTML = '<ul class="leaderboard-distribution-list">'
-        + distributions.map((row) => `
-          <li class="leaderboard-distribution-item">
-            <span class="leaderboard-distribution-label">${row.label}</span>
-            <strong class="leaderboard-distribution-value">${fmtNum(Math.round(row.value))} points</strong>
-          </li>`).join('')
-        + '</ul>';
-    }
-    bindTerminalPointSimulator();
-    bindTerminalScenarioToggle();
-    syncTerminalScenarioControls(model);
-    renderTerminalScenarioGrid(model);
-    renderTerminalThresholds(model);
-    renderTerminalPointTierChart(model);
-    renderTerminalPointSimulator();
-    markReady('kpi-terminal-points');
-    markReady('kpi-terminal-projected');
-    markReady('panel-leaderboard-summary');
-    markReady('panel-leaderboard-table');
-  }
-
   function buildMcapSeries(history, dateKeys, fallbackTvl) {
     if (history && history.length) {
       const byDay = new Map();
@@ -8417,20 +7166,8 @@
     const pOpiumTvl    = fetchChainsTvlAll(OPIUM_CHAINS.map(c => c.slug));
     const pMegaSnapshot = fetchMegaCommitmentSnapshot();
     const pMegaMarketCapHistory = fetchMegaMarketCapHistory();
-    const pTerminalLeaderboard = fetchTerminalLeaderboard();
-
-    pTerminalLeaderboard
-      .then((rows) => renderTerminalLeaderboard(buildTerminalLeaderboardModel(rows)))
-      .catch((e) => {
-        console.warn('Terminal leaderboard render failed', e);
-        renderTerminalLeaderboard(null);
-      });
 
     pMegaSnapshot.then((snapshot) => {
-      if (Number(snapshot?.price) > 0) {
-        terminalLeaderboardState.megaPrice = Number(snapshot.price);
-        if (terminalLeaderboardState.model) renderTerminalLeaderboard(terminalLeaderboardState.model, snapshot.price);
-      }
       renderMegaFloatChart(snapshot, null);
       return fetchMegaCommitmentHistoryOnChain(snapshot).then((history) => {
         if (history?.dates?.length) renderMegaFloatChart(snapshot, history);
@@ -8961,7 +7698,7 @@
       accent: '#F9BADD',
       health: 'Blockscout data',
       tvl: '776K',
-      users: '426',
+      users: '964',
       volume: '128K',
       links: [
         ['Website', 'https://euphoria.finance/@disabledtextbook860'],
@@ -8977,7 +7714,7 @@
       ],
       dashboards: [
         ['Daily Volume', 'USDM routed through Euphoria per UTC day.', 'Live', '128K'],
-        ['Daily Users', 'Unique wallets tracked from the first daily point.', 'Live', '426'],
+        ['Daily Users', 'MiniBlocks unique callers over the last 24h.', 'Live', '964'],
         ['Profit Split', 'Wallets in profit vs all other wallets.', 'Live', '26.1%'],
         ['Wallet PnL Distribution', 'Wallet counts by realized USDM outcome range.', 'Live', '426'],
       ],
@@ -8991,7 +7728,7 @@
       accent: '#FBBF24',
       health: 'Blockscout data',
       tvl: '272K',
-      users: 'Live',
+      users: '59',
       volume: 'USDM',
       links: [
         ['Website', 'https://app.hit.one/r/CYP8SS'],
@@ -9006,7 +7743,7 @@
       ],
       dashboards: [
         ['Daily Volume', 'USDM routed through HitOne per UTC day.', 'Live', 'USDM'],
-        ['Daily Users', 'Unique wallets tracked from the latest daily snapshot.', 'Live', 'Wallets'],
+        ['Daily Users', 'Blockscout USDM transfer counterparties over the last 24h.', 'Live', '59'],
         ['Project Fees', '1% on each trade plus 5% on realized profits.', 'Live', 'USDM'],
         ['Profit Split', 'Wallets in profit vs all other wallets.', 'Live', 'Live'],
         ['Wallet PnL Distribution', 'Wallet counts by realized USDM outcome range.', 'Live', 'Wallets'],
@@ -9382,8 +8119,14 @@
       const rightY = index === coords.length - 1 ? coord.y : (coord.y + rightCoord.y) / 2;
       const centerYPct = (coord.y / height) * 100;
       const tooltipShift = index < 1 ? '0%' : index > coords.length - 2 ? '-100%' : '-50%';
-      return `<span class="brix-hover-point" tabindex="0" aria-label="${escapeHTML(options.label || 'Chart point')}" data-base-marker-x="${markerX.toFixed(3)}" data-left-y-pct="${((leftY / height) * 100).toFixed(3)}" data-center-y-pct="${centerYPct.toFixed(3)}" data-right-y-pct="${((rightY / height) * 100).toFixed(3)}" style="left:${(bandStart / width * 100).toFixed(3)}%;width:${((bandEnd - bandStart) / width * 100).toFixed(3)}%;--marker-x:${markerX.toFixed(3)}%;--marker-y:${centerYPct.toFixed(3)}%;--tooltip-shift:${tooltipShift}"><span class="brix-chart-tooltip">${tooltipFor(points[index], index)}</span></span>`;
+      const snapAttrs = options.snapToPoints
+        ? ` data-snap-to-point="1" data-point-x="${coord.x.toFixed(3)}" data-point-y="${coord.y.toFixed(3)}"`
+        : '';
+      return `<span class="brix-hover-point" tabindex="0" aria-label="${escapeHTML(options.label || 'Chart point')}" data-base-marker-x="${markerX.toFixed(3)}" data-left-y-pct="${((leftY / height) * 100).toFixed(3)}" data-center-y-pct="${centerYPct.toFixed(3)}" data-right-y-pct="${((rightY / height) * 100).toFixed(3)}"${snapAttrs} style="left:${(bandStart / width * 100).toFixed(3)}%;width:${((bandEnd - bandStart) / width * 100).toFixed(3)}%;--marker-x:${markerX.toFixed(3)}%;--marker-y:${centerYPct.toFixed(3)}%;--tooltip-shift:${tooltipShift}"><span class="brix-chart-tooltip">${tooltipFor(points[index], index)}</span></span>`;
     }).join('');
+    const pointMarkers = options.showPointMarkers
+      ? coords.map((coord, index) => `<circle cx="${coord.x}" cy="${coord.y}" r="${index === coords.length - 1 ? 4 : 3}" fill="${chartColor}" stroke="#19191A" stroke-width="1.4"/>`).join('')
+      : `<circle cx="${coords[coords.length - 1].x}" cy="${coords[coords.length - 1].y}" r="4" fill="${chartColor}"/>`;
     return `
       <div class="brix-chart-figure">
         <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHTML(options.label || 'Brix line chart')}">
@@ -9401,7 +8144,7 @@
           <path d="${area}" fill="url(#${options.gradientId || 'brixLineArea'})"/>
           ${compareCoords.length ? `<path d="${brixPolyline(compareCoords)}" fill="none" stroke="rgba(223,217,217,0.34)" stroke-width="2" stroke-dasharray="6 7"/>` : ''}
           <path d="${path}" fill="none" stroke="${chartColor}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="${coords[coords.length - 1].x}" cy="${coords[coords.length - 1].y}" r="4" fill="${chartColor}"/>
+          ${pointMarkers}
           ${[first, mid, last].map((point, index) => {
             const x = index === 0 ? pad.left : index === 1 ? width / 2 : width - pad.right;
             return `<text x="${x}" y="${height - 8}" text-anchor="${index === 0 ? 'start' : index === 1 ? 'middle' : 'end'}" fill="rgba(223,217,217,0.52)" font-family="Courier New" font-size="11">${escapeHTML(xLabel(point, index))}</text>`;
@@ -9556,6 +8299,13 @@
       const centerYPct = Number(point.dataset.centerYPct || 50);
       point.style.setProperty('--marker-x', baseMarkerX.toFixed(3) + '%');
       point.style.setProperty('--marker-y', centerYPct.toFixed(3) + '%');
+      if (point.dataset.snapToPoint === '1') {
+        const pointX = Number(point.dataset.pointX);
+        const pointY = Number(point.dataset.pointY);
+        if (Number.isFinite(pointX) && Number.isFinite(pointY)) renderOverlayMarker(point, { x: pointX, y: pointY });
+        else hideOverlayMarker(point);
+        return;
+      }
       const rect = point.getBoundingClientRect();
       const fallbackClientX = rect.left + rect.width * (baseMarkerX / 100);
       const exactPosition = exactMarkerPosition(point, fallbackClientX);
@@ -9569,6 +8319,15 @@
       const leftYPct = Number(point.dataset.leftYPct || point.dataset.centerYPct || 50);
       const centerYPct = Number(point.dataset.centerYPct || 50);
       const rightYPct = Number(point.dataset.rightYPct || point.dataset.centerYPct || 50);
+      if (point.dataset.snapToPoint === '1') {
+        point.style.setProperty('--marker-x', baseMarkerX.toFixed(3) + '%');
+        point.style.setProperty('--marker-y', centerYPct.toFixed(3) + '%');
+        const pointX = Number(point.dataset.pointX);
+        const pointY = Number(point.dataset.pointY);
+        if (Number.isFinite(pointX) && Number.isFinite(pointY)) renderOverlayMarker(point, { x: pointX, y: pointY });
+        else hideOverlayMarker(point);
+        return;
+      }
       const localPct = rect.width > 0
         ? Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100))
         : baseMarkerX;
@@ -10035,6 +8794,50 @@
     ];
   }
 
+  function tapTradingUserSnapshot(data) {
+    const snapshot = data?.users?.last24h;
+    const users = Number(snapshot?.users);
+    if (!Number.isFinite(users) || users < 0) return null;
+    return {
+      ...snapshot,
+      users,
+      timeframe: snapshot.timeframe || '24h',
+      source: snapshot.source || 'Live source',
+    };
+  }
+
+  function tapTradingUserChartPoints(data, openUtcDate) {
+    const rawPoints = Array.isArray(data.users?.points) ? data.users.points : [];
+    const latestRawDate = rawPoints.reduce((latest, point) => String(point?.date || '') > latest ? String(point.date) : latest, '');
+    const effectiveOpenUtcDate = latestRawDate === openUtcDate ? openUtcDate : '';
+    const rows = euphoriaDailyPoints(rawPoints, 'users', { openUtcDate: effectiveOpenUtcDate });
+    const snapshot = tapTradingUserSnapshot(data);
+    if (!snapshot) return rows;
+    const fetchedMs = Date.parse(String(snapshot.fetchedAt || ''));
+    const dateKey = Number.isFinite(fetchedMs)
+      ? new Date(fetchedMs).toISOString().slice(0, 10)
+      : new Date().toISOString().slice(0, 10);
+    const timestamp = Number.isFinite(fetchedMs) ? fetchedMs : Date.parse(dateKey + 'T23:59:59.999Z');
+    return [
+      ...rows.filter((point) => point.label !== dateKey),
+      {
+        date: dateKey,
+        timestamp,
+        value: snapshot.users,
+        users: snapshot.users,
+        label: dateKey,
+        timeframe: snapshot.timeframe,
+        isLast24h: true,
+      },
+    ].sort((left, right) => left.timestamp - right.timestamp);
+  }
+
+  function tapTradingUserTooltipTitle(point) {
+    if (point.label === 'Anchor') return 'Previous day anchor';
+    if (point.isLast24h) return 'Today - last ' + (point.timeframe || '24h');
+    return brixDateLabel(point.timestamp);
+  }
+
   function euphoriaSummaryStats(data) {
     return tapTradingSummaryStats(data, [
       ['Since Live', '185K'],
@@ -10154,16 +8957,22 @@
   const openUtcDate = tapTradingOpenUtcDate(data);
     const sinceLiveTransfers = euphoriaTransferSinceLive(data);
   const volumePoints = euphoriaDailyPoints(data.volume?.points, 'volumeUsdm', { openUtcDate });
-  const userPoints = euphoriaDailyPoints(data.users?.points, 'users', { openUtcDate });
+  const userPoints = tapTradingUserChartPoints(data, openUtcDate);
   const latestVolumePoint = volumePoints.at(-1) || { value: 0, transferCount: 0, label: '' };
   const latestUserPoint = userPoints.at(-1) || { value: 0, label: '' };
+  const userSnapshot = tapTradingUserSnapshot(data);
   const latestDailyTransfers = Number(latestVolumePoint.txCount || latestVolumePoint.transferCount || 0);
   const dailyVolume = Number(latestVolumePoint.value || 0);
     const walletCount = Number(players.total || 0);
     const profitable = Number(players.profitable || 0);
     const notProfitable = Number(players.notProfitable || 0);
     const profitablePct = Number(players.profitablePct || 0);
-  const latestDailyUsers = Number(latestUserPoint.value || 0);
+    const displayedUsers = Number(latestUserPoint.value || 0);
+    const usersHeading = latestUserPoint.isLast24h ? (latestUserPoint.timeframe || '24h').toUpperCase() + ' Users' : 'Daily Users';
+    const usersCopy = userSnapshot?.label || config.usersCopy;
+    const usersSourceNote = userSnapshot
+      ? escapeHTML(userSnapshot.source) + ' · ' + escapeHTML(userSnapshot.timeframe) + ' snapshot fetched ' + escapeHTML(appDataTimestamp(userSnapshot.fetchedAt) || 'recently') + '. The line keeps the closed UTC transfer-wallet history for continuity.'
+      : 'Daily users count unique wallets from the latest closed UTC day; the first tracked day uses a zero anchor for a readable line.';
     const feePoints = appId === 'hitone'
       ? euphoriaDailyPoints(data.fees?.points, 'totalFeeUsdm', { openUtcDate })
       : [];
@@ -10208,8 +9017,8 @@
 
       <article class="brix-panel">
         <div class="brix-panel-head">
-          <div><div class="brix-eyebrow">Daily Users</div><h4>${fmtNum(Math.round(latestDailyUsers))}</h4></div>
-          <p class="brix-panel-copy">${escapeHTML(config.usersCopy)}</p>
+          <div><div class="brix-eyebrow">${escapeHTML(usersHeading)}</div><h4>${fmtNum(Math.round(displayedUsers))}</h4></div>
+          <p class="brix-panel-copy">${escapeHTML(usersCopy)}</p>
         </div>
         <div class="brix-chart">${brixLineChart(userPoints, {
           label: `${config.name} daily users`,
@@ -10217,9 +9026,11 @@
           color: config.secondary,
           baseline: 0,
           formatY: (value) => fmtNum(Math.round(value)),
-          tooltip: (point) => `<span class="brix-tooltip-title">${point.label === 'Anchor' ? 'Previous day anchor' : brixDateLabel(point.timestamp)}</span><span class="brix-tooltip-row"><span>Users</span><span>${fmtNum(Math.round(point.value))}</span></span>`,
+          showPointMarkers: true,
+          snapToPoints: true,
+          tooltip: (point) => `<span class="brix-tooltip-title">${tapTradingUserTooltipTitle(point)}</span><span class="brix-tooltip-row"><span>Users</span><span>${fmtNum(Math.round(point.value))}</span></span>`,
         })}</div>
-        <div class="brix-note">Daily users count unique wallets from the latest closed UTC day; the first tracked day uses a zero anchor for a readable line.</div>
+        <div class="brix-note">${usersSourceNote}</div>
       </article>
 
       ${feePoints.length ? `
@@ -10433,11 +9244,6 @@
       desc: 'Forecast scenarios, live chain rank, and chain P/E stacked in one view.',
       panels: ['opium', 'chainrev', 'pe'],
     },
-    leaderboard: {
-      title: 'LEADERBOARD',
-      desc: 'Terminal point totals, recent emissions, campaign projection, and implied MEGA per point.',
-      panels: ['leaderboard-summary', 'leaderboard-table'],
-    },
   };
   const CATEGORY_CARD_CHART_TARGETS = {
     usdm: {
@@ -10460,10 +9266,6 @@
       forecast: '[data-panel="opium"]',
       rank: '[data-panel="chainrev"]',
       pe: '[data-panel="pe"]',
-    },
-    leaderboard: {
-      summary: '#leaderboard-summary-card',
-      table: '#leaderboard-table-card',
     },
   };
   let activeCategory = 'usdm';
@@ -10496,9 +9298,6 @@
       }
       if (panelKey === 'mega-pe') {
         renderMegaPeHistoryPanel();
-        return;
-      }
-      if (panelKey === 'leaderboard-summary' || panelKey === 'leaderboard-table') {
         return;
       }
       renderPanel(panelKey);
