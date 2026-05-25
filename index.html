@@ -1597,7 +1597,7 @@
   /* CATEGORY NAVIGATION + STACKED CATEGORY VIEW */
   .category-cards {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 12px;
     margin: 0 0 18px;
   }
@@ -1651,6 +1651,7 @@
   .category-card[data-category="usdm"] { --accent: var(--pink); }
   .category-card[data-category="revenue"] { --accent: var(--peach); }
   .category-card[data-category="comparison"] { --accent: #C586FF; }
+  .category-card[data-category="economics"] { --accent: #F4D35E; }
   .category-card[data-category="mega"] { --accent: var(--blue); }
   .category-card-top {
     display: grid;
@@ -1773,6 +1774,7 @@
   .category-card[data-category="usdm"] .category-card-primary { color: var(--pink); text-shadow: 0 0 14px rgba(255,138,168,0.24); }
   .category-card[data-category="revenue"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
   .category-card[data-category="comparison"] .category-card-primary { color: var(--green); text-shadow: 0 0 14px rgba(144,215,159,0.24); }
+  .category-card[data-category="economics"] .category-card-primary { color: #F4D35E; text-shadow: 0 0 14px rgba(244,211,94,0.24); }
   .category-card[data-category="mega"] .category-card-primary { color: var(--blue); text-shadow: 0 0 14px rgba(126,170,212,0.24); }
   .category-card-details {
     display: flex;
@@ -1895,6 +1897,279 @@
     gap: 18px;
     margin-top: 0;
   }
+  .economics-current-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .economics-current-card {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(244,211,94,0.08), rgba(255,255,255,0.015));
+  }
+  .economics-current-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #F4D35E;
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .economics-current-value {
+    margin-top: 14px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1;
+    overflow-wrap: anywhere;
+  }
+  .economics-current-card:nth-child(1) .economics-current-value { color: #90D79F; text-shadow: 0 0 16px rgba(144,215,159,0.22); }
+  .economics-current-card:nth-child(2) .economics-current-value { color: #F5AF94; text-shadow: 0 0 16px rgba(245,175,148,0.22); }
+  .economics-current-sub {
+    margin-top: 10px;
+    color: var(--muted);
+    font-family: 'Helvetica Neue', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .economics-history-card {
+    padding: 22px;
+  }
+  .economics-history-card .category-chart-head {
+    align-items: center;
+  }
+  .economics-legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: min(420px, 100%);
+  }
+  .economics-legend-button {
+    --series-color: #90D79F;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 9px 12px 8px;
+    border: 1px solid color-mix(in srgb, var(--series-color) 48%, rgba(255,255,255,0.16));
+    background: color-mix(in srgb, var(--series-color) 14%, rgba(255,255,255,0.025));
+    color: #ECE8E8;
+    font-family: 'Helvetica Neue', Arial, system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.1;
+    cursor: pointer;
+    transition: opacity 0.16s ease, background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+  }
+  .economics-legend-button:hover,
+  .economics-legend-button:focus-visible {
+    outline: none;
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--series-color) 20%, rgba(255,255,255,0.04));
+  }
+  .economics-legend-button[aria-pressed="false"] {
+    opacity: 0.42;
+    background: rgba(255,255,255,0.018);
+    border-color: rgba(255,255,255,0.08);
+  }
+  .economics-legend-dot {
+    width: 11px;
+    height: 11px;
+    background: var(--series-color);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--series-color) 54%, transparent);
+    flex: 0 0 auto;
+  }
+  .economics-legend-value {
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .economics-history-wrap {
+    position: relative;
+    height: 520px;
+    width: 100%;
+  }
+  .economics-history-wrap canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .economics-chart-tooltip {
+    position: absolute;
+    z-index: 4;
+    min-width: 178px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(18,18,19,0.94);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.38);
+    color: #ECE8E8;
+    font-family: 'Helvetica Neue', Arial, system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.35;
+    pointer-events: none;
+    transform: translate(-50%, calc(-100% - 14px));
+  }
+  .economics-chart-tooltip[hidden] {
+    display: none;
+  }
+  .economics-tooltip-date {
+    margin-bottom: 8px;
+    color: #F4D35E;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .economics-tooltip-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .economics-tooltip-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #ECE8E8;
+  }
+  .economics-tooltip-dot {
+    width: 9px;
+    height: 9px;
+    background: var(--series-color);
+  }
+  .economics-timeframe {
+    margin-top: 16px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.018);
+  }
+  .economics-timeframe-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 8px;
+    font-family: 'Helvetica Neue', Arial, system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .economics-range-label {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .economics-range-slider {
+    position: relative;
+    height: 42px;
+  }
+  .economics-range-track {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 18px;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+  }
+  .economics-range-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(90deg, #90D79F, #F5AF94);
+    box-shadow: 0 0 18px rgba(244,211,94,0.18);
+  }
+  .economics-range-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 42px;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    pointer-events: none;
+  }
+  .economics-range-input:focus {
+    outline: none;
+  }
+  .economics-range-input::-webkit-slider-runnable-track {
+    height: 42px;
+    background: transparent;
+  }
+  .economics-range-input::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    margin-top: 11px;
+    border: 2px solid #19191A;
+    background: #F4D35E;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.26), 0 10px 22px rgba(0,0,0,0.34);
+    cursor: ew-resize;
+    pointer-events: auto;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .economics-range-input::-moz-range-track {
+    height: 42px;
+    background: transparent;
+    border: 0;
+  }
+  .economics-range-input::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #19191A;
+    border-radius: 0;
+    background: #F4D35E;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.26), 0 10px 22px rgba(0,0,0,0.34);
+    cursor: ew-resize;
+    pointer-events: auto;
+  }
+  .economics-range-input:disabled::-webkit-slider-thumb {
+    opacity: 0.36;
+    cursor: default;
+  }
+  .economics-range-input:disabled::-moz-range-thumb {
+    opacity: 0.36;
+    cursor: default;
+  }
+  .economics-explainer {
+    background: linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.012));
+  }
+  .economics-explainer h3 {
+    margin: 0 0 12px;
+    color: #F4D35E;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .economics-explainer p {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.58;
+  }
+  .economics-explainer strong {
+    color: var(--text);
+  }
+  .economics-signature {
+    margin-top: 16px;
+    color: #ECE8E8;
+    font-family: 'Helvetica Neue', Arial, system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
   .panel-mode-toggle {
     display: inline-flex;
   }
@@ -1912,6 +2187,20 @@
     width: 18px;
     height: 18px;
   }
+  .token-logo.economics {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #F4D35E, #F5AF94 60%, #90D79F);
+    color: #19191A;
+    font-family: var(--mono);
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 0;
+    box-shadow: 0 0 12px rgba(244,211,94,0.44);
+    width: 18px;
+    height: 18px;
+  }
   @media (max-width: 1120px) {
     .category-cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1926,7 +2215,8 @@
       gap: 9px;
     }
     .category-card-label .token-logo,
-    .category-card-label .token-logo.compare {
+    .category-card-label .token-logo.compare,
+    .category-card-label .token-logo.economics {
       width: 24px;
       height: 24px;
     }
@@ -1944,7 +2234,8 @@
       gap: 8px;
     }
     .category-card-label .token-logo,
-    .category-card-label .token-logo.compare {
+    .category-card-label .token-logo.compare,
+    .category-card-label .token-logo.economics {
       width: 24px;
       height: 24px;
     }
@@ -1954,6 +2245,29 @@
     .category-chart-card,
     .mega-card {
       padding: 16px;
+    }
+    .economics-current-grid {
+      grid-template-columns: 1fr;
+    }
+    .economics-history-card {
+      padding: 16px;
+    }
+    .economics-legend {
+      justify-content: flex-start;
+      min-width: 0;
+      width: 100%;
+    }
+    .economics-legend-button {
+      flex: 1 1 150px;
+      justify-content: center;
+    }
+    .economics-history-wrap {
+      height: 420px;
+    }
+    .economics-timeframe-head {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 4px;
     }
     .category-chart-head {
       gap: 12px;
@@ -1976,7 +2290,8 @@
       gap: 7px;
     }
     .category-card-label .token-logo,
-    .category-card-label .token-logo.compare {
+    .category-card-label .token-logo.compare,
+    .category-card-label .token-logo.economics {
       width: 20px;
       height: 20px;
     }
@@ -3316,7 +3631,7 @@
   <nav class="site-switcher" aria-label="MegaFees site sections">
     <button class="site-tab active" type="button" data-site-tab="network" aria-selected="true">
       <span class="site-tab-title"><span class="br">[</span>Network<span class="br">]</span></span>
-      <span class="site-tab-count">13 charts</span>
+      <span class="site-tab-count">14 charts</span>
     </button>
     <button class="site-tab" type="button" data-site-tab="apps" aria-selected="false">
       <span class="site-tab-title"><span class="br">[</span>Apps<span class="br">]</span></span>
@@ -3405,6 +3720,28 @@
         <div class="category-stat">
           <span class="category-stat-label">Forecast</span>
           <span class="category-stat-value" id="kpi-opium">$ —</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-card" data-category="economics" role="button" tabindex="0">
+      <div class="category-card-top">
+        <div class="category-card-label"><span class="token-logo economics">M</span>Economics</div>
+        <div class="category-card-count">1 chart</div>
+      </div>
+      <div class="category-card-primary" id="kpi-economics">$ —</div>
+      <div class="category-card-details">
+        <span class="category-card-detail" data-chart-key="m0" role="button" tabindex="0">M0</span>
+        <span class="category-card-detail" data-chart-key="m1" role="button" tabindex="0">M1</span>
+      </div>
+      <div class="category-card-stats">
+        <div class="category-stat">
+          <span class="category-stat-label">M0</span>
+          <span class="category-stat-value" id="kpi-economics-m0">$ —</span>
+        </div>
+        <div class="category-stat">
+          <span class="category-stat-label">M1</span>
+          <span class="category-stat-value" id="kpi-economics-m1">$ —</span>
         </div>
       </div>
     </div>
@@ -3599,6 +3936,71 @@
         </article>
       </div>
     </div>
+
+    <div class="category-panel" data-category="economics">
+      <div class="category-stack">
+        <div class="economics-current-grid">
+          <article class="economics-current-card" id="m0-card">
+            <div class="economics-current-label"><span class="token-logo economics">M</span>M0</div>
+            <div class="economics-current-value" id="economicsM0Current">$ —</div>
+            <div class="economics-current-sub">Tokenized USDM minus lending vault reserves.</div>
+          </article>
+          <article class="economics-current-card" id="m1-card">
+            <div class="economics-current-label"><span class="token-logo economics">M</span>M1</div>
+            <div class="economics-current-value" id="economicsM1Current">$ —</div>
+            <div class="economics-current-sub">M0 plus liquid USDM-denominated deposit claims.</div>
+          </article>
+        </div>
+
+        <article class="category-chart-card economics-history-card" id="economics-history-card">
+          <div class="category-chart-head">
+            <div class="category-chart-copy">
+              <h3><span class="token-logo economics">M</span>M0 / M1 History</h3>
+              <div class="desc">Daily reconstructed USDM money supply: base money vs liquid deposit claims.</div>
+            </div>
+            <div class="economics-legend" id="economicsLegend" aria-label="Economics chart series">
+              <button class="economics-legend-button" type="button" data-economics-series="m0" aria-pressed="true" style="--series-color:#90D79F">
+                <span class="economics-legend-dot" aria-hidden="true"></span>
+                <span>M0</span>
+                <span class="economics-legend-value" id="economicsLegendM0">$ —</span>
+              </button>
+              <button class="economics-legend-button" type="button" data-economics-series="m1" aria-pressed="true" style="--series-color:#F5AF94">
+                <span class="economics-legend-dot" aria-hidden="true"></span>
+                <span>M1</span>
+                <span class="economics-legend-value" id="economicsLegendM1">$ —</span>
+              </button>
+            </div>
+          </div>
+          <div class="panel" data-panel="economics-history">
+            <div class="chart-wrap economics-history-wrap">
+              <canvas id="economicsHistoryChart"></canvas>
+              <div class="economics-chart-tooltip" id="economicsChartTooltip" hidden></div>
+            </div>
+            <div class="economics-timeframe" id="economicsTimeframe">
+              <div class="economics-timeframe-head">
+                <span>Timeframe</span>
+                <span class="economics-range-label" id="economicsRangeLabel">Full history</span>
+              </div>
+              <div class="economics-range-slider" id="economicsRangeControl">
+                <div class="economics-range-track" aria-hidden="true"><span class="economics-range-fill" id="economicsRangeFill"></span></div>
+                <input class="economics-range-input" id="economicsRangeStart" type="range" min="0" max="0" value="0" aria-label="Start date">
+                <input class="economics-range-input" id="economicsRangeEnd" type="range" min="0" max="0" value="0" aria-label="End date">
+              </div>
+            </div>
+            <div class="note" id="economicsHistoryNote">Loading M0 / M1 history…</div>
+          </div>
+        </article>
+
+        <article class="category-chart-card economics-explainer" id="economics-explainer-card">
+          <h3>USDM Money Supply</h3>
+          <p>These figures are preliminary and should be treated as a high-level view of the MegaETH economy rather than a final accounting source.</p>
+          <p><strong>M0</strong> consists of USDM held by the public outside deposit-taking protocols, centralized exchanges, and companies. In this dashboard, DEX and spot liquidity stays in M0, while USDM held inside lending vaults and reserves is excluded.</p>
+          <p><strong>M1</strong> adds liquid USDM-denominated claims on top of M0, including demand deposits at deposit-taking protocols and other checkable or savings-like deposits. When M1 rises well above token supply, it means credit claims are circulating while part of the underlying USDM has been lent out.</p>
+          <p><strong>M2</strong> would add USDM time deposits and maturing assets under six months. It is not shown yet because a meaningful time-deposit market has not appeared.</p>
+          <p class="economics-signature">Inspired by <em>PaperImperium</em></p>
+        </article>
+      </div>
+    </div>
   </section>
 
   <!-- TX REVENUE TABLE -->
@@ -3678,7 +4080,7 @@
 
   <footer>
     <div class="footer-inner">
-      <div class="footer-data">Data: CoinGecko (USDm market cap, ETH price, chain token market caps for P/E) · DefiLlama (chain fees fallback + stables) · growthepie (network-fee/stables fallback) · MegaETH Blockscout stats-service / token APIs (network fees, live token supply, MEGA holders history, MegaStaking MEGA balance)</div>
+      <div class="footer-data">Data: CoinGecko (USDm market cap, ETH price, chain token market caps for P/E) · DefiLlama (chain fees fallback + stables) · growthepie (network-fee/stables fallback) · MegaETH Blockscout stats-service / token APIs (network fees, live token supply, MEGA holders history, MegaStaking MEGA balance, economics reserves) · Aave address book</div>
       <a class="hero-overlay__credit" href="https://x.com/JoestarCrypto" target="_blank" rel="noreferrer noopener">
         <span class="hero-overlay__credit-label">Made by Joestar</span>
         <span class="hero-overlay__credit-avatar"><img src="logos/Jojo2.jpg" alt="" /></span>
@@ -3736,6 +4138,8 @@
   const USDM_TOKEN_ADDRESS  = '0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7'; // MegaUSD (USDm)
   const USDT0_TOKEN_ADDRESS = '0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb'; // USDT0 (LayerZero OFT)
   const USDE_TOKEN_ADDRESS  = '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34'; // Ethena USDe
+  const AAVE_USDM_A_TOKEN_ADDRESS = '0x5dF82810CB4B8f3e0Da3c031cCc9208ee9cF9500'; // Aave MegaEth USDm (aMegUSDm)
+  const WORLD_USDM_LENDING_ORDERBOOK_ADDRESS = '0x2b654f4a35394739c66a8c790324c8e829d9bf6e';
   const ETH_PRICE_API = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd';
   // growthepie — MegaETH chain metrics (network fees/revenue)
   const GP_MEGAETH = 'https://api.growthepie.xyz/v1/chains/megaeth.json';
@@ -5692,9 +6096,9 @@
   // -------- RENDER --------
   const chartInstances = {};
   const LOAD_TARGETS = [
-    'kpi-tvl', 'kpi-daily', 'kpi-annual', 'kpi-cum', 'kpi-days', 'kpi-opium', 'kpi-rank',
+    'kpi-tvl', 'kpi-daily', 'kpi-annual', 'kpi-cum', 'kpi-days', 'kpi-opium', 'kpi-rank', 'kpi-economics',
     'panel-tvl', 'panel-revenue', 'panel-cum', 'panel-annual', 'panel-stables', 'panel-opium', 'panel-chainrev', 'panel-pe',
-    'panel-mega-holders', 'panel-mega-float', 'panel-mega-pe',
+    'panel-mega-holders', 'panel-mega-float', 'panel-mega-pe', 'panel-economics',
   ];
   const LOAD_TARGET_SET = new Set(LOAD_TARGETS);
   const LOAD_LABELS = {
@@ -5705,6 +6109,7 @@
     'kpi-days': 'stables share card',
     'kpi-opium': 'forecast card',
     'kpi-rank': 'rank card',
+    'kpi-economics': 'economics card',
     'panel-tvl': 'TVL chart',
     'panel-revenue': 'revenue chart',
     'panel-cum': 'cumulative chart',
@@ -5716,6 +6121,7 @@
     'panel-mega-holders': 'MEGA holders chart',
     'panel-mega-float': 'MEGA float chart',
     'panel-mega-pe': 'MEGA P/E chart',
+    'panel-economics': 'M0/M1 history chart',
   };
   const loadTracker = {
     total: LOAD_TARGETS.length,
@@ -5762,12 +6168,14 @@
     'kpi-mega-holders': 1400,
     'kpi-daily': 2800,
     'kpi-rank': 4200,
+    'kpi-economics': 5600,
   };
   const CATEGORY_PRIMARY_SOURCE_ORDER = {
     'kpi-tvl': ['tvl', 'stables', 'concentration', 'appflow'],
     'kpi-mega-holders': ['holders', 'float', 'pe'],
     'kpi-daily': ['daily', 'annual', 'cumulative'],
     'kpi-rank': ['forecast', 'rank', 'pe'],
+    'kpi-economics': ['m1', 'm0', 'deposits'],
   };
   const categoryPrimarySources = {};
   const categoryPrimaryRotations = {};
@@ -7063,6 +7471,580 @@
     });
   }
 
+  const economicsState = {
+    loading: true,
+    historyLoading: false,
+    data: null,
+    history: null,
+    visible: { m0: true, m1: true },
+    range: { start: 0, end: null, length: 0 },
+    rangeTouched: false,
+    chart: null,
+    hoverIndex: null,
+    note: 'Loading economics data…',
+  };
+
+  function economicsNumberMap(value) {
+    return value instanceof Map ? new Map(value) : new Map();
+  }
+
+  function economicsSetToday(map, value) {
+    const number = Number(value);
+    if (Number.isFinite(number)) map.set(isoDate(new Date()), number);
+    return map;
+  }
+
+  function economicsClamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function economicsRangeDateLabel(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function normalizeEconomicsRange(model) {
+    const length = Array.isArray(model?.dates) ? model.dates.length : 0;
+    const max = Math.max(0, length - 1);
+    const oldRange = economicsState.range || { start: 0, end: null, length: 0 };
+    let start = Number(oldRange.start);
+    let end = Number(oldRange.end);
+    if (!economicsState.rangeTouched || !Number.isFinite(start) || !Number.isFinite(end)) {
+      start = 0;
+      end = max;
+    } else if (oldRange.length && oldRange.length !== length && max > 0) {
+      const oldMax = Math.max(1, oldRange.length - 1);
+      start = Math.round((start / oldMax) * max);
+      end = Math.round((end / oldMax) * max);
+    }
+    start = economicsClamp(Math.round(start || 0), 0, max);
+    end = economicsClamp(Math.round(Number.isFinite(end) ? end : max), 0, max);
+    if (length > 1 && start >= end) {
+      if (start >= max) start = max - 1;
+      else end = Math.min(max, start + 1);
+    }
+    economicsState.range = { start, end, length };
+    return economicsState.range;
+  }
+
+  function economicsHistoryWindow(model) {
+    if (!model?.dates?.length) return model;
+    const range = normalizeEconomicsRange(model);
+    return {
+      ...model,
+      dates: model.dates.slice(range.start, range.end + 1),
+      m0Values: model.m0Values.slice(range.start, range.end + 1),
+      m1Values: model.m1Values.slice(range.start, range.end + 1),
+      rangeStart: range.start,
+      rangeEnd: range.end,
+    };
+  }
+
+  function syncEconomicsRangeControls(model) {
+    const startInput = document.getElementById('economicsRangeStart');
+    const endInput = document.getElementById('economicsRangeEnd');
+    const fill = document.getElementById('economicsRangeFill');
+    const label = document.getElementById('economicsRangeLabel');
+    if (!startInput || !endInput || !model?.dates?.length) return;
+    const range = normalizeEconomicsRange(model);
+    const max = Math.max(0, range.length - 1);
+    [startInput, endInput].forEach((input) => {
+      input.min = '0';
+      input.max = String(max);
+      input.disabled = max <= 0;
+    });
+    startInput.value = String(range.start);
+    endInput.value = String(range.end);
+    if (fill) {
+      const startPct = max ? (range.start / max) * 100 : 0;
+      const endPct = max ? (range.end / max) * 100 : 100;
+      fill.style.left = startPct + '%';
+      fill.style.right = (100 - endPct) + '%';
+    }
+    if (label) {
+      const startDate = model.dates[range.start];
+      const endDate = model.dates[range.end];
+      const full = range.start === 0 && range.end === max;
+      label.textContent = (full ? 'Full history: ' : '') + economicsRangeDateLabel(startDate) + ' - ' + economicsRangeDateLabel(endDate);
+    }
+  }
+
+  function bindEconomicsRangeControls() {
+    const startInput = document.getElementById('economicsRangeStart');
+    const endInput = document.getElementById('economicsRangeEnd');
+    if (!startInput || !endInput || startInput.__economicsRangeBound) return;
+    startInput.__economicsRangeBound = true;
+    endInput.__economicsRangeBound = true;
+    const setZ = (activeInput) => {
+      startInput.style.zIndex = activeInput === startInput ? '5' : '4';
+      endInput.style.zIndex = activeInput === endInput ? '5' : '4';
+    };
+    const update = (activeInput) => {
+      const history = economicsState.history || economicsFallbackHistory(economicsState.data);
+      const length = history?.dates?.length || 0;
+      const max = Math.max(0, length - 1);
+      if (!length || max <= 0) return;
+      const rawStart = Number(startInput.value);
+      const rawEnd = Number(endInput.value);
+      let start = economicsClamp(Math.round(Number.isFinite(rawStart) ? rawStart : 0), 0, max);
+      let end = economicsClamp(Math.round(Number.isFinite(rawEnd) ? rawEnd : max), 0, max);
+      if (activeInput === startInput && start >= end) start = Math.max(0, end - 1);
+      if (activeInput === endInput && end <= start) end = Math.min(max, start + 1);
+      economicsState.rangeTouched = true;
+      economicsState.range = { start, end, length };
+      economicsState.hoverIndex = null;
+      hideEconomicsChartTooltip(false);
+      renderEconomicsPanel();
+    };
+    startInput.addEventListener('input', () => update(startInput));
+    endInput.addEventListener('input', () => update(endInput));
+    startInput.addEventListener('pointerdown', () => setZ(startInput));
+    endInput.addEventListener('pointerdown', () => setZ(endInput));
+    startInput.addEventListener('focus', () => setZ(startInput));
+    endInput.addEventListener('focus', () => setZ(endInput));
+  }
+
+  function economicsSourceAmount(data, bucket, protocol) {
+    const sources = data?.lending?.[bucket]?.sources;
+    const row = (Array.isArray(sources) ? sources : []).find((entry) => String(entry?.protocol || '').toLowerCase() === protocol.toLowerCase());
+    return Number(row?.amount);
+  }
+
+  function economicsFallbackHistory(data) {
+    if (!data) return null;
+    const m0Points = Array.isArray(data.m0?.points) ? data.m0.points : [];
+    const m1Points = Array.isArray(data.m1?.points) ? data.m1.points : [];
+    const byDate = new Map();
+    m0Points.forEach((point) => {
+      const timestamp = Number(point?.timestamp);
+      const value = Number(point?.value);
+      if (Number.isFinite(timestamp) && Number.isFinite(value)) {
+        byDate.set(isoDate(new Date(timestamp)), { ...(byDate.get(isoDate(new Date(timestamp))) || {}), m0: value });
+      }
+    });
+    m1Points.forEach((point) => {
+      const timestamp = Number(point?.timestamp);
+      const value = Number(point?.value);
+      if (Number.isFinite(timestamp) && Number.isFinite(value)) {
+        byDate.set(isoDate(new Date(timestamp)), { ...(byDate.get(isoDate(new Date(timestamp))) || {}), m1: value });
+      }
+    });
+    if (!byDate.size) {
+      byDate.set(isoDate(new Date()), { m0: Number(data.m0?.value), m1: Number(data.m1?.value) });
+    }
+    const keys = [...byDate.keys()].sort();
+    return {
+      dates: keys.map((key) => new Date(key + 'T00:00:00Z')),
+      m0Values: keys.map((key) => Number(byDate.get(key)?.m0 ?? data.m0?.value ?? 0)),
+      m1Values: keys.map((key) => Number(byDate.get(key)?.m1 ?? data.m1?.value ?? 0)),
+      source: 'snapshot',
+    };
+  }
+
+  async function buildEconomicsHistoryModel(data) {
+    const today = isoDate(new Date());
+    const dates = buildDateSeries(MAINNET_LAUNCH, new Date());
+    const dateKeys = dates.map((date) => isoDate(date));
+    const [usdmSupplyMap, aaveDepositMap, aaveReserveMap, worldDepositMap] = await Promise.all([
+      fetchTokenSupplyHistoryOnChain(USDM_TOKEN_ADDRESS, 18),
+      fetchTokenSupplyHistoryOnChain(AAVE_USDM_A_TOKEN_ADDRESS, 18),
+      fetchTokenHolderBalanceHistoryOnChain(USDM_TOKEN_ADDRESS, AAVE_USDM_A_TOKEN_ADDRESS, 18),
+      fetchTokenHolderBalanceHistoryOnChain(USDM_TOKEN_ADDRESS, WORLD_USDM_LENDING_ORDERBOOK_ADDRESS, 18),
+    ]);
+
+    const usdmSupply = economicsSetToday(economicsNumberMap(usdmSupplyMap), Number(data?.usdm?.supply));
+    const aaveDeposits = economicsSetToday(economicsNumberMap(aaveDepositMap), Number(data?.lending?.aave?.usdmAToken?.totalSupply));
+    const aaveReserve = economicsSetToday(economicsNumberMap(aaveReserveMap), Number(data?.lending?.aave?.usdmAToken?.underlyingUsdmReserve ?? economicsSourceAmount(data, 'vaultUsdm', 'Aave V3')));
+    const worldDeposits = economicsSetToday(economicsNumberMap(worldDepositMap), Number(economicsSourceAmount(data, 'demandDeposits', 'World Markets')));
+
+    const supplySeries = mapSeriesByDate(usdmSupply, dateKeys, 0);
+    const aaveDepositSeries = mapSeriesByDate(aaveDeposits, dateKeys, 0);
+    const aaveReserveSeries = mapSeriesByDate(aaveReserve, dateKeys, 0);
+    const worldDepositSeries = mapSeriesByDate(worldDeposits, dateKeys, 0);
+    const m0Values = supplySeries.map((supply, index) => Math.max(0, supply - aaveReserveSeries[index] - worldDepositSeries[index]));
+    const m1Values = m0Values.map((m0, index) => m0 + aaveDepositSeries[index] + worldDepositSeries[index]);
+    const firstUsefulIndex = Math.max(0, m1Values.findIndex((value, index) => value > 0 || m0Values[index] > 0));
+    const startIndex = firstUsefulIndex >= 0 ? firstUsefulIndex : 0;
+    return {
+      dates: dates.slice(startIndex),
+      m0Values: m0Values.slice(startIndex),
+      m1Values: m1Values.slice(startIndex),
+      source: 'blockscout',
+      pinnedDay: today,
+    };
+  }
+
+  function renderEconomicsTooltipForIndex(index) {
+    const chart = economicsState.chart;
+    const tooltip = document.getElementById('economicsChartTooltip');
+    if (!chart || !tooltip) return;
+    const point = chart.points[index];
+    const rows = (point?.series || []).filter((row) => economicsState.visible[row.key] !== false && Number.isFinite(row.value));
+    if (!point || !rows.length) {
+      tooltip.hidden = true;
+      return;
+    }
+    tooltip.innerHTML = '<div class="economics-tooltip-date">' + economicsRangeDateLabel(point.date) + '</div>' + rows.map((row) => (
+      '<div class="economics-tooltip-row"><span class="economics-tooltip-name"><span class="economics-tooltip-dot" style="--series-color:' + row.color + '"></span>' + row.label + '</span><span>' + fmtUSDCompact(row.value) + '</span></div>'
+    )).join('');
+    const wrapWidth = chart.canvas.parentElement?.getBoundingClientRect().width || chart.geometry.width;
+    const tooltipX = economicsClamp(point.x, 92, Math.max(92, wrapWidth - 92));
+    const tooltipY = economicsClamp(Math.min(...rows.map((row) => row.y)), 42, Math.max(42, chart.geometry.chartBottom));
+    tooltip.style.left = tooltipX + 'px';
+    tooltip.style.top = tooltipY + 'px';
+    tooltip.hidden = false;
+  }
+
+  function hideEconomicsChartTooltip(redraw = true) {
+    const tooltip = document.getElementById('economicsChartTooltip');
+    if (tooltip) tooltip.hidden = true;
+    const hadHover = economicsState.hoverIndex !== null;
+    economicsState.hoverIndex = null;
+    if (redraw && hadHover && economicsState.chart?.model) {
+      makeEconomicsHistoryChart('economicsHistoryChart', economicsState.chart.model);
+    }
+  }
+
+  function handleEconomicsChartPointerMove(event) {
+    const chart = economicsState.chart;
+    if (!chart?.points?.length) return;
+    const rect = chart.canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const geometry = chart.geometry;
+    if (x < geometry.chartLeft || x > geometry.chartRight || y < geometry.chartTop || y > geometry.chartBottom) {
+      hideEconomicsChartTooltip();
+      return;
+    }
+    const maxIndex = chart.points.length - 1;
+    const index = maxIndex <= 0
+      ? 0
+      : economicsClamp(Math.round(((x - geometry.chartLeft) / geometry.chartWidth) * maxIndex), 0, maxIndex);
+    if (economicsState.hoverIndex !== index) {
+      economicsState.hoverIndex = index;
+      makeEconomicsHistoryChart('economicsHistoryChart', chart.model);
+    }
+    renderEconomicsTooltipForIndex(index);
+  }
+
+  function bindEconomicsChartHover(canvas) {
+    if (!canvas || canvas.__economicsHoverBound) return;
+    canvas.__economicsHoverBound = true;
+    canvas.addEventListener('pointermove', handleEconomicsChartPointerMove);
+    canvas.addEventListener('pointerleave', () => hideEconomicsChartTooltip());
+  }
+
+  function drawEconomicsLine(ctx, points, color, baselineY) {
+    if (!points.length) return;
+    ctx.save();
+    if (Number.isFinite(baselineY)) {
+      const area = ctx.createLinearGradient(0, Math.min(...points.map((point) => point.y)), 0, baselineY);
+      area.addColorStop(0, color + '44');
+      area.addColorStop(1, color + '00');
+      ctx.fillStyle = area;
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, baselineY);
+      points.forEach((point) => ctx.lineTo(point.x, point.y));
+      ctx.lineTo(points[points.length - 1].x, baselineY);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    points.forEach((point, index) => {
+      if (index === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
+    ctx.stroke();
+    ctx.fillStyle = color;
+    points.forEach((point, index) => {
+      const radius = index === points.length - 1 ? 5 : 3;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  function makeEconomicsHistoryChart(canvasId, model) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || !model?.dates?.length) return;
+    if (chartInstances[canvasId]) {
+      chartInstances[canvasId].destroy();
+      delete chartInstances[canvasId];
+    }
+    const existingChart = typeof Chart !== 'undefined' ? Chart.getChart(canvas) : null;
+    if (existingChart) existingChart.destroy();
+    const ctx = canvas.getContext('2d');
+    const parentBox = canvas.parentElement?.getBoundingClientRect();
+    const canvasBox = canvas.getBoundingClientRect();
+    const cssWidth = Math.max(320, Math.floor(parentBox?.width || canvasBox.width || canvas.clientWidth || 720));
+    const cssHeight = Math.max(360, Math.floor(parentBox?.height || canvasBox.height || canvas.clientHeight || 520));
+    const ratio = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.round(cssWidth * ratio);
+    canvas.height = Math.round(cssHeight * ratio);
+    canvas.style.width = cssWidth + 'px';
+    canvas.style.height = cssHeight + 'px';
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+    const series = [
+      { key: 'm0', label: 'M0', values: model.m0Values, color: '#90D79F' },
+      { key: 'm1', label: 'M1', values: model.m1Values, color: '#F5AF94' },
+    ].filter((entry) => economicsState.visible[entry.key]);
+    const values = series.flatMap((entry) => entry.values).filter(Number.isFinite);
+    const maxValue = Math.max(1, ...values);
+    const min = 0;
+    const max = maxValue * 1.12;
+    const pad = { left: cssWidth < 560 ? 62 : 84, right: 34, top: 28, bottom: 58 };
+    const chartLeft = pad.left;
+    const chartRight = cssWidth - pad.right;
+    const chartTop = pad.top;
+    const chartBottom = cssHeight - pad.bottom;
+    const chartWidth = Math.max(1, chartRight - chartLeft);
+    const chartHeight = Math.max(1, chartBottom - chartTop);
+    const xForIndex = (index) => chartLeft + (model.dates.length <= 1 ? chartWidth : (index / (model.dates.length - 1)) * chartWidth);
+    const yForValue = (value) => chartBottom - ((Math.max(min, Number(value) || 0) - min) / (max - min)) * chartHeight;
+
+    ctx.save();
+    ctx.font = '12px "Helvetica Neue", Arial, system-ui, sans-serif';
+    ctx.lineWidth = 1;
+    [0, maxValue / 2, maxValue].forEach((tick) => {
+      const y = yForValue(tick);
+      ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+      ctx.beginPath();
+      ctx.moveTo(chartLeft, y);
+      ctx.lineTo(chartRight, y);
+      ctx.stroke();
+      ctx.fillStyle = '#DFD9D9';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(fmtUSDCompact(tick), chartLeft - 8, y);
+    });
+
+    for (let i = 0; i <= 4; i += 1) {
+      const x = chartLeft + (chartWidth * i / 4);
+      ctx.strokeStyle = 'rgba(255,255,255,0.035)';
+      ctx.beginPath();
+      ctx.moveTo(x, chartTop);
+      ctx.lineTo(x, chartBottom);
+      ctx.stroke();
+    }
+
+    const m0Points = model.m0Values.map((value, index) => ({ x: xForIndex(index), y: yForValue(value), value }));
+    const m1Points = model.m1Values.map((value, index) => ({ x: xForIndex(index), y: yForValue(value), value }));
+    const seriesPoints = { m0: m0Points, m1: m1Points };
+    const tooltipPoints = model.dates.map((date, index) => ({
+      date,
+      x: xForIndex(index),
+      series: series.map((entry) => ({
+        key: entry.key,
+        label: entry.label,
+        color: entry.color,
+        value: entry.values[index],
+        x: seriesPoints[entry.key]?.[index]?.x,
+        y: seriesPoints[entry.key]?.[index]?.y,
+      })),
+    }));
+    economicsState.chart = {
+      canvas,
+      model,
+      points: tooltipPoints,
+      geometry: { chartLeft, chartRight, chartTop, chartBottom, chartWidth, chartHeight, width: cssWidth, height: cssHeight },
+    };
+    bindEconomicsChartHover(canvas);
+    if (economicsState.visible.m1) drawEconomicsLine(ctx, m1Points, '#F5AF94', chartBottom);
+    if (economicsState.visible.m0) drawEconomicsLine(ctx, m0Points, '#90D79F', chartBottom);
+
+    const hoverIndex = Number.isInteger(economicsState.hoverIndex) ? economicsState.hoverIndex : -1;
+    const hoverPoint = tooltipPoints[hoverIndex];
+    if (hoverPoint?.series?.length) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(hoverPoint.x, chartTop);
+      ctx.lineTo(hoverPoint.x, chartBottom);
+      ctx.stroke();
+      hoverPoint.series.forEach((entry) => {
+        if (!Number.isFinite(entry.x) || !Number.isFinite(entry.y)) return;
+        ctx.fillStyle = '#19191A';
+        ctx.strokeStyle = entry.color;
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.arc(entry.x, entry.y, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = entry.color;
+        ctx.beginPath();
+        ctx.arc(entry.x, entry.y, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
+    }
+
+    const firstDate = model.dates[0];
+    const lastDate = model.dates[model.dates.length - 1];
+    ctx.fillStyle = '#DFD9D9';
+    ctx.textBaseline = 'top';
+    ctx.font = '12px "Helvetica Neue", Arial, system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(firstDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), chartLeft, chartBottom + 16);
+    ctx.textAlign = 'right';
+    ctx.fillText(lastDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), chartRight, chartBottom + 16);
+
+    const latestLabels = [
+      economicsState.visible.m1 ? { point: m1Points.at(-1), value: model.m1Values.at(-1), color: '#F5AF94' } : null,
+      economicsState.visible.m0 ? { point: m0Points.at(-1), value: model.m0Values.at(-1), color: '#90D79F' } : null,
+    ].filter(Boolean);
+    latestLabels.forEach((entry) => {
+      if (!entry.point) return;
+      ctx.fillStyle = entry.color;
+      ctx.font = '800 13px "Helvetica Neue", Arial, system-ui, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(fmtUSDCompact(entry.value), Math.min(chartRight, entry.point.x - 8), entry.point.y);
+    });
+    ctx.restore();
+  }
+
+  function economicsSourcesText(sources) {
+    const rows = (Array.isArray(sources) ? sources : [])
+      .filter((row) => Number(row?.amount) > 0)
+      .map((row) => String(row.protocol || row.label || '').trim() + ' ' + fmtUSD(Number(row.amount)));
+    return rows.length ? rows.join(' · ') : 'no source breakdown';
+  }
+
+  function renderEconomicsLegend(data) {
+    const values = {
+      m0: Number(data?.m0?.value),
+      m1: Number(data?.m1?.value),
+    };
+    const m0Value = document.getElementById('economicsLegendM0');
+    const m1Value = document.getElementById('economicsLegendM1');
+    if (m0Value) m0Value.textContent = Number.isFinite(values.m0) ? fmtUSDCompact(values.m0) : '$ —';
+    if (m1Value) m1Value.textContent = Number.isFinite(values.m1) ? fmtUSDCompact(values.m1) : '$ —';
+    document.querySelectorAll('[data-economics-series]').forEach((button) => {
+      const key = button.dataset.economicsSeries;
+      const active = economicsState.visible[key] !== false;
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
+  function bindEconomicsLegend() {
+    document.querySelectorAll('[data-economics-series]').forEach((button) => {
+      if (button.__economicsLegendBound) return;
+      button.__economicsLegendBound = true;
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const key = button.dataset.economicsSeries;
+        if (!key || !(key in economicsState.visible)) return;
+        const visibleKeys = Object.entries(economicsState.visible).filter(([, visible]) => visible).map(([seriesKey]) => seriesKey);
+        if (economicsState.visible[key] && visibleKeys.length <= 1) return;
+        economicsState.visible[key] = !economicsState.visible[key];
+        hideEconomicsChartTooltip(false);
+        renderEconomicsLegend(economicsState.data);
+        renderEconomicsPanel();
+      });
+    });
+  }
+
+  function updateEconomicsKpis(data) {
+    const m0 = Number(data?.m0?.value);
+    const m1 = Number(data?.m1?.value);
+    const deposits = Number(data?.lending?.demandDeposits?.total);
+    setCategoryPrimarySource('kpi-economics', 'm1', Number.isFinite(m1) ? fmtUSDFit(m1) : null, 'M1');
+    setCategoryPrimarySource('kpi-economics', 'm0', Number.isFinite(m0) ? fmtUSDFit(m0) : null, 'M0');
+    setCategoryPrimarySource('kpi-economics', 'deposits', Number.isFinite(deposits) ? fmtUSDFit(deposits) : null, 'Deposit Claims');
+    const m0El = document.getElementById('kpi-economics-m0');
+    const m1El = document.getElementById('kpi-economics-m1');
+    const m0CurrentEl = document.getElementById('economicsM0Current');
+    const m1CurrentEl = document.getElementById('economicsM1Current');
+    if (m0El) m0El.textContent = Number.isFinite(m0) ? fmtUSDFit(m0) : '$ —';
+    if (m1El) m1El.textContent = Number.isFinite(m1) ? fmtUSDFit(m1) : '$ —';
+    if (m0CurrentEl) m0CurrentEl.textContent = Number.isFinite(m0) ? fmtUSDFit(m0) : '$ —';
+    if (m1CurrentEl) m1CurrentEl.textContent = Number.isFinite(m1) ? fmtUSDFit(m1) : '$ —';
+    renderEconomicsLegend(data);
+    markReady('kpi-economics');
+  }
+
+  function renderEconomicsPanel() {
+    const data = economicsState.data;
+    const note = document.getElementById('economicsHistoryNote');
+    if (!data) {
+      if (note) note.textContent = economicsState.note;
+      if (!economicsState.loading) {
+        markReady('panel-economics');
+      }
+      return;
+    }
+    const history = economicsState.history || economicsFallbackHistory(data);
+    if (history) {
+      syncEconomicsRangeControls(history);
+      makeEconomicsHistoryChart('economicsHistoryChart', economicsHistoryWindow(history));
+    }
+    const supply = Number(data.usdm?.supply);
+    const vaults = Number(data.lending?.vaultUsdm?.total);
+    const m0 = Number(data.m0?.value);
+    const m1 = Number(data.m1?.value);
+    const deposits = Number(data.lending?.demandDeposits?.total);
+    if (note) {
+      const historySource = economicsState.history?.source === 'blockscout'
+        ? 'History reconstructed from Blockscout transfer logs and pinned to the latest snapshot.'
+        : economicsState.historyLoading
+        ? 'Building full Blockscout history; showing the current snapshot while it loads.'
+        : 'Showing current snapshot because full history is unavailable right now.';
+      note.textContent = historySource + ' M0 = ' + fmtUSD(supply) + ' tokenized USDM - ' + fmtUSD(vaults) + ' lending vault reserves = ' + fmtUSD(m0) + '. M1 = M0 + ' + fmtUSD(deposits) + ' deposit claims = ' + fmtUSD(m1) + '. Vaults: ' + economicsSourcesText(data.lending?.vaultUsdm?.sources) + '.';
+    }
+    markReady('panel-economics');
+  }
+
+  async function hydrateEconomicsHistory(data) {
+    economicsState.historyLoading = true;
+    renderEconomicsPanel();
+    try {
+      const history = await buildEconomicsHistoryModel(data);
+      economicsState.history = history || economicsFallbackHistory(data);
+      economicsState.historyLoading = false;
+      renderEconomicsPanel();
+    } catch (e) {
+      console.warn('Economics history build failed:', e);
+      economicsState.history = economicsFallbackHistory(data);
+      economicsState.historyLoading = false;
+      renderEconomicsPanel();
+    }
+  }
+
+  async function loadEconomicsData() {
+    bindEconomicsLegend();
+    bindEconomicsRangeControls();
+    economicsState.loading = true;
+    try {
+      const res = await fetch('data/economics-dashboard-data.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('economics data ' + res.status);
+      economicsState.data = await res.json();
+      economicsState.loading = false;
+      economicsState.history = economicsFallbackHistory(economicsState.data);
+      economicsState.note = 'Economics data ready.';
+      updateEconomicsKpis(economicsState.data);
+      renderEconomicsPanel();
+      hydrateEconomicsHistory(economicsState.data);
+    } catch (e) {
+      console.warn('Economics data load failed:', e);
+      economicsState.data = null;
+      economicsState.history = null;
+      economicsState.loading = false;
+      economicsState.historyLoading = false;
+      economicsState.note = 'Economics data unavailable right now.';
+      updateEconomicsKpis(null);
+      renderEconomicsPanel();
+    }
+  }
+
   function renderTable(rows) {
     const body = document.getElementById('txBody');
     if (!rows.length) {
@@ -7146,6 +8128,7 @@
     // all run concurrently. Then hide the loader as soon as the *fastest*
     // useful source returns — the page becomes interactive even while
     // slower historical series are still loading.
+    loadEconomicsData();
     const pTvl       = fetchUSDmTVL();
     const pEthPrice  = fetchEthPrice();
     const pHistory   = fetchUSDmHistory();
@@ -8794,47 +9777,13 @@
     ];
   }
 
-  function tapTradingUserSnapshot(data) {
-    const snapshot = data?.users?.last24h;
-    const users = Number(snapshot?.users);
-    if (!Number.isFinite(users) || users < 0) return null;
-    return {
-      ...snapshot,
-      users,
-      timeframe: snapshot.timeframe || '24h',
-      source: snapshot.source || 'Live source',
-    };
-  }
-
   function tapTradingUserChartPoints(data, openUtcDate) {
     const rawPoints = Array.isArray(data.users?.points) ? data.users.points : [];
-    const latestRawDate = rawPoints.reduce((latest, point) => String(point?.date || '') > latest ? String(point.date) : latest, '');
-    const effectiveOpenUtcDate = latestRawDate === openUtcDate ? openUtcDate : '';
-    const rows = euphoriaDailyPoints(rawPoints, 'users', { openUtcDate: effectiveOpenUtcDate });
-    const snapshot = tapTradingUserSnapshot(data);
-    if (!snapshot) return rows;
-    const fetchedMs = Date.parse(String(snapshot.fetchedAt || ''));
-    const dateKey = Number.isFinite(fetchedMs)
-      ? new Date(fetchedMs).toISOString().slice(0, 10)
-      : new Date().toISOString().slice(0, 10);
-    const timestamp = Number.isFinite(fetchedMs) ? fetchedMs : Date.parse(dateKey + 'T23:59:59.999Z');
-    return [
-      ...rows.filter((point) => point.label !== dateKey),
-      {
-        date: dateKey,
-        timestamp,
-        value: snapshot.users,
-        users: snapshot.users,
-        label: dateKey,
-        timeframe: snapshot.timeframe,
-        isLast24h: true,
-      },
-    ].sort((left, right) => left.timestamp - right.timestamp);
+    return euphoriaDailyPoints(rawPoints, 'users', { openUtcDate });
   }
 
   function tapTradingUserTooltipTitle(point) {
     if (point.label === 'Anchor') return 'Previous day anchor';
-    if (point.isLast24h) return 'Today - last ' + (point.timeframe || '24h');
     return brixDateLabel(point.timestamp);
   }
 
@@ -8913,7 +9862,7 @@
         'gain-whale': '#7C2A52',
       },
       volumeCopy: 'USDM routed through Euphoria by closed UTC day. The open day appears only after the next refresh.',
-      usersCopy: 'Unique wallets from the latest closed UTC day. The open day is held back until the next refresh.',
+      usersCopy: 'Unique transaction callers from the latest closed UTC day. The open day is held back until the next refresh.',
       volumeNote: 'Volume excludes the Euphoria pool and the daily KPIs hold back the open UTC day until it closes.',
       outcomeNote: 'Pool flows are excluded from wallet outcome calculations.',
       distributionNote: 'Outcome ranges are computed from wallet payouts minus wallet stakes, excluding pool flows.',
@@ -8960,7 +9909,6 @@
   const userPoints = tapTradingUserChartPoints(data, openUtcDate);
   const latestVolumePoint = volumePoints.at(-1) || { value: 0, transferCount: 0, label: '' };
   const latestUserPoint = userPoints.at(-1) || { value: 0, label: '' };
-  const userSnapshot = tapTradingUserSnapshot(data);
   const latestDailyTransfers = Number(latestVolumePoint.txCount || latestVolumePoint.transferCount || 0);
   const dailyVolume = Number(latestVolumePoint.value || 0);
     const walletCount = Number(players.total || 0);
@@ -8968,11 +9916,12 @@
     const notProfitable = Number(players.notProfitable || 0);
     const profitablePct = Number(players.profitablePct || 0);
     const displayedUsers = Number(latestUserPoint.value || 0);
-    const usersHeading = latestUserPoint.isLast24h ? (latestUserPoint.timeframe || '24h').toUpperCase() + ' Users' : 'Daily Users';
-    const usersCopy = userSnapshot?.label || config.usersCopy;
-    const usersSourceNote = userSnapshot
-      ? escapeHTML(userSnapshot.source) + ' · ' + escapeHTML(userSnapshot.timeframe) + ' snapshot fetched ' + escapeHTML(appDataTimestamp(userSnapshot.fetchedAt) || 'recently') + '. The line keeps the closed UTC transfer-wallet history for continuity.'
-      : 'Daily users count unique wallets from the latest closed UTC day; the first tracked day uses a zero anchor for a readable line.';
+    const usersHeading = 'Previous Day Users';
+    const usersCopy = config.usersCopy;
+    const latestUserDate = latestUserPoint.label && latestUserPoint.label !== 'Anchor' ? latestUserPoint.label : '';
+    const usersSourceNote = latestUserDate
+      ? 'Closed UTC day ' + escapeHTML(latestUserDate) + '. Daily users only show completed UTC days; live 24h snapshots and the open day are held back.'
+      : 'Daily users only show completed UTC days; live 24h snapshots and the open day are held back.';
     const feePoints = appId === 'hitone'
       ? euphoriaDailyPoints(data.fees?.points, 'totalFeeUsdm', { openUtcDate })
       : [];
@@ -9244,6 +10193,11 @@
       desc: 'Forecast scenarios, live chain rank, and chain P/E stacked in one view.',
       panels: ['opium', 'chainrev', 'pe'],
     },
+    economics: {
+      title: 'ECONOMICS',
+      desc: 'M0 and M1 monetary views for USDM on MegaETH.',
+      panels: ['economics'],
+    },
   };
   const CATEGORY_CARD_CHART_TARGETS = {
     usdm: {
@@ -9266,6 +10220,10 @@
       forecast: '[data-panel="opium"]',
       rank: '[data-panel="chainrev"]',
       pe: '[data-panel="pe"]',
+    },
+    economics: {
+      m0: '#m0-card',
+      m1: '#m1-card',
     },
   };
   let activeCategory = 'usdm';
@@ -9298,6 +10256,10 @@
       }
       if (panelKey === 'mega-pe') {
         renderMegaPeHistoryPanel();
+        return;
+      }
+      if (panelKey === 'economics') {
+        renderEconomicsPanel();
         return;
       }
       renderPanel(panelKey);

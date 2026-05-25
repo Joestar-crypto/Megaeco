@@ -8,6 +8,7 @@ const BRIX_TOKENS_FILE = path.join(DATA_DIR, 'brix-tokens.json');
 const EUPHORIA_FILE = path.join(DATA_DIR, 'euphoria-dashboard-data.json');
 const HITONE_FILE = path.join(DATA_DIR, 'hitone-dashboard-data.json');
 const WORLD_FILE = path.join(DATA_DIR, 'world-markets-dashboard-data.json');
+const ECONOMICS_FILE = path.join(DATA_DIR, 'economics-dashboard-data.json');
 
 const USER_AGENT = 'MegaFees App Data Refresh/1.0';
 const DEFAULT_TIMEOUT_MS = 45000;
@@ -23,6 +24,10 @@ const HITONE_LAUNCH_DATE = '2026-02-13';
 const HITONE_FEE_REPORT_START_DATE = '2026-05-01';
 
 const WORLD_EXCHANGE = '0x5e3ae52eba0f9740364bd5dd39738e1336086a8b';
+const AAVE_V3_MEGAETH_POOL = '0x7e324abc5de01d112afc03a584966ff199741c28';
+const AAVE_V3_MEGAETH_DATA_PROVIDER = '0x9588b453a4ee24a420830cb3302195ca7aa3b403';
+const AAVE_USDM_A_TOKEN = '0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500';
+const AAVE_USDM_VARIABLE_DEBT = '0x6b408d6c479c304794abc60a4693a3ad2d3c2d0d';
 
 const ERC20_TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
 
@@ -54,6 +59,7 @@ const TAP_TRADING_APPS = {
     excludedCounterparties: [EUPHORIA_POOL],
     bandColors: EUPHORIA_BAND_COLORS,
     sinceLaunchMode: 'points',
+    dailyUserMode: 'transaction-callers',
     userSnapshot: {
       type: 'miniblocks',
       dappId: 40,
@@ -61,7 +67,7 @@ const TAP_TRADING_APPS = {
       sourceUrl: 'https://miniblocks.io/dapps/euphoria',
       label: 'Unique transaction callers over the last 24h from MiniBlocks.',
     },
-    methodology: 'Daily snapshots use MegaETH USDM Transfer logs involving the Euphoria contract. Player volume and PnL exclude the Euphoria pool, while raw transfer counts keep every USDM transfer touching the contract. Since-live totals start from the official 2026-05-14 UTC launch window.',
+    methodology: 'Daily volume and PnL snapshots use MegaETH USDM Transfer logs involving the Euphoria contract. Player volume and PnL exclude the Euphoria pool, while raw transfer counts keep every USDM transfer touching the contract. Daily users count unique transaction callers to the Euphoria contract. Since-live totals start from the official 2026-05-14 UTC launch window.',
   },
   hitone: {
     name: 'HitOne',
@@ -326,6 +332,16 @@ async function fetchBlockscoutJson(pathname, searchParams) {
   return fetchJson(url.toString());
 }
 
+async function fetchBlockscoutLegacyJson(searchParams) {
+  const url = new URL('https://megaeth.blockscout.com/api');
+  for (const [key, value] of Object.entries(searchParams || {})) {
+    if (value !== undefined && value !== null && value !== '') {
+      url.searchParams.set(key, String(value));
+    }
+  }
+  return fetchJson(url.toString());
+}
+
 async function fetchAllBlockscoutPages(pathname, searchParams) {
   const items = [];
   let nextParams = { ...(searchParams || {}) };
@@ -436,6 +452,44 @@ async function fetchTapTradingUserSnapshot(config) {
   }
 
   return null;
+}
+
+async function fetchDailyContractCallers(address, fromBlock, toBlock, fromTimestamp, toTimestamp) {
+  const contract = normalizeAddress(address);
+  const callers = new Set();
+  let currentBlock = fromBlock;
+  const maxPages = 120;
+
+  for (let page = 0; page < maxPages && currentBlock <= toBlock; page += 1) {
+    const payload = await fetchBlockscoutLegacyJson({
+      module: 'account',
+      action: 'txlist',
+      address,
+      startblock: currentBlock,
+      endblock: toBlock,
+      page: 1,
+      offset: 10000,
+      sort: 'asc',
+    });
+    const rows = Array.isArray(payload?.result) ? payload.result : [];
+    if (!rows.length) break;
+
+    for (const row of rows) {
+      const timestamp = safeNumber(row.timeStamp);
+      if (timestamp < fromTimestamp || timestamp >= toTimestamp) continue;
+      if (normalizeAddress(row.to) !== contract) continue;
+      const caller = normalizeAddress(row.from);
+      if (caller) callers.add(caller);
+    }
+
+    const lastBlock = safeNumber(rows.at(-1)?.blockNumber);
+    if (!lastBlock || lastBlock < currentBlock) break;
+    currentBlock = lastBlock + 1;
+    if (rows.length < 10000) break;
+    await sleep(120);
+  }
+
+  return callers.size;
 }
 
 async function fetchAllTokenHolders(address) {
@@ -594,12 +648,16 @@ async function processTapTradingDay(config, dateString, latestKnownBlock) {
     }
   }
 
+  const dailyUsers = config.dailyUserMode === 'transaction-callers'
+    ? await fetchDailyContractCallers(config.contract, fromBlock, toBlock, fromTimestamp, nextDayTimestamp)
+    : users.size;
+
   return {
     date: dateString,
     txCount: txHashes.size,
     transferCount: merged.length,
     volumeUsdm: round(volumeUsdm, 6),
-    users: users.size,
+    users: dailyUsers,
     excludedCollateralInUsdm: round(excludedCollateralInUsdm, 6),
     excludedPayoutOutUsdm: round(excludedPayoutOutUsdm, 6),
     deltas: Array.from(deltas.entries()).map(([address, totals]) => ({
@@ -1198,6 +1256,182 @@ function scaleWorldVolumeShape(currentVolume, nextFees24h, latestBlock) {
   };
 }
 
+function tokenSupplyFromBlockscout(token, fallbackDecimals = 18) {
+  const decimals = safeNumber(token?.decimals, fallbackDecimals);
+  return unitsToNumber(token?.total_supply || 0, decimals);
+}
+
+function findTokenBalanceAmount(balanceRows, tokenAddress, fallbackDecimals = 18) {
+  const target = normalizeAddress(tokenAddress);
+  const row = (Array.isArray(balanceRows) ? balanceRows : [])
+    .find((entry) => normalizeAddress(entry?.token?.address_hash) === target);
+  if (!row) return null;
+  const decimals = safeNumber(row?.token?.decimals, fallbackDecimals);
+  const amount = unitsToNumber(row.value || 0, decimals);
+  return Number.isFinite(amount) ? amount : null;
+}
+
+async function fetchTokenBalanceAmount(holderAddress, tokenAddress, fallback = null) {
+  try {
+    const rows = await fetchBlockscoutAddressTokenBalances(holderAddress);
+    const amount = findTokenBalanceAmount(rows, tokenAddress);
+    return Number.isFinite(amount) ? amount : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+async function fetchWorldUsdmLendingSources(worldData = {}) {
+  const sources = [];
+  const orderbooks = (worldData.lending?.lendOrderbooks || [])
+    .filter((orderbook) => String(orderbook?.token || '').toUpperCase() === 'USDM' && orderbook.address);
+
+  for (const orderbook of orderbooks) {
+    const amount = await fetchTokenBalanceAmount(orderbook.address, USDM_TOKEN, null);
+    if (Number.isFinite(amount) && amount > 0) {
+      sources.push({
+        protocol: 'World Markets',
+        label: 'USDM lending orderbook live balance',
+        amount: round(amount, 6),
+        address: orderbook.address,
+        underlying: USDM_TOKEN,
+      });
+    }
+  }
+
+  if (!sources.length) {
+    const fallbackAmount = safeNumber((worldData.lending?.tokens || []).find((row) => row.symbol === 'USDM')?.amount);
+    const fallbackOrderbook = orderbooks[0]?.address;
+    if (fallbackAmount > 0) {
+      sources.push({
+        protocol: 'World Markets',
+        label: 'USDM lending orderbook snapshot',
+        amount: round(fallbackAmount, 6),
+        address: fallbackOrderbook,
+        underlying: USDM_TOKEN,
+      });
+    }
+  }
+
+  return sources;
+}
+
+async function updateEconomicsData(current = {}, worldData = {}) {
+  const nowIso = new Date().toISOString();
+  const today = currentDateString();
+  const [usdmToken, aaveAToken, aaveDebtToken] = await Promise.all([
+    fetchBlockscoutToken(USDM_TOKEN),
+    fetchBlockscoutToken(AAVE_USDM_A_TOKEN),
+    fetchBlockscoutToken(AAVE_USDM_VARIABLE_DEBT),
+  ]);
+
+  const usdmSupply = tokenSupplyFromBlockscout(usdmToken, 18);
+  const aaveDeposits = tokenSupplyFromBlockscout(aaveAToken, 18);
+  const aaveDebt = tokenSupplyFromBlockscout(aaveDebtToken, 18);
+  const aaveReserveFallback = safeNumber(current.lending?.aave?.usdmAToken?.underlyingUsdmReserve, null);
+  const aaveReserve = await fetchTokenBalanceAmount(AAVE_USDM_A_TOKEN, USDM_TOKEN, aaveReserveFallback);
+  const worldSources = await fetchWorldUsdmLendingSources(worldData);
+
+  const aaveVaultSource = {
+    protocol: 'Aave V3',
+    label: 'USDM reserve in aMegUSDm contract',
+    amount: round(aaveReserve, 6),
+    address: AAVE_USDM_A_TOKEN,
+    underlying: USDM_TOKEN,
+  };
+  const vaultSources = [aaveVaultSource, ...worldSources]
+    .filter((source) => Number.isFinite(source.amount) && source.amount > 0);
+  const worldDemandSources = worldSources.map((source) => ({
+    ...source,
+    label: 'USDM lending deposits',
+  }));
+  const aaveDemandSource = {
+    protocol: 'Aave V3',
+    label: 'aMegUSDm total supply',
+    amount: round(aaveDeposits, 6),
+    address: AAVE_USDM_A_TOKEN,
+  };
+  const demandSources = [aaveDemandSource, ...worldDemandSources]
+    .filter((source) => Number.isFinite(source.amount) && source.amount > 0);
+
+  const vaultUsdmTotal = round(sum(vaultSources.map((source) => source.amount)), 6);
+  const demandDepositsTotal = round(sum(demandSources.map((source) => source.amount)), 6);
+  const m0 = round(usdmSupply - vaultUsdmTotal, 6);
+  const m1 = round(m0 + demandDepositsTotal, 6);
+  const timestamp = dayEndTimestamp(today);
+  const m0Points = keepLast(upsertTimestampPoint(current.m0?.points || [], { timestamp, value: m0 }), 90);
+  const m1Points = keepLast(upsertTimestampPoint(current.m1?.points || [], { timestamp, value: m1 }), 90);
+  const worldAmount = round(sum(worldSources.map((source) => source.amount)), 6);
+
+  return {
+    asOf: nowIso,
+    source: 'MegaETH Blockscout token snapshots, Aave address book, and World Markets lending snapshot.',
+    methodology: {
+      m0: 'M0 = total tokenized USDM supply minus USDM held in tracked lending vaults and reserves. DEX and spot balances stay inside M0.',
+      m1: 'M1 = M0 plus USDM-denominated demand-deposit claims on tracked lending protocols, including Aave aMegUSDm and World Markets USDM lending deposits.',
+    },
+    usdm: {
+      symbol: usdmToken?.symbol || 'USDM',
+      address: USDM_TOKEN,
+      supply: round(usdmSupply, 6),
+      priceUsd: round(safeNumber(usdmToken?.exchange_rate), 12),
+      source: `Blockscout /api/v2/tokens/${USDM_TOKEN}`,
+    },
+    m0: {
+      value: m0,
+      points: m0Points,
+      components: [
+        { label: 'Tokenized USDM supply', value: round(usdmSupply, 6), role: 'supply', color: '#FF8AA8' },
+        { label: 'Aave USDM reserve', value: -round(aaveReserve, 6), role: 'subtract', color: '#C586FF', address: AAVE_USDM_A_TOKEN },
+        { label: 'World Markets lending', value: -worldAmount, role: 'subtract', color: '#7EAAD4', address: worldSources[0]?.address },
+        { label: 'M0', value: m0, role: 'result', color: '#90D79F' },
+      ].filter((component) => component.role !== 'subtract' || Math.abs(component.value) > 0),
+    },
+    m1: {
+      value: m1,
+      points: m1Points,
+      components: [
+        { label: 'M0', value: m0, role: 'base', color: '#90D79F' },
+        { label: 'Aave aMegUSDm deposits', value: round(aaveDeposits, 6), role: 'deposit', color: '#C586FF', address: AAVE_USDM_A_TOKEN },
+        { label: 'World Markets USDM deposits', value: worldAmount, role: 'deposit', color: '#7EAAD4', address: worldSources[0]?.address },
+        { label: 'M1', value: m1, role: 'result', color: '#F5AF94' },
+      ].filter((component) => component.role !== 'deposit' || component.value > 0),
+    },
+    lending: {
+      vaultUsdm: {
+        total: vaultUsdmTotal,
+        sources: vaultSources,
+      },
+      demandDeposits: {
+        total: demandDepositsTotal,
+        sources: demandSources,
+      },
+      aave: {
+        pool: AAVE_V3_MEGAETH_POOL,
+        dataProvider: AAVE_V3_MEGAETH_DATA_PROVIDER,
+        addressBook: 'https://github.com/bgd-labs/aave-address-book/blob/main/src/AaveV3MegaEth.sol',
+        usdmAToken: {
+          symbol: aaveAToken?.symbol || 'aMegUSDm',
+          address: AAVE_USDM_A_TOKEN,
+          totalSupply: round(aaveDeposits, 6),
+          underlyingUsdmReserve: round(aaveReserve, 6),
+        },
+        usdmVariableDebt: {
+          symbol: aaveDebtToken?.symbol || 'variableDebtMegUSDm',
+          address: AAVE_USDM_VARIABLE_DEBT,
+          totalSupply: round(aaveDebt, 6),
+        },
+      },
+      excluded: [
+        {
+          protocol: 'Quantus Lend',
+          reason: 'DefiLlama MegaETH TVL is WETH/ETH only and no USDM-denominated demand deposits were detected.',
+        },
+      ],
+    },
+  };
+}
+
 async function updateWorldMarketsData(current) {
   const nowIso = new Date().toISOString();
   const today = currentDateString();
@@ -1360,6 +1594,20 @@ async function main() {
         return worldCurrent;
       });
       writes.push([WORLD_FILE, nextWorld]);
+    })());
+  }
+
+  if (shouldRefresh('economics')) {
+    updates.push((async () => {
+      const [economicsCurrent, worldCurrent] = await Promise.all([
+        readJson(ECONOMICS_FILE),
+        readJson(WORLD_FILE),
+      ]);
+      const nextEconomics = await updateEconomicsData(economicsCurrent, worldCurrent).catch((error) => {
+        console.warn('[refresh] Economics update failed, keeping previous snapshot:', error.message);
+        return economicsCurrent;
+      });
+      writes.push([ECONOMICS_FILE, nextEconomics]);
     })());
   }
 

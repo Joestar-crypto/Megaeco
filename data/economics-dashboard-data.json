@@ -1,0 +1,149 @@
+{
+  "asOf": "2026-05-25T13:24:50.000Z",
+  "source": "MegaETH Blockscout token snapshots, Aave address book, and World Markets lending snapshot.",
+  "methodology": {
+    "m0": "M0 = total tokenized USDM supply minus USDM held in tracked lending vaults and reserves. DEX and spot balances stay inside M0.",
+    "m1": "M1 = M0 plus USDM-denominated demand-deposit claims on tracked lending protocols, including Aave aMegUSDm and World Markets USDM lending deposits."
+  },
+  "usdm": {
+    "symbol": "USDM",
+    "address": "0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7",
+    "supply": 236580195.094433,
+    "priceUsd": 1.001,
+    "source": "Blockscout /api/v2/tokens/0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7"
+  },
+  "m0": {
+    "value": 40239020.756949,
+    "points": [
+      {
+        "timestamp": 1779715490000,
+        "value": 40239020.756949
+      }
+    ],
+    "components": [
+      {
+        "label": "Tokenized USDM supply",
+        "value": 236580195.094433,
+        "role": "supply",
+        "color": "#FF8AA8"
+      },
+      {
+        "label": "Aave USDM reserve",
+        "value": -195775574.337484,
+        "role": "subtract",
+        "color": "#C586FF",
+        "address": "0x5dF82810CB4B8f3e0Da3c031cCc9208ee9cF9500"
+      },
+      {
+        "label": "World Markets lending",
+        "value": -565600,
+        "role": "subtract",
+        "color": "#7EAAD4",
+        "address": "0x2b654f4a35394739c66a8c790324c8e829d9bf6e"
+      },
+      {
+        "label": "M0",
+        "value": 40239020.756949,
+        "role": "result",
+        "color": "#90D79F"
+      }
+    ]
+  },
+  "m1": {
+    "value": 638949951.793717,
+    "points": [
+      {
+        "timestamp": 1779715490000,
+        "value": 638949951.793717
+      }
+    ],
+    "components": [
+      {
+        "label": "M0",
+        "value": 40239020.756949,
+        "role": "base",
+        "color": "#90D79F"
+      },
+      {
+        "label": "Aave aMegUSDm deposits",
+        "value": 598145331.036768,
+        "role": "deposit",
+        "color": "#C586FF",
+        "address": "0x5dF82810CB4B8f3e0Da3c031cCc9208ee9cF9500"
+      },
+      {
+        "label": "World Markets USDM deposits",
+        "value": 565600,
+        "role": "deposit",
+        "color": "#7EAAD4",
+        "address": "0x2b654f4a35394739c66a8c790324c8e829d9bf6e"
+      },
+      {
+        "label": "M1",
+        "value": 638949951.793717,
+        "role": "result",
+        "color": "#F5AF94"
+      }
+    ]
+  },
+  "lending": {
+    "vaultUsdm": {
+      "total": 196341174.337484,
+      "sources": [
+        {
+          "protocol": "Aave V3",
+          "label": "USDM reserve in aMegUSDm contract",
+          "amount": 195775574.337484,
+          "address": "0x5dF82810CB4B8f3e0Da3c031cCc9208ee9cF9500",
+          "underlying": "0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7"
+        },
+        {
+          "protocol": "World Markets",
+          "label": "USDM lending orderbook snapshot",
+          "amount": 565600,
+          "address": "0x2b654f4a35394739c66a8c790324c8e829d9bf6e",
+          "underlying": "0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7"
+        }
+      ]
+    },
+    "demandDeposits": {
+      "total": 598710931.036768,
+      "sources": [
+        {
+          "protocol": "Aave V3",
+          "label": "aMegUSDm total supply",
+          "amount": 598145331.036768,
+          "address": "0x5dF82810CB4B8f3e0Da3c031cCc9208ee9cF9500"
+        },
+        {
+          "protocol": "World Markets",
+          "label": "USDM lending deposits",
+          "amount": 565600,
+          "address": "0x2b654f4a35394739c66a8c790324c8e829d9bf6e"
+        }
+      ]
+    },
+    "aave": {
+      "pool": "0x7e324AbC5De01d112AfC03a584966ff199741C28",
+      "dataProvider": "0x9588b453A4EE24a420830CB3302195cA7aA3b403",
+      "addressBook": "https://github.com/bgd-labs/aave-address-book/blob/main/src/AaveV3MegaEth.sol",
+      "usdmAToken": {
+        "symbol": "aMegUSDm",
+        "address": "0x5dF82810CB4B8f3e0Da3c031cCc9208ee9cF9500",
+        "totalSupply": 598145331.036768,
+        "underlyingUsdmReserve": 195775574.337484
+      },
+      "usdmVariableDebt": {
+        "symbol": "variableDebtMegUSDm",
+        "address": "0x6B408d6c479C304794abC60a4693A3AD2D3c2D0D",
+        "totalSupply": 402385328.082914
+      }
+    },
+    "excluded": [
+      {
+        "protocol": "Quantus Lend",
+        "reason": "DefiLlama MegaETH TVL is WETH/ETH only and no USDM-denominated demand deposits were detected."
+      }
+    ]
+  }
+}
