@@ -1204,6 +1204,29 @@
     opacity: 0.7;
     text-align: left;
   }
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .footer-link {
+    border: 1px solid var(--border-strong);
+    color: var(--green);
+    padding: 7px 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    text-transform: uppercase;
+    background: rgba(144,215,159,0.05);
+  }
+  .footer-link:hover,
+  .footer-link:focus-visible {
+    border-color: var(--green);
+    color: var(--text);
+    outline: none;
+  }
 
   /* Loading */
   .skeleton {
@@ -4081,10 +4104,13 @@
   <footer>
     <div class="footer-inner">
       <div class="footer-data">Data: CoinGecko (USDm market cap, ETH price, chain token market caps for P/E) · DefiLlama (chain fees fallback + stables) · growthepie (network-fee/stables fallback) · MegaETH Blockscout stats-service / token APIs (network fees, live token supply, MEGA holders history, MegaStaking MEGA balance, economics reserves) · Aave address book</div>
-      <a class="hero-overlay__credit" href="https://x.com/JoestarCrypto" target="_blank" rel="noreferrer noopener">
-        <span class="hero-overlay__credit-label">Made by Joestar</span>
-        <span class="hero-overlay__credit-avatar"><img src="logos/Jojo2.jpg" alt="" /></span>
-      </a>
+      <div class="footer-links">
+        <a class="footer-link" href="api/">API</a>
+        <a class="hero-overlay__credit" href="https://x.com/JoestarCrypto" target="_blank" rel="noreferrer noopener">
+          <span class="hero-overlay__credit-label">Made by Joestar</span>
+          <span class="hero-overlay__credit-avatar"><img src="logos/Jojo2.jpg" alt="" /></span>
+        </a>
+      </div>
     </div>
   </footer>
 </div>
