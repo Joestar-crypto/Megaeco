@@ -1,0 +1,88 @@
+{
+  "apiVersion": "1.0",
+  "name": "MegaFees Dashboard API",
+  "description": "Static JSON snapshots behind the MegaFees dashboard. No auth is required.",
+  "generatedAt": "2026-05-28T23:59:59.999Z",
+  "documentation": "/api/",
+  "openapi": "/api/v1/openapi.json",
+  "baseUrl": "https://megafees.com/api/v1",
+  "cache": "Snapshots are refreshed by the dashboard data workflow. Use cache: no-store when freshness matters.",
+  "cors": "The repository includes _headers rules for Access-Control-Allow-Origin: * on static hosts that support them.",
+  "endpoints": [
+    {
+      "id": "dashboard",
+      "method": "GET",
+      "title": "Complete dashboard data",
+      "description": "All public MegaFees dashboard datasets in one response.",
+      "path": "/api/v1/dashboard.json",
+      "updatedAt": "2026-05-28T23:59:59.999Z"
+    },
+    {
+      "id": "network.economics",
+      "method": "GET",
+      "title": "Network economics",
+      "description": "USDM supply, M0, M1, lending vault reserves, and demand-deposit components.",
+      "path": "/api/v1/economics.json",
+      "sourcePath": "/data/economics-dashboard-data.json",
+      "updatedAt": "2026-05-28T01:11:31.714Z"
+    },
+    {
+      "id": "network.megaHoldersHistory",
+      "method": "GET",
+      "title": "MEGA holders history",
+      "description": "Historical MEGA holder counts and holder-size buckets.",
+      "path": "/api/v1/mega-holders-history.json",
+      "sourcePath": "/data/mega-holders-history.json",
+      "updatedAt": null
+    },
+    {
+      "id": "apps.brix",
+      "method": "GET",
+      "title": "Brix dashboard",
+      "description": "Brix app dashboard metrics, prices, market-cap series, and summaries.",
+      "path": "/api/v1/apps/brix.json",
+      "sourcePath": "/data/brix-dashboard-data.json",
+      "updatedAt": "2026-05-28T23:59:59.999Z"
+    },
+    {
+      "id": "apps.brixTokens",
+      "method": "GET",
+      "title": "Brix token snapshots",
+      "description": "Brix-related token contracts, holders, supply, and transfer snapshots.",
+      "path": "/api/v1/apps/brix-tokens.json",
+      "sourcePath": "/data/brix-tokens.json",
+      "updatedAt": "2026-05-12T08:29:04.000Z"
+    },
+    {
+      "id": "apps.worldMarkets",
+      "method": "GET",
+      "title": "World Markets dashboard",
+      "description": "World Markets spot TVL, exchange balances, lending, fees, and source metadata.",
+      "path": "/api/v1/apps/world-markets.json",
+      "sourcePath": "/data/world-markets-dashboard-data.json",
+      "updatedAt": "2026-05-28T01:11:31.710Z"
+    },
+    {
+      "id": "apps.euphoria",
+      "method": "GET",
+      "title": "Euphoria dashboard",
+      "description": "Euphoria transaction, transfer, volume, user, fee, and PnL snapshots.",
+      "path": "/api/v1/apps/euphoria.json",
+      "sourcePath": "/data/euphoria-dashboard-data.json",
+      "updatedAt": "2026-05-28T01:11:56.131Z"
+    },
+    {
+      "id": "apps.hitone",
+      "method": "GET",
+      "title": "HitOne dashboard",
+      "description": "HitOne transaction, transfer, volume, user, fee, and PnL snapshots.",
+      "path": "/api/v1/apps/hitone.json",
+      "sourcePath": "/data/hitone-dashboard-data.json",
+      "updatedAt": "2026-05-28T01:11:48.818Z"
+    }
+  ],
+  "examples": {
+    "completeDashboard": "const dashboard = await fetch('https://megafees.com/api/v1/dashboard.json').then((res) => res.json());",
+    "singleDataset": "const economics = await fetch('https://megafees.com/api/v1/economics.json').then((res) => res.json());"
+  }
+}

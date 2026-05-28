@@ -1,0 +1,193 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MegaFees Dashboard API",
+    "version": "1.0.0",
+    "description": "Static JSON API for the public MegaFees dashboard data."
+  },
+  "servers": [
+    {
+      "url": "https://megafees.com"
+    }
+  ],
+  "paths": {
+    "/api/v1/index.json": {
+      "get": {
+        "operationId": "getApiManifest",
+        "summary": "API manifest",
+        "responses": {
+          "200": {
+            "description": "Endpoint manifest and fetch examples.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard.json": {
+      "get": {
+        "operationId": "getDashboardData",
+        "summary": "Complete dashboard data",
+        "responses": {
+          "200": {
+            "description": "Combined MegaFees dashboard datasets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/economics.json": {
+      "get": {
+        "operationId": "getNetworkEconomics",
+        "summary": "Network economics",
+        "description": "USDM supply, M0, M1, lending vault reserves, and demand-deposit components.",
+        "responses": {
+          "200": {
+            "description": "USDM supply, M0, M1, lending vault reserves, and demand-deposit components.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/mega-holders-history.json": {
+      "get": {
+        "operationId": "getNetworkMegaHoldersHistory",
+        "summary": "MEGA holders history",
+        "description": "Historical MEGA holder counts and holder-size buckets.",
+        "responses": {
+          "200": {
+            "description": "Historical MEGA holder counts and holder-size buckets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/apps/brix.json": {
+      "get": {
+        "operationId": "getAppsBrix",
+        "summary": "Brix dashboard",
+        "description": "Brix app dashboard metrics, prices, market-cap series, and summaries.",
+        "responses": {
+          "200": {
+            "description": "Brix app dashboard metrics, prices, market-cap series, and summaries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/apps/brix-tokens.json": {
+      "get": {
+        "operationId": "getAppsBrixTokens",
+        "summary": "Brix token snapshots",
+        "description": "Brix-related token contracts, holders, supply, and transfer snapshots.",
+        "responses": {
+          "200": {
+            "description": "Brix-related token contracts, holders, supply, and transfer snapshots.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/apps/world-markets.json": {
+      "get": {
+        "operationId": "getAppsWorldMarkets",
+        "summary": "World Markets dashboard",
+        "description": "World Markets spot TVL, exchange balances, lending, fees, and source metadata.",
+        "responses": {
+          "200": {
+            "description": "World Markets spot TVL, exchange balances, lending, fees, and source metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/apps/euphoria.json": {
+      "get": {
+        "operationId": "getAppsEuphoria",
+        "summary": "Euphoria dashboard",
+        "description": "Euphoria transaction, transfer, volume, user, fee, and PnL snapshots.",
+        "responses": {
+          "200": {
+            "description": "Euphoria transaction, transfer, volume, user, fee, and PnL snapshots.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/apps/hitone.json": {
+      "get": {
+        "operationId": "getAppsHitone",
+        "summary": "HitOne dashboard",
+        "description": "HitOne transaction, transfer, volume, user, fee, and PnL snapshots.",
+        "responses": {
+          "200": {
+            "description": "HitOne transaction, transfer, volume, user, fee, and PnL snapshots.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
