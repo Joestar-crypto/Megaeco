@@ -1154,78 +1154,127 @@
     color: rgba(223,217,217,0.42);
   }
   .terminal-floating-checker {
-    position: fixed;
-    top: 112px;
-    right: 14px;
-    z-index: 9998;
-    width: min(360px, calc(100vw - 28px));
-    padding: 14px;
-    border: 1px solid rgba(144,215,159,0.48);
+    position: relative;
+    z-index: 20;
+    width: min(1180px, calc(100vw - 32px));
+    margin: 26px auto 0;
+    padding: 18px;
+    border: 1px solid rgba(144,215,159,0.52);
     background:
-      linear-gradient(180deg, rgba(30,30,32,0.96), rgba(25,25,26,0.92)),
-      radial-gradient(120% 90% at 100% 0%, rgba(144,215,159,0.20), transparent 58%);
-    box-shadow: 0 16px 42px rgba(0,0,0,0.44), 0 0 30px rgba(144,215,159,0.16);
-    backdrop-filter: blur(16px);
+      linear-gradient(135deg, rgba(30,30,32,0.98) 0%, rgba(25,25,26,0.96) 52%, rgba(23,27,30,0.98) 100%),
+      linear-gradient(90deg, rgba(144,215,159,0.16), rgba(126,170,212,0.10), rgba(245,175,148,0.12));
+    box-shadow: 0 18px 52px rgba(0,0,0,0.42), 0 0 34px rgba(144,215,159,0.12);
     font-family: var(--mono);
+    overflow: hidden;
   }
   .terminal-floating-checker::before,
   .terminal-floating-checker::after {
     content: '';
     position: absolute;
-    width: 14px;
-    height: 14px;
     pointer-events: none;
   }
   .terminal-floating-checker::before {
-    top: -1px;
-    left: -1px;
-    border-top: 1px solid var(--green);
-    border-left: 1px solid var(--green);
+    inset: 0;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: linear-gradient(90deg, rgba(144,215,159,0.08), rgba(126,170,212,0.04), rgba(245,175,148,0.07));
   }
   .terminal-floating-checker::after {
-    right: -1px;
-    bottom: -1px;
-    border-right: 1px solid var(--green);
-    border-bottom: 1px solid var(--green);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--blue), var(--peach));
+    box-shadow: 0 0 22px rgba(144,215,159,0.32);
+  }
+  .terminal-floating-layout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(430px, 1.1fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+  .terminal-floating-main,
+  .terminal-floating-panel {
+    min-width: 0;
+  }
+  .terminal-floating-main {
+    display: grid;
+    gap: 12px;
+    align-content: start;
   }
   .terminal-floating-head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 10px;
+  }
+  .terminal-floating-kicker {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    line-height: 1;
+    text-transform: uppercase;
   }
   .terminal-floating-title {
     color: var(--text);
     font-family: 'Oxanium', 'Helvetica Neue', system-ui, sans-serif;
-    font-size: 18px;
+    font-size: clamp(32px, 4.5vw, 58px);
     font-weight: 800;
-    letter-spacing: 0.08em;
-    line-height: 1;
+    letter-spacing: 0;
+    line-height: 0.92;
     text-transform: uppercase;
   }
   .terminal-floating-badge {
     flex-shrink: 0;
-    padding: 6px 9px;
+    padding: 9px 11px;
     border: 1px solid rgba(144,215,159,0.42);
     color: var(--green);
-    background: rgba(144,215,159,0.08);
-    font-size: 10px;
+    background: rgba(144,215,159,0.10);
+    box-shadow: inset 0 0 18px rgba(144,215,159,0.08), 0 0 18px rgba(144,215,159,0.08);
+    font-size: 14px;
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
   .terminal-floating-copy {
-    margin: 0 0 10px;
+    margin: 0;
     color: var(--muted);
-    font-size: 10px;
-    letter-spacing: 0.10em;
+    font-size: 11px;
+    letter-spacing: 0.12em;
     line-height: 1.45;
     text-transform: uppercase;
-    opacity: 0.78;
+    opacity: 0.82;
+  }
+  .terminal-floating-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .terminal-floating-meta span {
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.025);
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 0.10em;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+  .terminal-floating-meta strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text);
+    font-size: 14px;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
   }
   .terminal-theory-warning {
-    margin: 0 0 10px;
+    margin: 0;
     padding: 9px 10px;
     border: 1px solid rgba(245,175,148,0.52);
     background: rgba(245,175,148,0.10);
@@ -1237,23 +1286,32 @@
     line-height: 1.45;
     text-transform: uppercase;
   }
+  .terminal-floating-panel {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(12,12,13,0.28);
+  }
   .terminal-floating-input {
     display: block;
-    margin-bottom: 10px;
+    margin: 0;
     color: var(--muted);
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
   .terminal-floating-input input {
     width: 100%;
-    min-height: 44px;
-    margin-top: 7px;
+    min-height: 58px;
+    margin-top: 8px;
     border: 1px solid rgba(144,215,159,0.38);
-    background: rgba(25,25,26,0.92);
+    background: rgba(25,25,26,0.96);
     color: var(--text);
-    font: 800 20px var(--mono);
-    padding: 10px 12px;
+    font: 800 28px var(--mono);
+    letter-spacing: 0;
+    padding: 12px 14px;
     outline: none;
   }
   .terminal-floating-input input:focus {
@@ -1262,14 +1320,22 @@
   }
   .terminal-floating-results {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1.25fr 1fr 1fr;
     gap: 8px;
   }
   .terminal-floating-result {
     min-width: 0;
-    padding: 10px;
+    min-height: 88px;
+    padding: 12px;
     border: 1px solid rgba(255,255,255,0.08);
     background: rgba(255,255,255,0.026);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .terminal-floating-result.is-primary {
+    border-color: rgba(245,175,148,0.42);
+    background: rgba(245,175,148,0.08);
   }
   .terminal-floating-result span {
     display: block;
@@ -1281,18 +1347,22 @@
   }
   .terminal-floating-result strong {
     display: block;
-    margin-top: 7px;
     color: var(--green);
-    font-size: 16px;
+    font-size: clamp(20px, 2.25vw, 32px);
     line-height: 1;
     overflow-wrap: anywhere;
     font-variant-numeric: tabular-nums;
   }
+  .terminal-floating-result.is-primary strong {
+    color: var(--peach);
+    font-size: clamp(28px, 3.6vw, 48px);
+    text-shadow: 0 0 18px rgba(245,175,148,0.22);
+  }
   .terminal-floating-result strong.is-mega { color: var(--blue); }
   .terminal-floating-jump {
-    width: 100%;
-    margin-top: 10px;
-    min-height: 34px;
+    justify-self: end;
+    min-height: 36px;
+    padding: 0 14px;
     border: 1px solid rgba(126,170,212,0.46);
     background: rgba(126,170,212,0.08);
     color: var(--text);
@@ -1501,17 +1571,18 @@
   }
   @media (max-width: 820px) {
     .terminal-floating-checker {
-      top: auto;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      width: auto;
+      width: calc(100vw - 24px);
+      margin: 22px auto 0;
       padding: 12px;
     }
-    .terminal-floating-title { font-size: 15px; }
-    .terminal-floating-copy { display: none; }
+    .terminal-floating-layout {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .terminal-floating-title { font-size: clamp(30px, 9vw, 44px); }
     .terminal-theory-warning { font-size: 8px; }
     .terminal-floating-results { grid-template-columns: 1fr; }
+    .terminal-floating-jump { justify-self: stretch; }
     .wrap { padding: 20px 16px 56px; }
     .topnav {
       gap: 12px;
@@ -1783,31 +1854,42 @@
   }
   @media (max-width: 560px) {
     .terminal-floating-checker {
+      margin: 18px auto 0;
       padding: 10px;
     }
     .terminal-floating-head {
-      margin-bottom: 8px;
+      flex-direction: column;
+      gap: 10px;
     }
     .terminal-floating-title {
-      font-size: 13px;
-      letter-spacing: 0.06em;
+      font-size: clamp(28px, 12vw, 38px);
     }
     .terminal-floating-badge {
-      padding: 5px 7px;
-      font-size: 9px;
+      padding: 7px 9px;
+      font-size: 11px;
+    }
+    .terminal-floating-meta {
+      grid-template-columns: 1fr;
+    }
+    .terminal-floating-panel {
+      padding: 10px;
     }
     .terminal-floating-input input {
-      min-height: 40px;
-      font-size: 17px;
+      min-height: 50px;
+      font-size: 22px;
     }
     .terminal-floating-results {
       gap: 6px;
     }
     .terminal-floating-result {
+      min-height: 72px;
       padding: 8px;
     }
     .terminal-floating-result strong {
-      font-size: 14px;
+      font-size: 20px;
+    }
+    .terminal-floating-result.is-primary strong {
+      font-size: 30px;
     }
     .wrap { padding: 16px 12px 48px; }
     .topnav {
@@ -3905,24 +3987,6 @@
     <span class="br">[</span> cards + charts hydrate in parallel · page stays live while slower feeds finish <span class="br">]</span>
   </div>
 </div>
-<aside class="terminal-floating-checker" id="terminalFloatingChecker" aria-label="Terminal points checker">
-  <div class="terminal-floating-head">
-    <div class="terminal-floating-title">Points Checker</div>
-    <div class="terminal-floating-badge" id="terminalFloatAllocationPct">0.5533%</div>
-  </div>
-  <p class="terminal-floating-copy">Terminal S1 · 6.32-week equivalent · proportional model</p>
-  <div class="terminal-theory-warning">Nothing here is official. This is only a theory, not a MegaETH announcement.</div>
-  <label class="terminal-floating-input" for="terminalFloatPointsInput">
-    Terminal points
-    <input id="terminalFloatPointsInput" type="number" min="0" step="1" inputmode="numeric" placeholder="Enter points" data-terminal-input-group="points" />
-  </label>
-  <div class="terminal-floating-results" aria-live="polite">
-    <div class="terminal-floating-result"><span>Estimated value</span><strong id="terminalFloatSupplyShare">$ —</strong></div>
-    <div class="terminal-floating-result"><span>Estimated MEGA</span><strong class="is-mega" id="terminalFloatEstimatedMega">—</strong></div>
-    <div class="terminal-floating-result"><span>Value / point</span><strong id="terminalFloatPointUsd">$ —</strong></div>
-  </div>
-  <button class="terminal-floating-jump" type="button" id="terminalFloatJump">Open full checker</button>
-</aside>
 <div class="wrap">
 
   <!-- HERO -->
@@ -3938,6 +4002,38 @@
     </div>
     <h1>The First <span class="accent">Real-Time</span><br/>Economics Dashboard.</h1>
     <p>>>  USDM Yield + Network Fees · Live On-Chain Data · Updated Daily</p>
+    <aside class="terminal-floating-checker" id="terminalFloatingChecker" aria-label="Terminal points checker">
+      <div class="terminal-floating-layout">
+        <div class="terminal-floating-main">
+          <div class="terminal-floating-head">
+            <div>
+              <span class="terminal-floating-kicker">MegaETH Terminal S1</span>
+              <div class="terminal-floating-title">Points Checker</div>
+            </div>
+            <div class="terminal-floating-badge" id="terminalFloatAllocationPct">0.5533%</div>
+          </div>
+          <div class="terminal-floating-copy">Theoretical allocation model · live MEGA price · proportional point share</div>
+          <div class="terminal-floating-meta" aria-label="Terminal model summary">
+            <span><strong id="terminalFloatTotalPoints">12,147,742</strong>Total points</span>
+            <span><strong id="terminalFloatWindow">6.32w</strong>Credited window</span>
+            <span><strong>USD live</strong>Price-backed output</span>
+          </div>
+          <div class="terminal-theory-warning">Nothing here is official. This is only a theory, not a MegaETH announcement.</div>
+        </div>
+        <div class="terminal-floating-panel">
+          <label class="terminal-floating-input" for="terminalFloatPointsInput">
+            Terminal points
+            <input id="terminalFloatPointsInput" type="number" min="0" step="1" inputmode="numeric" placeholder="Enter points" data-terminal-input-group="points" />
+          </label>
+          <div class="terminal-floating-results" aria-live="polite">
+            <div class="terminal-floating-result is-primary"><span>Estimated value</span><strong id="terminalFloatSupplyShare">$ —</strong></div>
+            <div class="terminal-floating-result"><span>Estimated MEGA</span><strong class="is-mega" id="terminalFloatEstimatedMega">—</strong></div>
+            <div class="terminal-floating-result"><span>Value / point</span><strong id="terminalFloatPointUsd">$ —</strong></div>
+          </div>
+          <button class="terminal-floating-jump" type="button" id="terminalFloatJump">Open full checker</button>
+        </div>
+      </div>
+    </aside>
   </section>
 
   <nav class="site-switcher" aria-label="MegaFees site sections">
@@ -9289,8 +9385,8 @@
     const pointsForOneBp = allocationPct > 0 ? model.totalLeaderboardPoints * (0.01 / allocationPct) : 0;
 
     setTexts(['terminalAllocationPct', 'terminalFloatAllocationPct'], terminalPct(allocationPct, 4));
-    setText('terminalTotalPoints', fmtNum(model.totalLeaderboardPoints));
-    setText('terminalCreditedDays', terminalWindowLabel());
+    setTexts(['terminalTotalPoints', 'terminalFloatTotalPoints'], fmtNum(model.totalLeaderboardPoints));
+    setTexts(['terminalCreditedDays', 'terminalFloatWindow'], terminalWindowLabel());
     setText('terminalPointsPerBip', fmtNum(Math.round(pointsForOneBp)));
     setText('terminalPointShare', terminalPct(pointShare * 100, 6));
     setTexts(['terminalSupplyShare', 'terminalFloatSupplyShare'], estimatedUsd != null ? fmtUSDCompact(estimatedUsd) : '$ —');
