@@ -1,13 +1,13 @@
 {
   "apiVersion": "1.0",
   "name": "MegaFees Dashboard API",
-  "generatedAt": "2026-06-05T23:59:59.999Z",
+  "generatedAt": "2026-06-06T23:59:59.999Z",
   "documentation": "/api/",
   "manifest": "/api/v1/index.json",
   "datasets": {
     "network": {
       "economics": {
-        "asOf": "2026-06-05T01:21:15.254Z",
+        "asOf": "2026-06-06T01:16:03.950Z",
         "source": "MegaETH Blockscout token snapshots, Aave address book, and World Markets lending snapshot.",
         "methodology": {
           "m0": "M0 = total tokenized USDM supply minus USDM held in tracked lending vaults and reserves. DEX and spot balances stay inside M0.",
@@ -16,12 +16,12 @@
         "usdm": {
           "symbol": "USDM",
           "address": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7",
-          "supply": 207914620.37611,
-          "priceUsd": 0.99996,
+          "supply": 206954564.6746,
+          "priceUsd": 0.999597,
           "source": "Blockscout /api/v2/tokens/0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
         },
         "m0": {
-          "value": 33719353.963327,
+          "value": 35313467.570809,
           "points": [
             {
               "timestamp": 1779715490000,
@@ -70,18 +70,22 @@
             {
               "timestamp": 1780703999999,
               "value": 33719353.963327
+            },
+            {
+              "timestamp": 1780790399999,
+              "value": 35313467.570809
             }
           ],
           "components": [
             {
               "label": "Tokenized USDM supply",
-              "value": 207914620.37611,
+              "value": 206954564.6746,
               "role": "supply",
               "color": "#FF8AA8"
             },
             {
               "label": "Aave USDM reserve",
-              "value": -173629666.412783,
+              "value": -171075497.103791,
               "role": "subtract",
               "color": "#C586FF",
               "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -95,14 +99,14 @@
             },
             {
               "label": "M0",
-              "value": 33719353.963327,
+              "value": 35313467.570809,
               "role": "result",
               "color": "#90D79F"
             }
           ]
         },
         "m1": {
-          "value": 607666131.057881,
+          "value": 606801519.388082,
           "points": [
             {
               "timestamp": 1779715490000,
@@ -151,18 +155,22 @@
             {
               "timestamp": 1780703999999,
               "value": 607666131.057881
+            },
+            {
+              "timestamp": 1780790399999,
+              "value": 606801519.388082
             }
           ],
           "components": [
             {
               "label": "M0",
-              "value": 33719353.963327,
+              "value": 35313467.570809,
               "role": "base",
               "color": "#90D79F"
             },
             {
               "label": "Aave aMegUSDm deposits",
-              "value": 573381177.094554,
+              "value": 570922451.817273,
               "role": "deposit",
               "color": "#C586FF",
               "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -176,7 +184,7 @@
             },
             {
               "label": "M1",
-              "value": 607666131.057881,
+              "value": 606801519.388082,
               "role": "result",
               "color": "#F5AF94"
             }
@@ -184,12 +192,12 @@
         },
         "lending": {
           "vaultUsdm": {
-            "total": 174195266.412783,
+            "total": 171641097.103791,
             "sources": [
               {
                 "protocol": "Aave V3",
                 "label": "USDM reserve in aMegUSDm contract",
-                "amount": 173629666.412783,
+                "amount": 171075497.103791,
                 "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
                 "underlying": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
               },
@@ -203,12 +211,12 @@
             ]
           },
           "demandDeposits": {
-            "total": 573946777.094554,
+            "total": 571488051.817273,
             "sources": [
               {
                 "protocol": "Aave V3",
                 "label": "aMegUSDm total supply",
-                "amount": 573381177.094554,
+                "amount": 570922451.817273,
                 "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
               },
               {
@@ -227,13 +235,13 @@
             "usdmAToken": {
               "symbol": "aMegUSDm",
               "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
-              "totalSupply": 573381177.094554,
-              "underlyingUsdmReserve": 173629666.412783
+              "totalSupply": 570922451.817273,
+              "underlyingUsdmReserve": 171075497.103791
             },
             "usdmVariableDebt": {
               "symbol": "variableDebtMegUSDm",
               "address": "0x6b408d6c479c304794abc60a4693a3ad2d3c2d0d",
-              "totalSupply": 399753516.09777
+              "totalSupply": 399848196.130029
             }
           },
           "excluded": [
@@ -1642,16 +1650,16 @@
     "apps": {
       "brix": {
         "itryMarketCap": {
-          "usd": 8825208.760695,
-          "supply": 428882845.03,
-          "tryUsd": 0.02057720159,
-          "asOf": "2026-06-05T01:21:15.188Z"
+          "usd": 8836683.474302,
+          "supply": 429342964.56,
+          "tryUsd": 0.020581875572,
+          "asOf": "2026-06-06T01:16:03.877Z"
         },
         "price": {
-          "usd": 0.02301918,
-          "ratio": 1.11867398,
-          "tryUsd": 0.02057720159,
-          "asOf": "2026-06-05T01:21:15.188Z"
+          "usd": 0.02304911,
+          "ratio": 1.11987413,
+          "tryUsd": 0.020581875572,
+          "asOf": "2026-06-06T01:16:03.877Z"
         },
         "tryUsdSeries": {
           "points": [
@@ -1858,53 +1866,57 @@
             {
               "timestamp": 1780703999999,
               "value": 0.02057720159
+            },
+            {
+              "timestamp": 1780790399999,
+              "value": 0.020581875572
             }
           ],
-          "asOf": "2026-06-05T23:59:59.999Z",
-          "windowDays": 51
+          "asOf": "2026-06-06T23:59:59.999Z",
+          "windowDays": 52
         },
         "stakingYield": {
           "points": [
             {
-              "distributionId": "fundamental-2026-06-05",
-              "distributionDate": "2026-06-05",
-              "periodStartDate": "2026-06-04",
-              "periodEndDate": "2026-06-05",
+              "distributionId": "fundamental-2026-06-06",
+              "distributionDate": "2026-06-06",
+              "periodStartDate": "2026-06-05",
+              "periodEndDate": "2026-06-06",
               "periodDays": 1,
               "stakingYieldItry": 0,
               "netYieldItry": 0,
               "additionalYieldItry": 0,
               "averageStakedItry": null,
-              "periodReturn": 0.001072488838,
-              "apy": 0.47882619008
+              "periodReturn": 0.001072832676,
+              "apy": 0.479011597269
             }
           ],
-          "totalItry": 20374239.45626,
-          "windowStart": "2026-06-05",
-          "windowEnd": "2026-06-05",
+          "totalItry": 20718188.26494,
+          "windowStart": "2026-06-06",
+          "windowEnd": "2026-06-06",
           "windowDays": 1
         },
         "apySnapshot": {
-          "stakingApy": 0.478826190316,
-          "stakingApr": 0.39145842587,
-          "totalStakedItry": 356165202.806713,
-          "totalStakingYieldItry": 20374239.45626,
+          "stakingApy": 0.479011597045,
+          "stakingApr": 0.39158392674,
+          "totalStakedItry": 356509151.615393,
+          "totalStakingYieldItry": 20718188.26494,
           "distributionsUsed": 1,
           "coveredDays": 1,
-          "periodStartDate": "2026-06-04",
-          "periodEndDate": "2026-06-05",
-          "lastDistributionDate": "2026-06-05"
+          "periodStartDate": "2026-06-05",
+          "periodEndDate": "2026-06-06",
+          "lastDistributionDate": "2026-06-06"
         },
         "sofrRate": {
           "rate": 0.0358967,
-          "asOf": "2026-06-04",
+          "asOf": "2026-06-05",
           "seriesId": "SOFR30DAYAVG"
         },
         "stakeRatio": {
-          "ratio": 0.830448703962,
-          "locked": 356165202.806713,
-          "supply": 428882845.03,
-          "asOf": "2026-06-05T01:21:15.188Z"
+          "ratio": 0.830359831285,
+          "locked": 356509151.615393,
+          "supply": 429342964.56,
+          "asOf": "2026-06-06T01:16:03.877Z"
         },
         "witryRateSeries": {
           "points": [
@@ -2099,21 +2111,25 @@
             {
               "timestamp": 1780703999999,
               "value": 1.11867398
+            },
+            {
+              "timestamp": 1780790399999,
+              "value": 1.11987413
             }
           ],
-          "windowDays": 48
+          "windowDays": 49
         },
         "holderTiers": {
           "token": "WITRY",
           "tokenAddress": "0x15B271D9012b5820FC42b1c495B4C1e206547De5",
           "sourceUrl": "https://megaeth.blockscout.com/token/0x15B271D9012b5820FC42b1c495B4C1e206547De5",
-          "rawHolderCount": 253,
-          "holderCount": 238,
+          "rawHolderCount": 249,
+          "holderCount": 234,
           "excludedContractCount": 15,
-          "totalBalance": 280776561.413115,
+          "totalBalance": 280776483.858105,
           "worldMarkets": {
             "address": "0x5e3ae52eba0f9740364bd5dd39738e1336086a8b",
-            "balance": 47703736.348
+            "balance": 48274211.125
           },
           "tiers": [
             {
@@ -2121,9 +2137,9 @@
               "min": null,
               "max": null,
               "count": 1,
-              "balance": 47703736.348,
-              "countSharePct": 0.42016806722689076,
-              "balanceSharePct": 16.989928257512933,
+              "balance": 48274211.125,
+              "countSharePct": 0.4273504273504274,
+              "balanceSharePct": 17.193110499024584,
               "color": "#f97357"
             },
             {
@@ -2132,8 +2148,8 @@
               "max": null,
               "count": 3,
               "balance": 223075450.449451,
-              "countSharePct": 1.2605042016806722,
-              "balanceSharePct": 79.44945593988997,
+              "countSharePct": 1.282051282051282,
+              "balanceSharePct": 79.44947788511573,
               "color": "#f4b66b"
             },
             {
@@ -2142,43 +2158,43 @@
               "max": 10000000,
               "count": 2,
               "balance": 4045723.9,
-              "countSharePct": 0.8403361344537815,
-              "balanceSharePct": 1.4409051381063829,
+              "countSharePct": 0.8547008547008548,
+              "balanceSharePct": 1.4409055361077054,
               "color": "#e8ddd4"
             },
             {
               "label": "Fish",
               "min": 100000,
               "max": 1000000,
-              "count": 14,
-              "balance": 5002413.946719,
-              "countSharePct": 5.88235294117647,
-              "balanceSharePct": 1.781635162686856,
+              "count": 12,
+              "balance": 4463323.702654,
+              "countSharePct": 5.128205128205128,
+              "balanceSharePct": 1.5896358702567615,
               "color": "#9b8cff"
             },
             {
               "label": "Crabs",
               "min": 10000,
               "max": 100000,
-              "count": 21,
-              "balance": 667438.216597,
-              "countSharePct": 8.823529411764707,
-              "balanceSharePct": 0.23771151453593817,
+              "count": 20,
+              "balance": 636977.031597,
+              "countSharePct": 8.547008547008547,
+              "balanceSharePct": 0.22686267127661242,
               "color": "#70bad2"
             },
             {
               "label": "Shrimp",
               "min": 0,
               "max": 10000,
-              "count": 197,
-              "balance": 281798.552348,
-              "countSharePct": 82.77310924369748,
-              "balanceSharePct": 0.10036398726803457,
+              "count": 196,
+              "balance": 280797.649404,
+              "countSharePct": 83.76068376068376,
+              "balanceSharePct": 0.10000753821870971,
               "color": "#6b7280"
             }
           ]
         },
-        "asOf": "2026-06-05T01:21:15.188Z"
+        "asOf": "2026-06-06T01:16:03.877Z"
       },
       "brixTokens": {
         "source": "MegaETH Blockscout",
@@ -3062,9 +3078,9 @@
           }
         ],
         "spotTvl": {
-          "asOf": "2026-06-05T01:21:15.248Z",
-          "defillamaCurrentUsd": 9534994.62303,
-          "blockscoutLiveUsd": 9665520.201218,
+          "asOf": "2026-06-06T01:16:03.939Z",
+          "defillamaCurrentUsd": 9496597.74008,
+          "blockscoutLiveUsd": 9624681.720461,
           "methodology": "DefiLlama counts WETH, USDM, USDT0, BTC.B, and WITRY held by the WorldInc exchange contract. Blockscout live view also shows MEGA and dust balances.",
           "exchangeAddress": "0x5e3Ae52EbA0F9740364Bd5dd39738e1336086A8b",
           "history": [
@@ -3175,54 +3191,58 @@
             {
               "timestamp": 1780703999999,
               "value": 9534994.62303
+            },
+            {
+              "timestamp": 1780790399999,
+              "value": 9496597.74008
             }
           ],
           "tokens": [
             {
               "symbol": "USDM",
-              "amount": 7419793.889124625,
-              "priceUsd": 0.99996,
-              "usd": 7419497.09736906,
+              "amount": 7420690.948160597,
+              "priceUsd": 0.999597,
+              "usd": 7417700.409708488,
               "address": "0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7",
               "color": "#6DD0A9"
             },
             {
               "symbol": "WITRY",
-              "amount": 47703736.348,
-              "priceUsd": 0.02301918,
-              "usd": 1098100.8936671545,
+              "amount": 48274211.125,
+              "priceUsd": 0.02304911,
+              "usd": 1112677.6023833489,
               "address": "0x15B271D9012b5820FC42b1c495B4C1e206547De5",
               "color": "#F97357"
             },
             {
               "symbol": "WETH",
-              "amount": 406.137632130677,
-              "priceUsd": 1752.24,
-              "usd": 711650.6045246565,
+              "amount": 411.309287860071,
+              "priceUsd": 1598.94,
+              "usd": 657658.8727309826,
               "address": "0x4200000000000000000000000000000000000006",
               "color": "#7EAAD4"
             },
             {
               "symbol": "USDT0",
-              "amount": 181039.126886,
-              "priceUsd": 0.998988,
-              "usd": 180855.9152895914,
+              "amount": 214959.274086,
+              "priceUsd": 0.999727,
+              "usd": 214900.5902041745,
               "address": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
               "color": "#9AA7C2"
             },
             {
               "symbol": "MEGA",
-              "amount": 2574849.167002532,
-              "priceUsd": 0.05011,
-              "usd": 129025.69175849689,
+              "amount": 2572766.8570025326,
+              "priceUsd": 0.04602843,
+              "usd": 118420.41918386107,
               "address": "0x28B7E77f82B25B95953825F1E3eA0E36c1c29861",
               "color": "#FF8AA8"
             },
             {
               "symbol": "BTC.B",
-              "amount": 2.00053814,
-              "priceUsd": 63178,
-              "usd": 126389.99860892001,
+              "amount": 1.68293552,
+              "priceUsd": 61395,
+              "usd": 103323.8262504,
               "address": "0xB0F70C0bD6FD87dbEb7C10dC692a2a6106817072",
               "color": "#F4D35E"
             }
@@ -3230,11 +3250,11 @@
         },
         "spotVolume": {
           "source": "DefiLlama DEXs summary, slug world-markets-spot, dataType dailyVolume.",
-          "total24hUsd": 364858,
-          "total48hto24hUsd": 255319,
-          "total7dUsd": 1729293,
-          "total30dUsd": 7560653,
-          "totalAllTimeUsd": 20733390,
+          "total24hUsd": 134341,
+          "total48hto24hUsd": 359504,
+          "total7dUsd": 1537616,
+          "total30dUsd": 7623322,
+          "totalAllTimeUsd": 20862377,
           "daily": [
             {
               "timestamp": 1770681600000,
@@ -3694,55 +3714,59 @@
             },
             {
               "timestamp": 1780531200000,
-              "value": 364858
+              "value": 359504
+            },
+            {
+              "timestamp": 1780617600000,
+              "value": 134341
             }
           ]
         },
         "perps": {
           "volume": {
             "source": "Daily 24h notional is refreshed from DefiLlama perps fees using the last observed on-chain fee-rate; hourly and market distributions keep the last full on-chain shape.",
-            "latestBlock": 17825474,
-            "fromBlock": 17739074,
+            "latestBlock": 17911553,
+            "fromBlock": 17825153,
             "tradeLogs": 6714,
-            "notional24hUsd": 5971233.138165,
-            "feesUsdFromLogs": 3588,
+            "notional24hUsd": 4328644.758185,
+            "feesUsdFromLogs": 2601,
             "markets": [
               {
                 "symbol": "BTC.B",
-                "notionalUsd": 2136748.605543,
-                "rawVolume": 26.422997,
+                "notionalUsd": 1548964.081109,
+                "rawVolume": 19.154464,
                 "rawUnit": "BTC.B",
                 "color": "#F4D35E",
                 "orderbook": "0x757b27d961a25fef0c2b71819c91de8a7c669079"
               },
               {
                 "symbol": "WETH",
-                "notionalUsd": 2037934.820356,
-                "rawVolume": 888.744173,
+                "notionalUsd": 1477332.34887,
+                "rawVolume": 644.265216,
                 "rawUnit": "WETH",
                 "color": "#7EAAD4",
                 "orderbook": "0xf12fe484ab504276a454e750f54a9b7fbe5b0687"
               },
               {
                 "symbol": "SOL",
-                "notionalUsd": 1776821.112966,
-                "rawVolume": 18649.003888,
+                "notionalUsd": 1288046.743262,
+                "rawVolume": 13518.968538,
                 "rawUnit": "SOL",
                 "color": "#6DD0A9",
                 "orderbook": "0x0b35a77978f008df9f9c43c6206c07d3535bebff"
               },
               {
                 "symbol": "HYPE",
-                "notionalUsd": 17903.571756,
-                "rawVolume": 438.215612,
+                "notionalUsd": 12978.592569,
+                "rawVolume": 317.669679,
                 "rawUnit": "HYPE",
                 "color": "#C586FF",
                 "orderbook": "0xe666c9a0ae4948bd03e9651ba5a703868b97aba9"
               },
               {
                 "symbol": "MEGA",
-                "notionalUsd": 1825.027554,
-                "rawVolume": 16010.137154,
+                "notionalUsd": 1322.992382,
+                "rawVolume": 11606.010796,
                 "rawUnit": "MEGA",
                 "color": "#FF8AA8",
                 "orderbook": "0x6be130b3c425dba04a097e21e4a4603a0bda04e8"
@@ -3751,110 +3775,110 @@
             "hourlyNotional": [
               {
                 "label": "T-24h",
-                "value": 489965.244244
+                "value": 355183.835083
               },
               {
                 "label": "T-23h",
-                "value": 486103.361255
+                "value": 352384.292816
               },
               {
                 "label": "T-22h",
-                "value": 642194.39939
+                "value": 465537.244374
               },
               {
                 "label": "T-21h",
-                "value": 815786.3808
+                "value": 591376.916516
               },
               {
                 "label": "T-20h",
-                "value": 227181.994897
+                "value": 164687.95115
               },
               {
                 "label": "T-19h",
-                "value": 201865.795771
+                "value": 146335.823523
               },
               {
                 "label": "T-18h",
-                "value": 260150.619543
+                "value": 188587.447445
               },
               {
                 "label": "T-17h",
-                "value": 209665.15356
+                "value": 151989.7058
               },
               {
                 "label": "T-16h",
-                "value": 271061.91969
+                "value": 196497.227735
               },
               {
                 "label": "T-15h",
-                "value": 253143.869187
+                "value": 183508.139285
               },
               {
                 "label": "T-14h",
-                "value": 205550.587541
+                "value": 149006.989463
               },
               {
                 "label": "T-13h",
-                "value": 15514.971448
+                "value": 11247.057061
               },
               {
                 "label": "T-12h",
-                "value": 109079.5702
+                "value": 79073.56803
               },
               {
                 "label": "T-11h",
-                "value": 110136.936163
+                "value": 79840.069944
               },
               {
                 "label": "T-10h",
-                "value": 59580.694318
+                "value": 43191.021717
               },
               {
                 "label": "T-9h",
-                "value": 82438.310961
+                "value": 59760.882611
               },
               {
                 "label": "T-8h",
-                "value": 122186.677899
+                "value": 88575.125199
               },
               {
                 "label": "T-7h",
-                "value": 159608.948603
+                "value": 115703.142507
               },
               {
                 "label": "T-6h",
-                "value": 189648.094147
+                "value": 137479.011393
               },
               {
                 "label": "T-5h",
-                "value": 263865.021788
+                "value": 191280.078504
               },
               {
                 "label": "T-4h",
-                "value": 159731.02056
+                "value": 115791.634469
               },
               {
                 "label": "T-3h",
-                "value": 167346.925569
+                "value": 121312.52882
               },
               {
                 "label": "T-2h",
-                "value": 130887.370193
+                "value": 94882.39963
               },
               {
                 "label": "T-1h",
-                "value": 338539.270432
+                "value": 245412.665104
               }
             ],
             "estimatedFromFees": true
           },
           "fees": {
             "source": "DefiLlama fees summary, slug world-markets-perps, dataType dailyFees.",
-            "total24hUsd": 3588,
-            "total48hto24hUsd": 2548,
-            "total7dUsd": 11533,
-            "total30dUsd": 258653,
-            "totalAllTimeUsd": 743857,
+            "total24hUsd": 2601,
+            "total48hto24hUsd": 3528,
+            "total7dUsd": 13176,
+            "total30dUsd": 247577,
+            "totalAllTimeUsd": 746398,
             "methodology": "Perps trading fees plus lending interest plus liquidation fees.",
             "daily": [
               {
@@ -4267,18 +4291,22 @@
               },
               {
                 "timestamp": 1780531200000,
-                "value": 3588
+                "value": 3528
+              },
+              {
+                "timestamp": 1780617600000,
+                "value": 2601
               }
             ]
           }
         },
         "spotFees": {
           "source": "DefiLlama fees summary, slug world-markets-spot, dataType dailyFees.",
-          "total24hUsd": 407,
-          "total48hto24hUsd": 257,
-          "total7dUsd": 1487,
-          "total30dUsd": 5950,
-          "totalAllTimeUsd": 9568,
+          "total24hUsd": 153,
+          "total48hto24hUsd": 388,
+          "total7dUsd": 1472,
+          "total30dUsd": 6012,
+          "totalAllTimeUsd": 9702,
           "daily": [
             {
               "timestamp": 1771718400000,
@@ -4690,7 +4718,11 @@
             },
             {
               "timestamp": 1780531200000,
-              "value": 407
+              "value": 388
+            },
+            {
+              "timestamp": 1780617600000,
+              "value": 153
             }
           ]
         },
@@ -4744,22 +4776,22 @@
           ]
         },
         "tokenPrices": {
-          "USDM": 0.99996,
-          "WETH": 1752.24,
-          "USDT0": 0.998988,
-          "BTC.B": 63178,
-          "WITRY": 0.02301918,
-          "MEGA": 0.05011,
+          "USDM": 0.999597,
+          "WETH": 1598.94,
+          "USDT0": 0.999727,
+          "BTC.B": 61395,
+          "WITRY": 0.02304911,
+          "MEGA": 0.04602843,
           "SOL": 95.27699835598168,
           "HYPE": 40.85562300679958
         },
-        "asOf": "2026-06-05T01:21:15.248Z"
+        "asOf": "2026-06-06T01:16:03.939Z"
       },
       "euphoria": {
-        "fetchedAt": "2026-06-05T01:23:05.131Z",
+        "fetchedAt": "2026-06-06T01:17:22.301Z",
         "dataWindowUtc": {
-          "from": "2026-06-05T00:00:00Z",
-          "to": "2026-06-05T01:23:05.131Z"
+          "from": "2026-06-06T00:00:00Z",
+          "to": "2026-06-06T01:17:22.301Z"
         },
         "contract": "0x12759afca690637b425ffba3265f0dc2f6242a8d",
         "contractUrl": "https://megaeth.blockscout.com/address/0x12759afca690637b425ffba3265f0dc2f6242a8d",
@@ -4768,19 +4800,19 @@
         "source": "MegaETH Blockscout counters + MegaETH RPC ERC-20 Transfer logs",
         "methodology": "Daily volume and PnL snapshots use MegaETH USDM Transfer logs involving the Euphoria contract. Player volume and PnL exclude the Euphoria pool, while raw transfer counts keep every USDM transfer touching the contract. Daily users count unique transaction callers to the Euphoria contract. Since-live totals start from the official 2026-05-14 UTC launch window.",
         "transactions": {
-          "total": 2114364,
-          "today": 382,
-          "sinceLaunchTransactions": 1897351,
-          "totalTokenTransfers": 3288665,
-          "tokenTransfersToday": 572,
-          "sinceLaunchTokenTransfers": 2846059
+          "total": 2222298,
+          "today": 19297,
+          "sinceLaunchTransactions": 2004546,
+          "totalTokenTransfers": 3450512,
+          "tokenTransfersToday": 28950,
+          "sinceLaunchTokenTransfers": 3006876
         },
         "volume": {
-          "todayUsdm": 108.2,
-          "excludedCollateralInUsdm": 7427679.385,
-          "excludedPayoutOutUsdm": 7517803.998,
-          "poolCollateralInUsdm": 7427679.385,
-          "poolPayoutOutUsdm": 7517803.998,
+          "todayUsdm": 1238.4,
+          "excludedCollateralInUsdm": 7667290.019,
+          "excludedPayoutOutUsdm": 7758498.163,
+          "poolCollateralInUsdm": 7667290.019,
+          "poolPayoutOutUsdm": 7758498.163,
           "points": [
             {
               "date": "2026-05-14",
@@ -4916,24 +4948,30 @@
             },
             {
               "date": "2026-06-05",
-              "volumeUsdm": 108.2,
-              "txCount": 382,
-              "transferCount": 572
+              "volumeUsdm": 32384.9,
+              "txCount": 88280,
+              "transferCount": 132439
+            },
+            {
+              "date": "2026-06-06",
+              "volumeUsdm": 1238.4,
+              "txCount": 19297,
+              "transferCount": 28950
             }
           ]
         },
         "users": {
           "last24h": {
             "users": 1000,
-            "txCount": 100997,
-            "failedCount": 35,
-            "totalGasUsed": 31093458840,
-            "avgGasPerTx": 307865,
+            "txCount": 104956,
+            "failedCount": 64,
+            "totalGasUsed": 32292241735,
+            "avgGasPerTx": 307674,
             "timeframe": "24h",
             "source": "MiniBlocks unique callers",
             "sourceUrl": "https://miniblocks.io/dapps/euphoria",
             "label": "Unique transaction callers over the last 24h from MiniBlocks.",
-            "fetchedAt": "2026-06-05T01:23:04.792Z"
+            "fetchedAt": "2026-06-06T01:17:21.959Z"
           },
           "points": [
             {
@@ -5026,22 +5064,26 @@
             },
             {
               "date": "2026-06-05",
-              "users": 382
+              "users": 1000
+            },
+            {
+              "date": "2026-06-06",
+              "users": 1000
             }
           ]
         },
         "players": {
-          "total": 1773,
-          "profitable": 308,
-          "notProfitable": 1465,
-          "profitablePct": 17.37,
-          "notProfitablePct": 82.63,
+          "total": 1793,
+          "profitable": 313,
+          "notProfitable": 1480,
+          "profitablePct": 17.46,
+          "notProfitablePct": 82.54,
           "bands": [
             {
               "key": "loss",
               "label": "Loss",
-              "count": 1464,
-              "netUsdm": -101318.146,
+              "count": 1479,
+              "netUsdm": -103096.475,
               "color": "#2A0D1C"
             },
             {
@@ -5055,28 +5097,28 @@
               "key": "gain-small",
               "label": "0-1 USDM",
               "count": 48,
-              "netUsdm": 21.594,
+              "netUsdm": 21.354,
               "color": "#F9BADD"
             },
             {
               "key": "gain-mid",
               "label": "1-5 USDM",
-              "count": 102,
-              "netUsdm": 268.905,
+              "count": 104,
+              "netUsdm": 274.461,
               "color": "#FF8FCC"
             },
             {
               "key": "gain-high",
               "label": "5-25 USDM",
-              "count": 95,
-              "netUsdm": 1112.104,
+              "count": 96,
+              "netUsdm": 1110.918,
               "color": "#D94D96"
             },
             {
               "key": "gain-whale",
               "label": "25+ USDM",
-              "count": 63,
-              "netUsdm": 8707.626,
+              "count": 65,
+              "netUsdm": 9344.981,
               "color": "#7C2A52"
             }
           ],
@@ -5089,9 +5131,9 @@
             },
             {
               "address": "0x807c8a11b254b40ea06b9ac11ea66e228481f92a",
-              "stakedUsdm": 6845.3,
-              "paidUsdm": 7767.172,
-              "netUsdm": 921.872
+              "stakedUsdm": 6848.3,
+              "paidUsdm": 7769.221,
+              "netUsdm": 920.921
             },
             {
               "address": "0xbc38515fe692d2e5b918da9faacde5408807f3a3",
@@ -5101,15 +5143,21 @@
             },
             {
               "address": "0x361320eb07cedbcb194c490f0b4cecf5e641524c",
-              "stakedUsdm": 16725.6,
-              "paidUsdm": 17337.987,
-              "netUsdm": 612.387
+              "stakedUsdm": 18501.5,
+              "paidUsdm": 19099.269,
+              "netUsdm": 597.769
             },
             {
               "address": "0x18f74164dd37ccdd1433dfa6343ce78a34c6260f",
               "stakedUsdm": 16959,
               "paidUsdm": 17463.39,
               "netUsdm": 504.39
+            },
+            {
+              "address": "0xb26d86e472ce8f04cddd1d6cf83c45d2989d95d7",
+              "stakedUsdm": 25.8,
+              "paidUsdm": 461.299,
+              "netUsdm": 435.499
             },
             {
               "address": "0x90821845fa264b18848153c8b63d3bd34fd81643",
@@ -5125,21 +5173,15 @@
             },
             {
               "address": "0x17275353d65f59e99b99b246d8312b2366ca6bda",
-              "stakedUsdm": 3163.3,
-              "paidUsdm": 3384.718,
-              "netUsdm": 221.418
+              "stakedUsdm": 3165.4,
+              "paidUsdm": 3385.845,
+              "netUsdm": 220.445
             },
             {
               "address": "0x85c508edc369129cb17de72960c91d2c3983245e",
               "stakedUsdm": 2412,
               "paidUsdm": 2629.07,
               "netUsdm": 217.07
-            },
-            {
-              "address": "0x995df63101981471c72cc86c0380298955bf5521",
-              "stakedUsdm": 1701,
-              "paidUsdm": 1899.36,
-              "netUsdm": 198.36
             }
           ]
         },
@@ -5153,9 +5195,9 @@
           },
           {
             "address": "0x807c8a11b254b40ea06b9ac11ea66e228481f92a",
-            "stakedUsdm": 6845.3,
-            "paidUsdm": 7767.172,
-            "netUsdm": 921.872
+            "stakedUsdm": 6848.3,
+            "paidUsdm": 7769.221,
+            "netUsdm": 920.921
           },
           {
             "address": "0xbc38515fe692d2e5b918da9faacde5408807f3a3",
@@ -5165,15 +5207,21 @@
           },
           {
             "address": "0x361320eb07cedbcb194c490f0b4cecf5e641524c",
-            "stakedUsdm": 16725.6,
-            "paidUsdm": 17337.987,
-            "netUsdm": 612.387
+            "stakedUsdm": 18501.5,
+            "paidUsdm": 19099.269,
+            "netUsdm": 597.769
           },
           {
             "address": "0x18f74164dd37ccdd1433dfa6343ce78a34c6260f",
             "stakedUsdm": 16959,
             "paidUsdm": 17463.39,
             "netUsdm": 504.39
+          },
+          {
+            "address": "0xb26d86e472ce8f04cddd1d6cf83c45d2989d95d7",
+            "stakedUsdm": 25.8,
+            "paidUsdm": 461.299,
+            "netUsdm": 435.499
           },
           {
             "address": "0x90821845fa264b18848153c8b63d3bd34fd81643",
@@ -5189,9 +5237,9 @@
           },
           {
             "address": "0x17275353d65f59e99b99b246d8312b2366ca6bda",
-            "stakedUsdm": 3163.3,
-            "paidUsdm": 3384.718,
-            "netUsdm": 221.418
+            "stakedUsdm": 3165.4,
+            "paidUsdm": 3385.845,
+            "netUsdm": 220.445
           },
           {
             "address": "0x85c508edc369129cb17de72960c91d2c3983245e",
@@ -5224,6 +5272,12 @@
             "netUsdm": 177.94
           },
           {
+            "address": "0x26117daa59fefa345ed96a95b77b066a9a434c55",
+            "stakedUsdm": 28,
+            "paidUsdm": 183.724,
+            "netUsdm": 155.724
+          },
+          {
             "address": "0xad6b07576425ad99045aff3af12cda6c66a4b543",
             "stakedUsdm": 362,
             "paidUsdm": 509.25,
@@ -5231,9 +5285,9 @@
           },
           {
             "address": "0xfc7316bd722d5158238c83d4480cf359a1f6410c",
-            "stakedUsdm": 2110.9,
-            "paidUsdm": 2254.621,
-            "netUsdm": 143.721
+            "stakedUsdm": 2111.4,
+            "paidUsdm": 2255.306,
+            "netUsdm": 143.906
           },
           {
             "address": "0x28222f48031fe70a477434105a6da71732cf0b24",
@@ -5261,15 +5315,15 @@
           },
           {
             "address": "0x554da6c7a9d5a819110dcb4972d81e6fbce84a79",
-            "stakedUsdm": 3885.2,
-            "paidUsdm": 3993.384,
-            "netUsdm": 108.184
+            "stakedUsdm": 3886.2,
+            "paidUsdm": 3993.898,
+            "netUsdm": 107.698
           },
           {
             "address": "0xfd44f96f2b1548e38d52793d10f04ecb64436f41",
-            "stakedUsdm": 1014.4,
+            "stakedUsdm": 1014.8,
             "paidUsdm": 1116.6,
-            "netUsdm": 102.2
+            "netUsdm": 101.8
           },
           {
             "address": "0x70847910133cb1b81b7a5591ed6233017711dd47",
@@ -5284,16 +5338,22 @@
             "netUsdm": 100.48
           },
           {
+            "address": "0x0a5aa7cbd836d725ecf64f25b7f8af5fc94bcbf0",
+            "stakedUsdm": 846.2,
+            "paidUsdm": 943.41,
+            "netUsdm": 97.21
+          },
+          {
             "address": "0x0110ab10940ce827a3d99ab0e2fe4577308ee7bf",
             "stakedUsdm": 3872,
             "paidUsdm": 3968.38,
             "netUsdm": 96.38
           },
           {
-            "address": "0x0a5aa7cbd836d725ecf64f25b7f8af5fc94bcbf0",
-            "stakedUsdm": 713.7,
-            "paidUsdm": 808.59,
-            "netUsdm": 94.89
+            "address": "0x4ba51f7df8a4bcec9cdfbbd40891cb22b3b21359",
+            "stakedUsdm": 993.8,
+            "paidUsdm": 1085.139,
+            "netUsdm": 91.339
           },
           {
             "address": "0x62a261627aa9ae11bea4c04342cfe960f18e5fbe",
@@ -5362,6 +5422,12 @@
             "netUsdm": 51.78
           },
           {
+            "address": "0x279080fb846132169948865c2a323816bc7ec728",
+            "stakedUsdm": 840.2,
+            "paidUsdm": 891.228,
+            "netUsdm": 51.028
+          },
+          {
             "address": "0xd1fbc0535140f4622a2733f3d5354c0157f73897",
             "stakedUsdm": 753,
             "paidUsdm": 803.36,
@@ -5372,12 +5438,6 @@
             "stakedUsdm": 18,
             "paidUsdm": 67.37,
             "netUsdm": 49.37
-          },
-          {
-            "address": "0x279080fb846132169948865c2a323816bc7ec728",
-            "stakedUsdm": 746.2,
-            "paidUsdm": 794.168,
-            "netUsdm": 47.968
           },
           {
             "address": "0x748ed93e0b308b18308fb8d0e8f5739ca059c96b",
@@ -5416,12 +5476,6 @@
             "netUsdm": 40.08
           },
           {
-            "address": "0x8861f69c9e4dd7af843c06e20459d7dbfb7cb88a",
-            "stakedUsdm": 364.2,
-            "paidUsdm": 401.435,
-            "netUsdm": 37.235
-          },
-          {
             "address": "0x8b8512b13fc2465aebde992ddfbfc2e17d84f22d",
             "stakedUsdm": 851.6,
             "paidUsdm": 888.275,
@@ -5432,6 +5486,12 @@
             "stakedUsdm": 97,
             "paidUsdm": 132.83,
             "netUsdm": 35.83
+          },
+          {
+            "address": "0x8861f69c9e4dd7af843c06e20459d7dbfb7cb88a",
+            "stakedUsdm": 366.2,
+            "paidUsdm": 401.435,
+            "netUsdm": 35.235
           },
           {
             "address": "0x308aff616c497a8c3cf6bcd2d9449a4df678ea0e",
@@ -5468,12 +5528,6 @@
             "stakedUsdm": 337,
             "paidUsdm": 368.51,
             "netUsdm": 31.51
-          },
-          {
-            "address": "0xa4fbfee4637c5439e1025f2b506a9c147cdf3797",
-            "stakedUsdm": 1985.8,
-            "paidUsdm": 2016.76,
-            "netUsdm": 30.96
           },
           {
             "address": "0x3f725c3dd6e95f0618d332dfb7ec99374742eedd",
@@ -5513,9 +5567,9 @@
           },
           {
             "address": "0xe80add424ae6f31a0c7d9536900856e56f0402a2",
-            "stakedUsdm": 38,
-            "paidUsdm": 64.42,
-            "netUsdm": 26.42
+            "stakedUsdm": 38.6,
+            "paidUsdm": 64.636,
+            "netUsdm": 26.036
           },
           {
             "address": "0x746042c9ec15e5659f8fb4ba63d29d11497bcb49",
@@ -5540,6 +5594,12 @@
             "stakedUsdm": 49,
             "paidUsdm": 72.66,
             "netUsdm": 23.66
+          },
+          {
+            "address": "0xa4fbfee4637c5439e1025f2b506a9c147cdf3797",
+            "stakedUsdm": 1994.5,
+            "paidUsdm": 2016.76,
+            "netUsdm": 22.26
           },
           {
             "address": "0x19208a2f3b6ec426fc3b411ec8909f45c3e431b9",
@@ -5590,12 +5650,6 @@
             "netUsdm": 18.86
           },
           {
-            "address": "0x4ba51f7df8a4bcec9cdfbbd40891cb22b3b21359",
-            "stakedUsdm": 837.8,
-            "paidUsdm": 855.779,
-            "netUsdm": 17.979
-          },
-          {
             "address": "0xcfc8d18176399bb1009a6fe14718b65a6d308468",
             "stakedUsdm": 85,
             "paidUsdm": 102.72,
@@ -5614,28 +5668,22 @@
             "netUsdm": 17.16
           },
           {
-            "address": "0x491d39813993c7cb797d32e314667d6f7d2bacdd",
-            "stakedUsdm": 150.8,
-            "paidUsdm": 167.943,
-            "netUsdm": 17.143
-          },
-          {
             "address": "0xd6f53de715ca1887152dc91431fdad3f6e3de44c",
             "stakedUsdm": 90,
             "paidUsdm": 107.14,
             "netUsdm": 17.14
           },
           {
+            "address": "0x491d39813993c7cb797d32e314667d6f7d2bacdd",
+            "stakedUsdm": 150.9,
+            "paidUsdm": 167.943,
+            "netUsdm": 17.043
+          },
+          {
             "address": "0xf3d73e67df379725b97a05b081809928dc2849f8",
             "stakedUsdm": 50.9,
             "paidUsdm": 67.903,
             "netUsdm": 17.003
-          },
-          {
-            "address": "0xb683339fca8a9feefb6c79cce70dec8e0ab91951",
-            "stakedUsdm": 1394.1,
-            "paidUsdm": 1410.9,
-            "netUsdm": 16.8
           },
           {
             "address": "0x6ea9b3722b005d97f0d921da943f65bf32df67ca",
@@ -5728,12 +5776,6 @@
             "netUsdm": 13.67
           },
           {
-            "address": "0xd2133c0a5793eec0dc7e139185b95d87fb047669",
-            "stakedUsdm": 557.2,
-            "paidUsdm": 570.838,
-            "netUsdm": 13.638
-          },
-          {
             "address": "0x6a4bc25835e3421bc26875ed90efaae0b5316b63",
             "stakedUsdm": 77,
             "paidUsdm": 90.56,
@@ -5744,6 +5786,12 @@
             "stakedUsdm": 435,
             "paidUsdm": 447.61,
             "netUsdm": 12.61
+          },
+          {
+            "address": "0xd2133c0a5793eec0dc7e139185b95d87fb047669",
+            "stakedUsdm": 560.5,
+            "paidUsdm": 573.054,
+            "netUsdm": 12.554
           },
           {
             "address": "0xed6d1b89ea9bd4609de08b0f53702812cecca12e",
@@ -5806,16 +5854,16 @@
             "netUsdm": 11.07
           },
           {
-            "address": "0xb161059b74926155c30616f2b81310a308735357",
-            "stakedUsdm": 3068,
-            "paidUsdm": 3078.8,
-            "netUsdm": 10.8
-          },
-          {
             "address": "0x340f1969b8506115492e5bc34352a160ceeda96b",
             "stakedUsdm": 259,
             "paidUsdm": 269.76,
             "netUsdm": 10.76
+          },
+          {
+            "address": "0xb161059b74926155c30616f2b81310a308735357",
+            "stakedUsdm": 3068.1,
+            "paidUsdm": 3078.8,
+            "netUsdm": 10.7
           },
           {
             "address": "0x91eb98cc8350cddcb3f3de3442bb1ecdf02e87c7",
@@ -6004,6 +6052,18 @@
             "netUsdm": 6.73
           },
           {
+            "address": "0x9e4cc747dca4c648c2c1381bfbb58eadc0ce3ae9",
+            "stakedUsdm": 224.5,
+            "paidUsdm": 231.086,
+            "netUsdm": 6.586
+          },
+          {
+            "address": "0x92d10b8b15c00489dc349836a9df49367002b1ee",
+            "stakedUsdm": 33.2,
+            "paidUsdm": 39.622,
+            "netUsdm": 6.422
+          },
+          {
             "address": "0x050f59b5dcbd5f112635a185ccf0986ee3c8b9bc",
             "stakedUsdm": 57,
             "paidUsdm": 63.37,
@@ -6058,12 +6118,6 @@
             "netUsdm": 5.43
           },
           {
-            "address": "0x4cd5e60249625f952379de91fe83732bcafe3f56",
-            "stakedUsdm": 129.1,
-            "paidUsdm": 134.494,
-            "netUsdm": 5.394
-          },
-          {
             "address": "0xad2f99f0e0b8c9920db1f00435ca66256464dc18",
             "stakedUsdm": 64,
             "paidUsdm": 69.38,
@@ -6092,6 +6146,12 @@
             "stakedUsdm": 26,
             "paidUsdm": 31.02,
             "netUsdm": 5.02
+          },
+          {
+            "address": "0x4cd5e60249625f952379de91fe83732bcafe3f56",
+            "stakedUsdm": 130.1,
+            "paidUsdm": 135.103,
+            "netUsdm": 5.003
           },
           {
             "address": "0x2eb49118e47b060838fd11375f85d7eb05420163",
@@ -6202,12 +6262,6 @@
             "netUsdm": 4.09
           },
           {
-            "address": "0xa0a949d455053a7d5008a8f4f967e76a0e3a3b3a",
-            "stakedUsdm": 70.6,
-            "paidUsdm": 74.645,
-            "netUsdm": 4.045
-          },
-          {
             "address": "0x9a097d66074d2f2cf17ab5fa1c212de7f4a111e4",
             "stakedUsdm": 25,
             "paidUsdm": 29.03,
@@ -6224,12 +6278,6 @@
             "stakedUsdm": 11.5,
             "paidUsdm": 15.42,
             "netUsdm": 3.92
-          },
-          {
-            "address": "0x2c5003b943c7c47bf876216cc5ecb51cec73f28a",
-            "stakedUsdm": 48.7,
-            "paidUsdm": 52.615,
-            "netUsdm": 3.915
           },
           {
             "address": "0x449cabb31f4189c6463fb255e6f293e591c1d794",
@@ -6260,6 +6308,12 @@
             "stakedUsdm": 40,
             "paidUsdm": 43.74,
             "netUsdm": 3.74
+          },
+          {
+            "address": "0xedf8d879e90428fce472b8af99bdf76fe0c37fab",
+            "stakedUsdm": 17.9,
+            "paidUsdm": 21.607,
+            "netUsdm": 3.707
           },
           {
             "address": "0xbfb4c52601413fe8158d5bfa9bd84a67e588f8be",
@@ -6328,6 +6382,12 @@
             "netUsdm": 2.95
           },
           {
+            "address": "0xa0a949d455053a7d5008a8f4f967e76a0e3a3b3a",
+            "stakedUsdm": 72.9,
+            "paidUsdm": 75.753,
+            "netUsdm": 2.853
+          },
+          {
             "address": "0x33f57a4c8309d8ecb55fb44ff6420678f93dda23",
             "stakedUsdm": 5,
             "paidUsdm": 7.83,
@@ -6358,6 +6418,12 @@
             "netUsdm": 2.76
           },
           {
+            "address": "0x27a0ac322eb2f5a3f37cef2e8a77648784b43722",
+            "stakedUsdm": 55.6,
+            "paidUsdm": 58.35,
+            "netUsdm": 2.75
+          },
+          {
             "address": "0x8970cb46dae63e99ece16452b7ec9594ada08622",
             "stakedUsdm": 100,
             "paidUsdm": 102.74,
@@ -6380,6 +6446,12 @@
             "stakedUsdm": 39,
             "paidUsdm": 41.56,
             "netUsdm": 2.56
+          },
+          {
+            "address": "0x96e2e02a71dde58f5420e1ce8fb236ab75a881ac",
+            "stakedUsdm": 3.8,
+            "paidUsdm": 6.344,
+            "netUsdm": 2.544
           },
           {
             "address": "0x4b55ef1ffb382a17c38b8e2926ff8788cd4b16b8",
@@ -6428,6 +6500,12 @@
             "stakedUsdm": 13,
             "paidUsdm": 15.21,
             "netUsdm": 2.21
+          },
+          {
+            "address": "0xaf411a986bf51896efd5d427205b1c90106c2b70",
+            "stakedUsdm": 10.8,
+            "paidUsdm": 13.008,
+            "netUsdm": 2.208
           },
           {
             "address": "0x94cf66e8a6937e9c45d3218daf6d8eb1a63c9edf",
@@ -6481,6 +6559,12 @@
             "address": "0xbaff23ee8e612c4a75427ad39e5aeab6cde72939",
             "stakedUsdm": 5,
             "paidUsdm": 6.95,
+            "netUsdm": 1.95
+          },
+          {
+            "address": "0xe086b600644adbe6a443b3b8bf0bcc42fea50d7b",
+            "stakedUsdm": 1.5,
+            "paidUsdm": 3.45,
             "netUsdm": 1.95
           },
           {
@@ -6598,12 +6682,6 @@
             "netUsdm": 1.35
           },
           {
-            "address": "0xa094955e6c7cb842835fff126e8f777155715b37",
-            "stakedUsdm": 32.4,
-            "paidUsdm": 33.739,
-            "netUsdm": 1.339
-          },
-          {
             "address": "0xa5718817a75857ea63423ba648ab6fae13a78ca1",
             "stakedUsdm": 12,
             "paidUsdm": 13.31,
@@ -6674,12 +6752,6 @@
             "stakedUsdm": 73,
             "paidUsdm": 74.16,
             "netUsdm": 1.16
-          },
-          {
-            "address": "0x9e4cc747dca4c648c2c1381bfbb58eadc0ce3ae9",
-            "stakedUsdm": 220.8,
-            "paidUsdm": 221.957,
-            "netUsdm": 1.157
           },
           {
             "address": "0x28ced64199fa5fee5f71a3cbe7933e30f67f848f",
@@ -6760,10 +6832,10 @@
             "netUsdm": 0.76
           },
           {
-            "address": "0x49e8cd4606483c515e242874c9a078a19598cfac",
-            "stakedUsdm": 125.1,
-            "paidUsdm": 125.845,
-            "netUsdm": 0.745
+            "address": "0xa094955e6c7cb842835fff126e8f777155715b37",
+            "stakedUsdm": 36.1,
+            "paidUsdm": 36.842,
+            "netUsdm": 0.742
           },
           {
             "address": "0x13367d0fb61b2706b6c388cdd2baccbb068b2790",
@@ -6806,12 +6878,6 @@
             "stakedUsdm": 18,
             "paidUsdm": 18.58,
             "netUsdm": 0.58
-          },
-          {
-            "address": "0x280ea300a08e1e50903b5de623d9d6cd1f83384d",
-            "stakedUsdm": 8.6,
-            "paidUsdm": 9.161,
-            "netUsdm": 0.561
           },
           {
             "address": "0xe45005e626b7c687e323cc06a453ca7dfd0b2a00",
@@ -6904,6 +6970,12 @@
             "netUsdm": 0.298
           },
           {
+            "address": "0x057cd062e219e8c2058aba129de93a49b451e4ba",
+            "stakedUsdm": 0.1,
+            "paidUsdm": 0.395,
+            "netUsdm": 0.295
+          },
+          {
             "address": "0xfb0b053e7d3c0f2c4e923f9bb46f10464c8613f8",
             "stakedUsdm": 70,
             "paidUsdm": 70.25,
@@ -6922,16 +6994,16 @@
             "netUsdm": 0.23
           },
           {
+            "address": "0x1a45f5ce5afda81e818caf1fc318b1e985dde568",
+            "stakedUsdm": 9.6,
+            "paidUsdm": 9.8,
+            "netUsdm": 0.2
+          },
+          {
             "address": "0xf7c5b27328b071203cfe7911b0c4960c53698b84",
             "stakedUsdm": 16,
             "paidUsdm": 16.19,
             "netUsdm": 0.19
-          },
-          {
-            "address": "0xcfbaad33ece7693e4417ed1811990a8310ea42de",
-            "stakedUsdm": 3.9,
-            "paidUsdm": 4.071,
-            "netUsdm": 0.171
           },
           {
             "address": "0x720b4bf45cde2c8e00c5922a21cfd5c9d268b695",
@@ -7138,6 +7210,12 @@
             "netUsdm": -0.317
           },
           {
+            "address": "0xcfbaad33ece7693e4417ed1811990a8310ea42de",
+            "stakedUsdm": 4.4,
+            "paidUsdm": 4.071,
+            "netUsdm": -0.329
+          },
+          {
             "address": "0xad1a9382f4121f6fa0379dd6a207ef8c2199b89c",
             "stakedUsdm": 9,
             "paidUsdm": 8.66,
@@ -7252,12 +7330,6 @@
             "netUsdm": -0.64
           },
           {
-            "address": "0x6f88035bbc643bafdd726c452eef037d8c931975",
-            "stakedUsdm": 4.4,
-            "paidUsdm": 3.73,
-            "netUsdm": -0.67
-          },
-          {
             "address": "0xea2219df43a040c1a1a6f64b4fc726b4dda4bf72",
             "stakedUsdm": 4.3,
             "paidUsdm": 3.59,
@@ -7298,6 +7370,12 @@
             "stakedUsdm": 2,
             "paidUsdm": 1.23,
             "netUsdm": -0.77
+          },
+          {
+            "address": "0x5039eb66222e040a9062f93fd9d999c085120095",
+            "stakedUsdm": 3.7,
+            "paidUsdm": 2.923,
+            "netUsdm": -0.777
           },
           {
             "address": "0x3b568172eef0f60bc035abaf46bfa6f5a8cf9cbc",
@@ -7364,6 +7442,18 @@
             "stakedUsdm": 50,
             "paidUsdm": 49.06,
             "netUsdm": -0.94
+          },
+          {
+            "address": "0xc2950c4281400dc68b23ab335c4b513f8cc2b26b",
+            "stakedUsdm": 28.4,
+            "paidUsdm": 27.444,
+            "netUsdm": -0.956
+          },
+          {
+            "address": "0xf15db81ecae19eb468491f81e8e51e674a358e79",
+            "stakedUsdm": 7.3,
+            "paidUsdm": 6.332,
+            "netUsdm": -0.968
           },
           {
             "address": "0x336a1dd7d05542ae499c3ecd9c515e90c28fb12c",
@@ -7582,12 +7672,6 @@
             "netUsdm": -1.12
           },
           {
-            "address": "0x46ec5b51527df5c83b7e70960c5ddb524c560368",
-            "stakedUsdm": 6.4,
-            "paidUsdm": 5.276,
-            "netUsdm": -1.124
-          },
-          {
             "address": "0x10262001ff0d753f05031645af6ff4316cdd45fa",
             "stakedUsdm": 3.5,
             "paidUsdm": 2.368,
@@ -7610,6 +7694,12 @@
             "stakedUsdm": 3,
             "paidUsdm": 1.78,
             "netUsdm": -1.22
+          },
+          {
+            "address": "0x49e8cd4606483c515e242874c9a078a19598cfac",
+            "stakedUsdm": 127.1,
+            "paidUsdm": 125.845,
+            "netUsdm": -1.255
           },
           {
             "address": "0xef735ec178af57652960296fd7d24a637d0c2fcc",
@@ -7640,12 +7730,6 @@
             "stakedUsdm": 9,
             "paidUsdm": 7.62,
             "netUsdm": -1.38
-          },
-          {
-            "address": "0xedf8d879e90428fce472b8af99bdf76fe0c37fab",
-            "stakedUsdm": 4.3,
-            "paidUsdm": 2.909,
-            "netUsdm": -1.391
           },
           {
             "address": "0xc3b703608ae3375231428dc586d56a71fce2de55",
@@ -7682,6 +7766,12 @@
             "stakedUsdm": 6,
             "paidUsdm": 4.5,
             "netUsdm": -1.5
+          },
+          {
+            "address": "0x280ea300a08e1e50903b5de623d9d6cd1f83384d",
+            "stakedUsdm": 11.1,
+            "paidUsdm": 9.595,
+            "netUsdm": -1.505
           },
           {
             "address": "0x5d9b2fa96b8a2d3ed714a5b19a78f1e9b9f3f320",
@@ -7730,6 +7820,12 @@
             "stakedUsdm": 45,
             "paidUsdm": 43.3,
             "netUsdm": -1.7
+          },
+          {
+            "address": "0x20da0447cf1302be28e642a6fe1e91a399f20990",
+            "stakedUsdm": 3.5,
+            "paidUsdm": 1.765,
+            "netUsdm": -1.735
           },
           {
             "address": "0x33c9fa179dd19fcb611fea332871bcd8decc32c2",
@@ -8014,6 +8110,12 @@
             "netUsdm": -2.43
           },
           {
+            "address": "0x2c5003b943c7c47bf876216cc5ecb51cec73f28a",
+            "stakedUsdm": 66.2,
+            "paidUsdm": 63.735,
+            "netUsdm": -2.465
+          },
+          {
             "address": "0xb1bdbfe2fef00445c7e9116e6b4e02a110f17682",
             "stakedUsdm": 14,
             "paidUsdm": 11.53,
@@ -8030,6 +8132,12 @@
             "stakedUsdm": 46,
             "paidUsdm": 43.47,
             "netUsdm": -2.53
+          },
+          {
+            "address": "0x01c46e8bfc7843aca8c065dc76f71c0ec1e51eed",
+            "stakedUsdm": 2102.5,
+            "paidUsdm": 2099.968,
+            "netUsdm": -2.532
           },
           {
             "address": "0xf42b6096168f7c6c7c6f519811a4f371af9d07e9",
@@ -8086,12 +8194,6 @@
             "netUsdm": -2.64
           },
           {
-            "address": "0x28d8ceb5822f0a864f7553313c224d53659929e2",
-            "stakedUsdm": 7.3,
-            "paidUsdm": 4.629,
-            "netUsdm": -2.671
-          },
-          {
             "address": "0xdb03e1449ccd67b59ad2bd7e87c258ada994de05",
             "stakedUsdm": 7,
             "paidUsdm": 4.32,
@@ -8126,6 +8228,18 @@
             "stakedUsdm": 58,
             "paidUsdm": 55.25,
             "netUsdm": -2.75
+          },
+          {
+            "address": "0xeb5efb6d91a6af8de1165bec37ad31069b68326f",
+            "stakedUsdm": 12.3,
+            "paidUsdm": 9.54,
+            "netUsdm": -2.76
+          },
+          {
+            "address": "0x28d8ceb5822f0a864f7553313c224d53659929e2",
+            "stakedUsdm": 8,
+            "paidUsdm": 5.232,
+            "netUsdm": -2.768
           },
           {
             "address": "0xa2e9fb6a84096b9a71273d7145f2c36ab9a85d65",
@@ -8284,6 +8398,12 @@
             "netUsdm": -3.203
           },
           {
+            "address": "0x46ec5b51527df5c83b7e70960c5ddb524c560368",
+            "stakedUsdm": 14.9,
+            "paidUsdm": 11.686,
+            "netUsdm": -3.214
+          },
+          {
             "address": "0x7a327e52b936ba55bab2c20befb69f13c455bfc0",
             "stakedUsdm": 14,
             "paidUsdm": 10.77,
@@ -8378,6 +8498,12 @@
             "stakedUsdm": 7,
             "paidUsdm": 3.54,
             "netUsdm": -3.46
+          },
+          {
+            "address": "0xb683339fca8a9feefb6c79cce70dec8e0ab91951",
+            "stakedUsdm": 1456.1,
+            "paidUsdm": 1452.62,
+            "netUsdm": -3.48
           },
           {
             "address": "0x3d5a488b3e0611a4605a4046d475794fee2bcd20",
@@ -8482,18 +8608,6 @@
             "netUsdm": -3.75
           },
           {
-            "address": "0xf6047731e9340f1bd59e20f278d3274981b43041",
-            "stakedUsdm": 53,
-            "paidUsdm": 49.24,
-            "netUsdm": -3.76
-          },
-          {
-            "address": "0x01c46e8bfc7843aca8c065dc76f71c0ec1e51eed",
-            "stakedUsdm": 2088.4,
-            "paidUsdm": 2084.628,
-            "netUsdm": -3.772
-          },
-          {
             "address": "0x5ba6b63f1b4aed757d073896465950e107478cd4",
             "stakedUsdm": 5,
             "paidUsdm": 1.17,
@@ -8516,6 +8630,12 @@
             "stakedUsdm": 12.5,
             "paidUsdm": 8.628,
             "netUsdm": -3.872
+          },
+          {
+            "address": "0x2666bd9b6558eaeb2d751c8eb6b591f1a5295502",
+            "stakedUsdm": 4.9,
+            "paidUsdm": 1.022,
+            "netUsdm": -3.878
           },
           {
             "address": "0xd0c0474ba2efd8342e8f0c71670ad81997f18bcb",
@@ -8654,12 +8774,6 @@
             "stakedUsdm": 20,
             "paidUsdm": 15.76,
             "netUsdm": -4.24
-          },
-          {
-            "address": "0xad14881ad5a8b24ea375a85e43dd2a7a694e5009",
-            "stakedUsdm": 38.7,
-            "paidUsdm": 34.458,
-            "netUsdm": -4.242
           },
           {
             "address": "0xca6e7d591345211545a658bae7b47ee4d56eeb4f",
@@ -8872,6 +8986,12 @@
             "netUsdm": -4.72
           },
           {
+            "address": "0xad14881ad5a8b24ea375a85e43dd2a7a694e5009",
+            "stakedUsdm": 39.6,
+            "paidUsdm": 34.872,
+            "netUsdm": -4.728
+          },
+          {
             "address": "0xe48c3fcc2aac80cca1e34e867f82ffc0dcb87fac",
             "stakedUsdm": 18,
             "paidUsdm": 13.21,
@@ -8882,6 +9002,12 @@
             "stakedUsdm": 22,
             "paidUsdm": 17.2,
             "netUsdm": -4.8
+          },
+          {
+            "address": "0xce6a4b3dd448262589a56021eef49b488af8ccb6",
+            "stakedUsdm": 6.7,
+            "paidUsdm": 1.892,
+            "netUsdm": -4.808
           },
           {
             "address": "0x1f94c23395917e235bc772c5ae229977f09ca770",
@@ -9094,6 +9220,12 @@
             "netUsdm": -5.24
           },
           {
+            "address": "0xf6047731e9340f1bd59e20f278d3274981b43041",
+            "stakedUsdm": 78,
+            "paidUsdm": 72.74,
+            "netUsdm": -5.26
+          },
+          {
             "address": "0xe8404ae04192d35f6b2552cee910816a834e1327",
             "stakedUsdm": 12.1,
             "paidUsdm": 6.792,
@@ -9238,12 +9370,6 @@
             "netUsdm": -6
           },
           {
-            "address": "0x878be886523c9e335d68ce02abecf3b05422902a",
-            "stakedUsdm": 896.4,
-            "paidUsdm": 890.393,
-            "netUsdm": -6.007
-          },
-          {
             "address": "0xb824f65b3f40a370f0c7ad27e68b1a116497ae3c",
             "stakedUsdm": 9,
             "paidUsdm": 2.89,
@@ -9284,6 +9410,12 @@
             "stakedUsdm": 19,
             "paidUsdm": 12.62,
             "netUsdm": -6.38
+          },
+          {
+            "address": "0x5554da6908e147ebeebce6284a04e9388e60d01c",
+            "stakedUsdm": 95.5,
+            "paidUsdm": 89.116,
+            "netUsdm": -6.384
           },
           {
             "address": "0x8c88f21dae3c2cfe702c5acea6ef9d6a8ee6d3e8",
@@ -9536,6 +9668,12 @@
             "stakedUsdm": 78,
             "paidUsdm": 70.4,
             "netUsdm": -7.6
+          },
+          {
+            "address": "0x878be886523c9e335d68ce02abecf3b05422902a",
+            "stakedUsdm": 898.3,
+            "paidUsdm": 890.688,
+            "netUsdm": -7.612
           },
           {
             "address": "0x8e86d714db3bd4187c113b78845479a79723f85c",
@@ -10912,12 +11050,6 @@
             "netUsdm": -10.46
           },
           {
-            "address": "0xd5e9d9e7783c73c8f16dbcb8184a7ce9e01f73f8",
-            "stakedUsdm": 191.5,
-            "paidUsdm": 180.985,
-            "netUsdm": -10.515
-          },
-          {
             "address": "0xf309c680ccd32e8a8a5ae832f222b8e6a2b4c9fd",
             "stakedUsdm": 205,
             "paidUsdm": 194.45,
@@ -10946,6 +11078,12 @@
             "stakedUsdm": 1063,
             "paidUsdm": 1052.39,
             "netUsdm": -10.61
+          },
+          {
+            "address": "0x1a96d5aad7c830f7658167c0d1eeacbc0fb77572",
+            "stakedUsdm": 32.7,
+            "paidUsdm": 22.072,
+            "netUsdm": -10.628
           },
           {
             "address": "0x7cfeca0791570b2e27e266904ad06e4107cf3cef",
@@ -10996,6 +11134,12 @@
             "netUsdm": -10.76
           },
           {
+            "address": "0x6b629f74b35bc4aafd433f0f2efcef3ae8662d33",
+            "stakedUsdm": 21.8,
+            "paidUsdm": 11,
+            "netUsdm": -10.8
+          },
+          {
             "address": "0x42e75d7def862290b6b9672131a470ec37e9a742",
             "stakedUsdm": 47.1,
             "paidUsdm": 36.299,
@@ -11006,6 +11150,12 @@
             "stakedUsdm": 18,
             "paidUsdm": 7.18,
             "netUsdm": -10.82
+          },
+          {
+            "address": "0xd5e9d9e7783c73c8f16dbcb8184a7ce9e01f73f8",
+            "stakedUsdm": 193,
+            "paidUsdm": 182.154,
+            "netUsdm": -10.846
           },
           {
             "address": "0xfe229c417c4448ed6e9c8e0328bd1638146a0f0d",
@@ -11098,12 +11248,6 @@
             "netUsdm": -11.314
           },
           {
-            "address": "0x37f36cb9b4f986f2bdb2cbe233320f6116b73ff5",
-            "stakedUsdm": 35,
-            "paidUsdm": 23.68,
-            "netUsdm": -11.32
-          },
-          {
             "address": "0x6ace614843b59821731a870595eeb1aa5f5ac30e",
             "stakedUsdm": 77,
             "paidUsdm": 65.6,
@@ -11186,12 +11330,6 @@
             "stakedUsdm": 18,
             "paidUsdm": 5.94,
             "netUsdm": -12.06
-          },
-          {
-            "address": "0x46ff70a0c845edcb2e3fb811f6e115027e1ad1c6",
-            "stakedUsdm": 10714.7,
-            "paidUsdm": 10702.613,
-            "netUsdm": -12.087
           },
           {
             "address": "0x2f656168d9ba78ccded67d621e5f9a88f692e421",
@@ -11674,6 +11812,12 @@
             "netUsdm": -15.55
           },
           {
+            "address": "0x6f88035bbc643bafdd726c452eef037d8c931975",
+            "stakedUsdm": 19.4,
+            "paidUsdm": 3.73,
+            "netUsdm": -15.67
+          },
+          {
             "address": "0x5747c2ed014904d905980ae08b210c2428885c71",
             "stakedUsdm": 49.4,
             "paidUsdm": 33.699,
@@ -11939,9 +12083,9 @@
           },
           {
             "address": "0xc3ad0ab60a03b51a88b0b2bd911bc278af2716ec",
-            "stakedUsdm": 60.6,
-            "paidUsdm": 42.21,
-            "netUsdm": -18.39
+            "stakedUsdm": 61,
+            "paidUsdm": 42.57,
+            "netUsdm": -18.43
           },
           {
             "address": "0xafd382f04c416d7af6a88a7443fc215ee2e00982",
@@ -12008,6 +12152,12 @@
             "stakedUsdm": 90,
             "paidUsdm": 71.17,
             "netUsdm": -18.83
+          },
+          {
+            "address": "0x65779530cec182200754b120d6da2273e124c02c",
+            "stakedUsdm": 380.9,
+            "paidUsdm": 362.008,
+            "netUsdm": -18.892
           },
           {
             "address": "0x385aa355f74420595498d94cfd810c6a8a2d6465",
@@ -12172,12 +12322,6 @@
             "netUsdm": -19.49
           },
           {
-            "address": "0x65779530cec182200754b120d6da2273e124c02c",
-            "stakedUsdm": 380.7,
-            "paidUsdm": 361.173,
-            "netUsdm": -19.527
-          },
-          {
             "address": "0x7c3773c9bef29e5ffcb56491de9d01ae8471f36d",
             "stakedUsdm": 392,
             "paidUsdm": 372.47,
@@ -12235,12 +12379,6 @@
             "address": "0xba121e1fd82b0aba833adeaa4e65245077c32ab2",
             "stakedUsdm": 51,
             "paidUsdm": 31.33,
-            "netUsdm": -19.67
-          },
-          {
-            "address": "0xced23b1ba3e6b3a19f659963add9715efec2e527",
-            "stakedUsdm": 43,
-            "paidUsdm": 23.33,
             "netUsdm": -19.67
           },
           {
@@ -12466,6 +12604,12 @@
             "netUsdm": -21.56
           },
           {
+            "address": "0xced23b1ba3e6b3a19f659963add9715efec2e527",
+            "stakedUsdm": 83,
+            "paidUsdm": 61.16,
+            "netUsdm": -21.84
+          },
+          {
             "address": "0xa77c4ab12e8810da175b09e08b2412a3e11279c8",
             "stakedUsdm": 219,
             "paidUsdm": 197.12,
@@ -12520,28 +12664,22 @@
             "netUsdm": -22.55
           },
           {
-            "address": "0x06db1be9c35ec17da9a9ac44fe0b062515364b26",
-            "stakedUsdm": 359.7,
-            "paidUsdm": 337.12,
-            "netUsdm": -22.58
-          },
-          {
             "address": "0x3b46a9259ac0352cd94171e69f7596ad8dce5460",
             "stakedUsdm": 56.8,
             "paidUsdm": 34.182,
             "netUsdm": -22.618
           },
           {
+            "address": "0x37f36cb9b4f986f2bdb2cbe233320f6116b73ff5",
+            "stakedUsdm": 70,
+            "paidUsdm": 47.36,
+            "netUsdm": -22.64
+          },
+          {
             "address": "0x10f38c7e4e89a3e870ba682b4c1fdeb789eed8fc",
             "stakedUsdm": 419,
             "paidUsdm": 396.09,
             "netUsdm": -22.91
-          },
-          {
-            "address": "0x53cedd39db92cf6ff838a85ab74a29e7df4cdfba",
-            "stakedUsdm": 53,
-            "paidUsdm": 30.07,
-            "netUsdm": -22.93
           },
           {
             "address": "0xd554439789ffc9242d003cb20bc5a600410281a7",
@@ -12706,6 +12844,12 @@
             "netUsdm": -24.72
           },
           {
+            "address": "0x12bc5b3331cb231815ad94097be04d07a62957d3",
+            "stakedUsdm": 25,
+            "paidUsdm": 0,
+            "netUsdm": -25
+          },
+          {
             "address": "0xe3b52659b3518c6aadb592107d54ae594fcdd85b",
             "stakedUsdm": 267,
             "paidUsdm": 241.84,
@@ -12766,6 +12910,12 @@
             "netUsdm": -25.58
           },
           {
+            "address": "0x3d585b25b585f61d1080c3f102a937cf660f3ebd",
+            "stakedUsdm": 212.1,
+            "paidUsdm": 186.505,
+            "netUsdm": -25.595
+          },
+          {
             "address": "0x260255387f52b8734dd459f90a490b05b3879da9",
             "stakedUsdm": 101,
             "paidUsdm": 75.34,
@@ -12806,12 +12956,6 @@
             "stakedUsdm": 334,
             "paidUsdm": 307.92,
             "netUsdm": -26.08
-          },
-          {
-            "address": "0x3d585b25b585f61d1080c3f102a937cf660f3ebd",
-            "stakedUsdm": 208.6,
-            "paidUsdm": 182.505,
-            "netUsdm": -26.095
           },
           {
             "address": "0xb658d4f95be57bcc49e57116a732b50114cb41c9",
@@ -13090,6 +13234,12 @@
             "netUsdm": -30.18
           },
           {
+            "address": "0x46ff70a0c845edcb2e3fb811f6e115027e1ad1c6",
+            "stakedUsdm": 10791.4,
+            "paidUsdm": 10760.984,
+            "netUsdm": -30.416
+          },
+          {
             "address": "0x3dd149868c84e331516add6d6dffe05a61d25334",
             "stakedUsdm": 156,
             "paidUsdm": 125.46,
@@ -13102,6 +13252,12 @@
             "netUsdm": -30.59
           },
           {
+            "address": "0x3b060e4cd88190844beff3931572338d7273c7bd",
+            "stakedUsdm": 904.2,
+            "paidUsdm": 873.399,
+            "netUsdm": -30.801
+          },
+          {
             "address": "0xb49521c84e931341aa392521b25c586266e3433b",
             "stakedUsdm": 70,
             "paidUsdm": 39.1,
@@ -13112,18 +13268,6 @@
             "stakedUsdm": 62,
             "paidUsdm": 31.09,
             "netUsdm": -30.91
-          },
-          {
-            "address": "0x3b060e4cd88190844beff3931572338d7273c7bd",
-            "stakedUsdm": 904.1,
-            "paidUsdm": 873.117,
-            "netUsdm": -30.983
-          },
-          {
-            "address": "0xfd8a0fb01c841595918bf6f07cd7be03a9876b2c",
-            "stakedUsdm": 1624.2,
-            "paidUsdm": 1593.194,
-            "netUsdm": -31.006
           },
           {
             "address": "0x299c7d1775ab5eff86548751095cae252caada94",
@@ -13198,6 +13342,12 @@
             "netUsdm": -32.35
           },
           {
+            "address": "0xfd8a0fb01c841595918bf6f07cd7be03a9876b2c",
+            "stakedUsdm": 1639.2,
+            "paidUsdm": 1606.757,
+            "netUsdm": -32.443
+          },
+          {
             "address": "0x11d8b854bc8714a8bcdf4d0584e4fd0f2dcc4df2",
             "stakedUsdm": 71,
             "paidUsdm": 38.54,
@@ -13226,12 +13376,6 @@
             "stakedUsdm": 3323,
             "paidUsdm": 3289.44,
             "netUsdm": -33.56
-          },
-          {
-            "address": "0xe118efc5ee7b0cfbbb665af42091cb22c181cb84",
-            "stakedUsdm": 3747.4,
-            "paidUsdm": 3713.519,
-            "netUsdm": -33.881
           },
           {
             "address": "0x3d4b4df2149f500fcbf339ae4d58f1be691ba980",
@@ -13294,6 +13438,12 @@
             "netUsdm": -34.72
           },
           {
+            "address": "0xe118efc5ee7b0cfbbb665af42091cb22c181cb84",
+            "stakedUsdm": 3753,
+            "paidUsdm": 3717.943,
+            "netUsdm": -35.057
+          },
+          {
             "address": "0x452eba45d51fde8a08ba163a66f945abaaf9a119",
             "stakedUsdm": 190,
             "paidUsdm": 154.88,
@@ -13328,12 +13478,6 @@
             "stakedUsdm": 116,
             "paidUsdm": 80.06,
             "netUsdm": -35.94
-          },
-          {
-            "address": "0x8dce3e7219462b0348036b7a311b761ca6599043",
-            "stakedUsdm": 93.4,
-            "paidUsdm": 56.992,
-            "netUsdm": -36.408
           },
           {
             "address": "0xd14a2616d174464b238ec5ec0af3046cc6a31da8",
@@ -13376,6 +13520,12 @@
             "stakedUsdm": 93,
             "paidUsdm": 55.55,
             "netUsdm": -37.45
+          },
+          {
+            "address": "0x06db1be9c35ec17da9a9ac44fe0b062515364b26",
+            "stakedUsdm": 395.7,
+            "paidUsdm": 357.9,
+            "netUsdm": -37.8
           },
           {
             "address": "0xbc8a7cbf42621602e6b5c3693e3152c793296eea",
@@ -13636,16 +13786,16 @@
             "netUsdm": -44.93
           },
           {
-            "address": "0x1b9a8e337283fe29ac961b281a1ba871815b90e9",
-            "stakedUsdm": 2182.5,
-            "paidUsdm": 2137.252,
-            "netUsdm": -45.248
-          },
-          {
             "address": "0x7cb95313f826d92febab8c3e5a71b507d083a1b2",
             "stakedUsdm": 334,
             "paidUsdm": 288.7,
             "netUsdm": -45.3
+          },
+          {
+            "address": "0x8dce3e7219462b0348036b7a311b761ca6599043",
+            "stakedUsdm": 116.1,
+            "paidUsdm": 70.518,
+            "netUsdm": -45.582
           },
           {
             "address": "0xe965657822d5e19a84ed0d5c0014ff6c64302686",
@@ -13658,6 +13808,12 @@
             "stakedUsdm": 89,
             "paidUsdm": 43.32,
             "netUsdm": -45.68
+          },
+          {
+            "address": "0x53cedd39db92cf6ff838a85ab74a29e7df4cdfba",
+            "stakedUsdm": 106,
+            "paidUsdm": 60.14,
+            "netUsdm": -45.86
           },
           {
             "address": "0xb49e4539972d2ad84a00ccf3b8cd3a84168f15cb",
@@ -13678,12 +13834,6 @@
             "netUsdm": -46.2
           },
           {
-            "address": "0x2e641579fca1845f0fdc3a0ceede4cf64e4ce262",
-            "stakedUsdm": 475,
-            "paidUsdm": 428.78,
-            "netUsdm": -46.22
-          },
-          {
             "address": "0x2257bcebb596016491db8f9266de96dadb6c1545",
             "stakedUsdm": 197.3,
             "paidUsdm": 150.95,
@@ -13694,6 +13844,12 @@
             "stakedUsdm": 250,
             "paidUsdm": 203.54,
             "netUsdm": -46.46
+          },
+          {
+            "address": "0x2e641579fca1845f0fdc3a0ceede4cf64e4ce262",
+            "stakedUsdm": 482.3,
+            "paidUsdm": 435.43,
+            "netUsdm": -46.87
           },
           {
             "address": "0x8239b2364f27bb0ac23fb926c03acd2497927b27",
@@ -13784,12 +13940,6 @@
             "stakedUsdm": 87,
             "paidUsdm": 38.36,
             "netUsdm": -48.64
-          },
-          {
-            "address": "0xb59410b922b8490641b2605320dd2f07718a33f8",
-            "stakedUsdm": 1261.1,
-            "paidUsdm": 1212.459,
-            "netUsdm": -48.641
           },
           {
             "address": "0x073fc27cd1d279ec3ebdcba578410a96f0ef4bdd",
@@ -13888,12 +14038,6 @@
             "netUsdm": -49.5
           },
           {
-            "address": "0x850248fc0fd06bc31ba52ee0a54719a1fa06fc7b",
-            "stakedUsdm": 449.6,
-            "paidUsdm": 400.092,
-            "netUsdm": -49.508
-          },
-          {
             "address": "0x0310c0c627fee3770a037064d38ec44ec2cbd1e6",
             "stakedUsdm": 205,
             "paidUsdm": 155.49,
@@ -13922,6 +14066,12 @@
             "stakedUsdm": 488,
             "paidUsdm": 438.4,
             "netUsdm": -49.6
+          },
+          {
+            "address": "0x850248fc0fd06bc31ba52ee0a54719a1fa06fc7b",
+            "stakedUsdm": 457.2,
+            "paidUsdm": 407.499,
+            "netUsdm": -49.701
           },
           {
             "address": "0xf779e21c18a6de9462409b2f509bc1005e90d11c",
@@ -13964,6 +14114,12 @@
             "stakedUsdm": 358.6,
             "paidUsdm": 307.961,
             "netUsdm": -50.639
+          },
+          {
+            "address": "0x1b9a8e337283fe29ac961b281a1ba871815b90e9",
+            "stakedUsdm": 2229.8,
+            "paidUsdm": 2179.108,
+            "netUsdm": -50.692
           },
           {
             "address": "0x55141c1041b95c962c86181481ce71686abe4f14",
@@ -14026,6 +14182,12 @@
             "netUsdm": -53.55
           },
           {
+            "address": "0xb59410b922b8490641b2605320dd2f07718a33f8",
+            "stakedUsdm": 1308.5,
+            "paidUsdm": 1254.856,
+            "netUsdm": -53.644
+          },
+          {
             "address": "0xd9497404048afce56dbe9461ebfcc9047d2c779d",
             "stakedUsdm": 96,
             "paidUsdm": 41.71,
@@ -14066,12 +14228,6 @@
             "stakedUsdm": 136,
             "paidUsdm": 79.63,
             "netUsdm": -56.37
-          },
-          {
-            "address": "0x09609c3524a3935c7778356eb24731435228b120",
-            "stakedUsdm": 925.1,
-            "paidUsdm": 868.455,
-            "netUsdm": -56.645
           },
           {
             "address": "0xeb740307c9b25232a4200778ffd274847cd424c3",
@@ -14128,6 +14284,12 @@
             "netUsdm": -59.15
           },
           {
+            "address": "0x09609c3524a3935c7778356eb24731435228b120",
+            "stakedUsdm": 942.5,
+            "paidUsdm": 883.301,
+            "netUsdm": -59.199
+          },
+          {
             "address": "0xe3d5698ac32a445c9311e0b9be1613acd043ed8f",
             "stakedUsdm": 10799,
             "paidUsdm": 10739.6,
@@ -14180,12 +14342,6 @@
             "stakedUsdm": 648,
             "paidUsdm": 586.15,
             "netUsdm": -61.85
-          },
-          {
-            "address": "0x1a48b173e1b2583bcdbcff4dad626ef61d4d8a06",
-            "stakedUsdm": 221.8,
-            "paidUsdm": 159.762,
-            "netUsdm": -62.038
           },
           {
             "address": "0x18cf17f10a79a047741de2b917ad5e551431129d",
@@ -14308,6 +14464,12 @@
             "netUsdm": -68.49
           },
           {
+            "address": "0x1a48b173e1b2583bcdbcff4dad626ef61d4d8a06",
+            "stakedUsdm": 244.8,
+            "paidUsdm": 176.272,
+            "netUsdm": -68.528
+          },
+          {
             "address": "0x772bd5f52f09ff3f892b1379d2290d9764bb6326",
             "stakedUsdm": 523,
             "paidUsdm": 453.59,
@@ -14422,12 +14584,6 @@
             "netUsdm": -77.762
           },
           {
-            "address": "0x14162628e3e0215949b4be2fbd7caab7c6c6d923",
-            "stakedUsdm": 6266.8,
-            "paidUsdm": 6188.901,
-            "netUsdm": -77.899
-          },
-          {
             "address": "0x0760d770ce5c21979797957ed2128b7f0422f074",
             "stakedUsdm": 269,
             "paidUsdm": 190.83,
@@ -14444,6 +14600,12 @@
             "stakedUsdm": 249,
             "paidUsdm": 170.78,
             "netUsdm": -78.22
+          },
+          {
+            "address": "0x14162628e3e0215949b4be2fbd7caab7c6c6d923",
+            "stakedUsdm": 6267.8,
+            "paidUsdm": 6188.901,
+            "netUsdm": -78.899
           },
           {
             "address": "0x8cdcd16488ae5506d107325f66b0eca0aa5d410a",
@@ -14830,6 +14992,12 @@
             "netUsdm": -99.98
           },
           {
+            "address": "0x3b0d90f5c5f1bdc5c6b411afa900b61946fcec55",
+            "stakedUsdm": 5875.8,
+            "paidUsdm": 5775.777,
+            "netUsdm": -100.023
+          },
+          {
             "address": "0x4b7471658d43e7a84f7c65264025d18d7078f7a3",
             "stakedUsdm": 3822,
             "paidUsdm": 3721.92,
@@ -14852,12 +15020,6 @@
             "stakedUsdm": 222,
             "paidUsdm": 120.85,
             "netUsdm": -101.15
-          },
-          {
-            "address": "0x3b0d90f5c5f1bdc5c6b411afa900b61946fcec55",
-            "stakedUsdm": 5874.8,
-            "paidUsdm": 5771.202,
-            "netUsdm": -103.598
           },
           {
             "address": "0xbd37184a945042a5fb8797e4a97ea74dac1fc7e2",
@@ -14944,6 +15106,12 @@
             "netUsdm": -112.267
           },
           {
+            "address": "0x9cfe2362e8921a510d7f3814ed90aaa6e666b9e3",
+            "stakedUsdm": 1098.6,
+            "paidUsdm": 985.955,
+            "netUsdm": -112.645
+          },
+          {
             "address": "0x446756cb5998f08ff34ea4cf7cf3f2d40d926c45",
             "stakedUsdm": 543,
             "paidUsdm": 430.01,
@@ -14972,12 +15140,6 @@
             "stakedUsdm": 1494,
             "paidUsdm": 1380.68,
             "netUsdm": -113.32
-          },
-          {
-            "address": "0x9cfe2362e8921a510d7f3814ed90aaa6e666b9e3",
-            "stakedUsdm": 1091.6,
-            "paidUsdm": 977.815,
-            "netUsdm": -113.785
           },
           {
             "address": "0x6c2e92623c079aaa6bd9bfa0ba218d28d181d405",
@@ -15040,12 +15202,6 @@
             "netUsdm": -120.7
           },
           {
-            "address": "0xadfdc8cee6c1cd80d7337d323a7a0b39b4c2a18f",
-            "stakedUsdm": 30558.1,
-            "paidUsdm": 30436.403,
-            "netUsdm": -121.697
-          },
-          {
             "address": "0x6467fc0eae546864befa8c53a3d9b1f8643a7b3f",
             "stakedUsdm": 2427.1,
             "paidUsdm": 2304.621,
@@ -15074,12 +15230,6 @@
             "stakedUsdm": 960,
             "paidUsdm": 832.16,
             "netUsdm": -127.84
-          },
-          {
-            "address": "0x32ae370859ac54e73885f4ff814a796b35a53d44",
-            "stakedUsdm": 844,
-            "paidUsdm": 712.55,
-            "netUsdm": -131.45
           },
           {
             "address": "0xb80e50bd9fd584746657484eeee301518a707d5e",
@@ -15112,6 +15262,12 @@
             "netUsdm": -139.42
           },
           {
+            "address": "0x619112963fa73eaa51480eac39816d9b46fa27ec",
+            "stakedUsdm": 7419.3,
+            "paidUsdm": 7274.105,
+            "netUsdm": -145.195
+          },
+          {
             "address": "0x939f89f9a6e30ea563731fddb5f29b3b22f7b34c",
             "stakedUsdm": 413,
             "paidUsdm": 267.55,
@@ -15136,16 +15292,22 @@
             "netUsdm": -148.85
           },
           {
-            "address": "0x619112963fa73eaa51480eac39816d9b46fa27ec",
-            "stakedUsdm": 7396.3,
-            "paidUsdm": 7247.155,
-            "netUsdm": -149.145
-          },
-          {
             "address": "0x12b1f806397e7aecf61f9b502c5a6cd05d0f5b3d",
             "stakedUsdm": 573,
             "paidUsdm": 421.95,
             "netUsdm": -151.05
+          },
+          {
+            "address": "0x32ae370859ac54e73885f4ff814a796b35a53d44",
+            "stakedUsdm": 877.3,
+            "paidUsdm": 722.761,
+            "netUsdm": -154.539
+          },
+          {
+            "address": "0xadfdc8cee6c1cd80d7337d323a7a0b39b4c2a18f",
+            "stakedUsdm": 30915.3,
+            "paidUsdm": 30757.775,
+            "netUsdm": -157.525
           },
           {
             "address": "0x588f6672384f7a463ccd5f838d8034b3b4d9ef33",
@@ -15238,12 +15400,6 @@
             "netUsdm": -194.156
           },
           {
-            "address": "0x873320eb26e656c212033ab74799b8b6e1d3d399",
-            "stakedUsdm": 637,
-            "paidUsdm": 440.56,
-            "netUsdm": -196.44
-          },
-          {
             "address": "0x792e5ae9134f366959beab314aaeadee22d1a206",
             "stakedUsdm": 504,
             "paidUsdm": 306.78,
@@ -15278,6 +15434,12 @@
             "stakedUsdm": 542,
             "paidUsdm": 338.83,
             "netUsdm": -203.17
+          },
+          {
+            "address": "0x873320eb26e656c212033ab74799b8b6e1d3d399",
+            "stakedUsdm": 644.5,
+            "paidUsdm": 440.56,
+            "netUsdm": -203.94
           },
           {
             "address": "0x773075fe6a8bf696b1199f5000a1bda4b0b3e2a8",
@@ -15365,9 +15527,9 @@
           },
           {
             "address": "0xb36e05bdbbfd34d56c6dd270245120c03c90def0",
-            "stakedUsdm": 3115.1,
+            "stakedUsdm": 3115.3,
             "paidUsdm": 2877.784,
-            "netUsdm": -237.316
+            "netUsdm": -237.516
           },
           {
             "address": "0x87fcd0f057c3747ddc44ffc79c047b97fb50c80d",
@@ -15496,12 +15658,6 @@
             "netUsdm": -351.1
           },
           {
-            "address": "0x3daecbea93a8ed7d5a3c1435c56236064482680e",
-            "stakedUsdm": 4031.3,
-            "paidUsdm": 3677.833,
-            "netUsdm": -353.467
-          },
-          {
             "address": "0xed6007943dc0b3394c9d6cd48bf455be8107259b",
             "stakedUsdm": 7326.7,
             "paidUsdm": 6967.275,
@@ -15512,6 +15668,12 @@
             "stakedUsdm": 4059,
             "paidUsdm": 3699.5,
             "netUsdm": -359.5
+          },
+          {
+            "address": "0x3daecbea93a8ed7d5a3c1435c56236064482680e",
+            "stakedUsdm": 4219.2,
+            "paidUsdm": 3848.942,
+            "netUsdm": -370.258
           },
           {
             "address": "0xb74528dae7108d09655ec6634ce783c4f6f638fa",
@@ -15641,9 +15803,9 @@
           },
           {
             "address": "0xed435fd935002bac2dbbe9e21f55358a83aecd76",
-            "stakedUsdm": 5507,
-            "paidUsdm": 4748.746,
-            "netUsdm": -758.254
+            "stakedUsdm": 5516.1,
+            "paidUsdm": 4762.298,
+            "netUsdm": -753.802
           },
           {
             "address": "0x9b97cc63458b46ba2b741dc31bbe65f86f8472cd",
@@ -15682,16 +15844,16 @@
             "netUsdm": -989.35
           },
           {
-            "address": "0x331d53ee8d5e8de6604ad828d37c8bbdabbcba7e",
-            "stakedUsdm": 3861.1,
-            "paidUsdm": 2863.16,
-            "netUsdm": -997.94
-          },
-          {
             "address": "0xbee96f8f58165c785eff6dd6ea805bd74c5ccf18",
             "stakedUsdm": 6479,
             "paidUsdm": 5479.96,
             "netUsdm": -999.04
+          },
+          {
+            "address": "0x331d53ee8d5e8de6604ad828d37c8bbdabbcba7e",
+            "stakedUsdm": 4111.1,
+            "paidUsdm": 3107.41,
+            "netUsdm": -1003.69
           },
           {
             "address": "0xa42fb9a78229f2de140624d0e426a8af07c4270c",
@@ -15742,12 +15904,6 @@
             "netUsdm": -1827.98
           },
           {
-            "address": "0xa6199b8cc83088d0882e7f16510c6fbe67f58823",
-            "stakedUsdm": 39958.3,
-            "paidUsdm": 38087.245,
-            "netUsdm": -1871.055
-          },
-          {
             "address": "0xc36b6a251c702cf786ab8963884c1f527567f643",
             "stakedUsdm": 17476,
             "paidUsdm": 15601.93,
@@ -15755,15 +15911,21 @@
           },
           {
             "address": "0x04edeac2685657e0c6c26220fcfa770f5a7cdf31",
-            "stakedUsdm": 41994,
-            "paidUsdm": 40040.753,
-            "netUsdm": -1953.247
+            "stakedUsdm": 43814,
+            "paidUsdm": 41684.463,
+            "netUsdm": -2129.537
+          },
+          {
+            "address": "0xa6199b8cc83088d0882e7f16510c6fbe67f58823",
+            "stakedUsdm": 63607.5,
+            "paidUsdm": 60858.127,
+            "netUsdm": -2749.373
           },
           {
             "address": "0x30f0a5446655c33022c86371e195334b35188235",
-            "stakedUsdm": 55143.5,
-            "paidUsdm": 52441.011,
-            "netUsdm": -2702.489
+            "stakedUsdm": 59215.4,
+            "paidUsdm": 56063.25,
+            "netUsdm": -3152.15
           },
           {
             "address": "0x71f0353c8be71387e67d7ba018b312d6de5870a7",
@@ -15785,15 +15947,15 @@
           }
         ],
         "sync": {
-          "lastSyncedDate": "2026-06-05",
-          "latestBlock": 17825463
+          "lastSyncedDate": "2026-06-06",
+          "latestBlock": 17911552
         }
       },
       "hitone": {
-        "fetchedAt": "2026-06-05T01:21:27.314Z",
+        "fetchedAt": "2026-06-06T01:16:22.690Z",
         "dataWindowUtc": {
-          "from": "2026-06-05T00:00:00Z",
-          "to": "2026-06-05T01:21:27.314Z"
+          "from": "2026-06-06T00:00:00Z",
+          "to": "2026-06-06T01:16:22.690Z"
         },
         "contract": "0xdf248bafe6fe9a73f201a125641e5c8bb20472f7",
         "contractUrl": "https://megaeth.blockscout.com/address/0xdf248bafe6fe9a73f201a125641e5c8bb20472f7",
@@ -15801,15 +15963,15 @@
         "source": "MegaETH Blockscout counters + MegaETH RPC ERC-20 Transfer logs",
         "methodology": "Daily snapshots use MegaETH USDM Transfer logs involving the HitOne address. Player volume and PnL treat USDM sent to HitOne as stakes and USDM sent from HitOne as payouts. Since-live transfer totals use the all-time Blockscout counter because HitOne predates MegaFees daily snapshots.",
         "transactions": {
-          "total": 395767,
-          "today": 16,
-          "sinceLaunchTransactions": 395767,
-          "totalTokenTransfers": 316508,
-          "tokenTransfersToday": 16,
-          "sinceLaunchTokenTransfers": 316508
+          "total": 396433,
+          "today": 23,
+          "sinceLaunchTransactions": 396433,
+          "totalTokenTransfers": 317053,
+          "tokenTransfersToday": 23,
+          "sinceLaunchTokenTransfers": 317053
         },
         "volume": {
-          "todayUsdm": 50,
+          "todayUsdm": 6,
           "excludedCollateralInUsdm": 0,
           "excludedPayoutOutUsdm": 0,
           "poolCollateralInUsdm": 0,
@@ -16021,21 +16183,27 @@
             },
             {
               "date": "2026-06-05",
-              "volumeUsdm": 50,
-              "txCount": 16,
-              "transferCount": 16
+              "volumeUsdm": 5538,
+              "txCount": 1231,
+              "transferCount": 1232
+            },
+            {
+              "date": "2026-06-06",
+              "volumeUsdm": 6,
+              "txCount": 23,
+              "transferCount": 23
             }
           ]
         },
         "users": {
           "last24h": {
-            "users": 25,
-            "transferCount": 559,
+            "users": 29,
+            "transferCount": 1241,
             "timeframe": "24h",
             "source": "MegaETH Blockscout USDM token transfers",
             "sourceUrl": "https://megaeth.blockscout.com/address/0xdf248bafe6fe9a73f201a125641e5c8bb20472f7",
             "label": "Unique USDM transfer counterparties over the last 24h from Blockscout.",
-            "fetchedAt": "2026-06-05T01:21:20.649Z"
+            "fetchedAt": "2026-06-06T01:16:09.343Z"
           },
           "points": [
             {
@@ -16176,22 +16344,26 @@
             },
             {
               "date": "2026-06-05",
-              "users": 2
+              "users": 28
+            },
+            {
+              "date": "2026-06-06",
+              "users": 5
             }
           ]
         },
         "players": {
-          "total": 1994,
-          "profitable": 280,
-          "notProfitable": 1714,
-          "profitablePct": 14.04,
-          "notProfitablePct": 85.96,
+          "total": 1995,
+          "profitable": 278,
+          "notProfitable": 1717,
+          "profitablePct": 13.93,
+          "notProfitablePct": 86.07,
           "bands": [
             {
               "key": "loss",
               "label": "Loss",
-              "count": 1708,
-              "netUsdm": -59969.7358,
+              "count": 1711,
+              "netUsdm": -62749.5316,
               "color": "#2A1110"
             },
             {
@@ -16211,22 +16383,22 @@
             {
               "key": "gain-mid",
               "label": "1-5 USDM",
-              "count": 50,
-              "netUsdm": 119.797175,
+              "count": 51,
+              "netUsdm": 118.957025,
               "color": "#22C55E"
             },
             {
               "key": "gain-high",
               "label": "5-25 USDM",
-              "count": 48,
-              "netUsdm": 562.554225,
+              "count": 45,
+              "netUsdm": 531.747225,
               "color": "#20B2AA"
             },
             {
               "key": "gain-whale",
               "label": "25+ USDM",
               "count": 43,
-              "netUsdm": 21137.594,
+              "netUsdm": 22436.8021,
               "color": "#0B5EA8"
             }
           ],
@@ -16234,14 +16406,14 @@
             {
               "address": "0x1a3e985eb041f030cb9e1a2a7e4e226de20906d0",
               "stakedUsdm": 0,
-              "paidUsdm": 8399.3665,
-              "netUsdm": 8399.3665
+              "paidUsdm": 8581.9115,
+              "netUsdm": 8581.9115
             },
             {
               "address": "0x84003add97e316535d7ceac0c57419b5b47a9403",
-              "stakedUsdm": 8392,
-              "paidUsdm": 12860.429,
-              "netUsdm": 4468.429
+              "stakedUsdm": 9193,
+              "paidUsdm": 14793.0805,
+              "netUsdm": 5600.0805
             },
             {
               "address": "0x2ac9156e9f206fad6fc82ff5654da51c600b36d7",
@@ -16298,14 +16470,14 @@
           {
             "address": "0x1a3e985eb041f030cb9e1a2a7e4e226de20906d0",
             "stakedUsdm": 0,
-            "paidUsdm": 8399.3665,
-            "netUsdm": 8399.3665
+            "paidUsdm": 8581.9115,
+            "netUsdm": 8581.9115
           },
           {
             "address": "0x84003add97e316535d7ceac0c57419b5b47a9403",
-            "stakedUsdm": 8392,
-            "paidUsdm": 12860.429,
-            "netUsdm": 4468.429
+            "stakedUsdm": 9193,
+            "paidUsdm": 14793.0805,
+            "netUsdm": 5600.0805
           },
           {
             "address": "0x2ac9156e9f206fad6fc82ff5654da51c600b36d7",
@@ -16380,12 +16552,6 @@
             "netUsdm": 110.076
           },
           {
-            "address": "0x29719cf9ddf2d42e3860e562a3b3d8de9ec1f227",
-            "stakedUsdm": 276,
-            "paidUsdm": 380.3555,
-            "netUsdm": 104.3555
-          },
-          {
             "address": "0x045a1583f4084b2b9d80acfa83d21a9492687280",
             "stakedUsdm": 222,
             "paidUsdm": 323.599,
@@ -16402,6 +16568,12 @@
             "stakedUsdm": 115,
             "paidUsdm": 201.4095,
             "netUsdm": 86.4095
+          },
+          {
+            "address": "0x29719cf9ddf2d42e3860e562a3b3d8de9ec1f227",
+            "stakedUsdm": 296,
+            "paidUsdm": 382.2645,
+            "netUsdm": 86.2645
           },
           {
             "address": "0x0f51dfd9c18fd614d98602311d9894e72b8bd6db",
@@ -16508,8 +16680,8 @@
           {
             "address": "0x56a38367aaec481c1b95c8fa620170905bb38f6e",
             "stakedUsdm": 0,
-            "paidUsdm": 37.2965,
-            "netUsdm": 37.2965
+            "paidUsdm": 37.2987,
+            "netUsdm": 37.2987
           },
           {
             "address": "0x86efd85f1b995158613eb20237fee4c3566f5f78",
@@ -16536,16 +16708,16 @@
             "netUsdm": 33.292
           },
           {
+            "address": "0x71648e82bf8683d378002d199c56aa42c1127884",
+            "stakedUsdm": 0,
+            "paidUsdm": 32.71205,
+            "netUsdm": 32.71205
+          },
+          {
             "address": "0x373823c6cb3c7e88cd15c74037fcd9acd7801b14",
             "stakedUsdm": 147,
             "paidUsdm": 178.735,
             "netUsdm": 31.735
-          },
-          {
-            "address": "0x71648e82bf8683d378002d199c56aa42c1127884",
-            "stakedUsdm": 0,
-            "paidUsdm": 29.61165,
-            "netUsdm": 29.61165
           },
           {
             "address": "0xa70d5a56116947808fd8e3988982c7ee1d468045",
@@ -16644,12 +16816,6 @@
             "netUsdm": 14.4855
           },
           {
-            "address": "0x5d5088733f9bdce6325e740fdaf826f4df82b388",
-            "stakedUsdm": 11501,
-            "paidUsdm": 11515.4805,
-            "netUsdm": 14.4805
-          },
-          {
             "address": "0xf670e21cd366a043b28fcec480d27d4dea1c42d7",
             "stakedUsdm": 2,
             "paidUsdm": 15.9025,
@@ -16702,12 +16868,6 @@
             "stakedUsdm": 276,
             "paidUsdm": 287.3105,
             "netUsdm": 11.3105
-          },
-          {
-            "address": "0x4b92e8a6904f4844abcaa600d67f2d5245ea6bb3",
-            "stakedUsdm": 24,
-            "paidUsdm": 35.1365,
-            "netUsdm": 11.1365
           },
           {
             "address": "0xffe34a429b52690f3a1c0f8e45a3652b2f0e9c73",
@@ -16830,12 +16990,6 @@
             "netUsdm": 5.4265
           },
           {
-            "address": "0x936d4a31b14f52c2f077872130bbab0f503803d7",
-            "stakedUsdm": 23,
-            "paidUsdm": 28.19,
-            "netUsdm": 5.19
-          },
-          {
             "address": "0x8dbce43dacde39435f38181f0bd10d8581a870af",
             "stakedUsdm": 72,
             "paidUsdm": 77.1135,
@@ -16852,12 +17006,6 @@
             "stakedUsdm": 0,
             "paidUsdm": 4.48495,
             "netUsdm": 4.48495
-          },
-          {
-            "address": "0xb032cd1f51e36b90b7a99212cf48b9a88c4080e4",
-            "stakedUsdm": 35,
-            "paidUsdm": 39.378,
-            "netUsdm": 4.378
           },
           {
             "address": "0xd3c11741cda420659e1c25b82aa2b3702cc8edc0",
@@ -16900,6 +17048,12 @@
             "stakedUsdm": 41,
             "paidUsdm": 44.3945,
             "netUsdm": 3.3945
+          },
+          {
+            "address": "0xb032cd1f51e36b90b7a99212cf48b9a88c4080e4",
+            "stakedUsdm": 36,
+            "paidUsdm": 39.388,
+            "netUsdm": 3.388
           },
           {
             "address": "0x633e9c6fcf60ee5de0e6db33faf55d3a04d99303",
@@ -17004,12 +17158,6 @@
             "netUsdm": 2.1235
           },
           {
-            "address": "0x71a77df65b6700d71f0ff822d22dab1f2004d6ec",
-            "stakedUsdm": 17,
-            "paidUsdm": 19.0625,
-            "netUsdm": 2.0625
-          },
-          {
             "address": "0x354cc0d597fe0cb4acc49f48bfa04ecdf43ea714",
             "stakedUsdm": 219,
             "paidUsdm": 220.9665,
@@ -17072,8 +17220,8 @@
           {
             "address": "0xf59f80d8fb45280fa2d2eb767fde694a931f0ec1",
             "stakedUsdm": 0,
-            "paidUsdm": 1.5058,
-            "netUsdm": 1.5058
+            "paidUsdm": 1.51065,
+            "netUsdm": 1.51065
           },
           {
             "address": "0x0479b6921ab8fa2e79c3b7c6a6896efed9b5f3cd",
@@ -17112,10 +17260,22 @@
             "netUsdm": 1.2645
           },
           {
+            "address": "0x936d4a31b14f52c2f077872130bbab0f503803d7",
+            "stakedUsdm": 37,
+            "paidUsdm": 38.135,
+            "netUsdm": 1.135
+          },
+          {
             "address": "0x9cac80eae5e0d99b019de7a24ec41c1ff16b82f3",
             "stakedUsdm": 9,
             "paidUsdm": 10.1055,
             "netUsdm": 1.1055
+          },
+          {
+            "address": "0x71a77df65b6700d71f0ff822d22dab1f2004d6ec",
+            "stakedUsdm": 18,
+            "paidUsdm": 19.0725,
+            "netUsdm": 1.0725
           },
           {
             "address": "0xfbec3fcde27f5f1947c06eb0bd70b0177a605ec2",
@@ -18666,12 +18826,6 @@
             "netUsdm": -0.3245
           },
           {
-            "address": "0x817aff2661ac6c29596cdc31d0eb5f81a74d867b",
-            "stakedUsdm": 3,
-            "paidUsdm": 2.6755,
-            "netUsdm": -0.3245
-          },
-          {
             "address": "0x06a3a4be45a908e2a0bc7fb6b0cf56e966ea2e89",
             "stakedUsdm": 8,
             "paidUsdm": 7.6725,
@@ -18850,12 +19004,6 @@
             "stakedUsdm": 2,
             "paidUsdm": 1.56,
             "netUsdm": -0.44
-          },
-          {
-            "address": "0xd9a8dc7a26f50df1bc00335ee155f253d7cb640e",
-            "stakedUsdm": 16,
-            "paidUsdm": 15.5525,
-            "netUsdm": -0.4475
           },
           {
             "address": "0xfd9f4deeeca78a1960fe48dbb68b0f8c9167f416",
@@ -20214,6 +20362,12 @@
             "netUsdm": -1.312
           },
           {
+            "address": "0x817aff2661ac6c29596cdc31d0eb5f81a74d867b",
+            "stakedUsdm": 4,
+            "paidUsdm": 2.6755,
+            "netUsdm": -1.3245
+          },
+          {
             "address": "0x6d75ecd309f8816761e61c32e7661243339e2559",
             "stakedUsdm": 3,
             "paidUsdm": 1.67,
@@ -20950,6 +21104,12 @@
             "stakedUsdm": 71,
             "paidUsdm": 69.0885,
             "netUsdm": -1.9115
+          },
+          {
+            "address": "0xd9a8dc7a26f50df1bc00335ee155f253d7cb640e",
+            "stakedUsdm": 22,
+            "paidUsdm": 20.084,
+            "netUsdm": -1.916
           },
           {
             "address": "0x4fe34ebf767f04f2ae6b09d23262c5af0d6552d2",
@@ -22410,6 +22570,12 @@
             "netUsdm": -4.1995
           },
           {
+            "address": "0x4b92e8a6904f4844abcaa600d67f2d5245ea6bb3",
+            "stakedUsdm": 43,
+            "paidUsdm": 38.799,
+            "netUsdm": -4.201
+          },
+          {
             "address": "0xa60c13e98c9a5bce5579c9af61b46f09340dc528",
             "stakedUsdm": 13,
             "paidUsdm": 8.7575,
@@ -22822,6 +22988,12 @@
             "stakedUsdm": 5,
             "paidUsdm": 0,
             "netUsdm": -5
+          },
+          {
+            "address": "0xb3cb566ed63ae20b9267d0fb6da6b3b724d52827",
+            "stakedUsdm": 26,
+            "paidUsdm": 20.9975,
+            "netUsdm": -5.0025
           },
           {
             "address": "0x6a77e12595cbfb4b9f77dff79b70b32b17aa930d",
@@ -23304,12 +23476,6 @@
             "netUsdm": -6.006
           },
           {
-            "address": "0x08d785c1665a4ea340d7e94c06cf42afb4e5e0a0",
-            "stakedUsdm": 15,
-            "paidUsdm": 8.96,
-            "netUsdm": -6.04
-          },
-          {
             "address": "0x9ca3d89c2a356fbfb624f0a3563c643fe0d18b4e",
             "stakedUsdm": 11,
             "paidUsdm": 4.96,
@@ -23482,12 +23648,6 @@
             "stakedUsdm": 42,
             "paidUsdm": 35.35,
             "netUsdm": -6.65
-          },
-          {
-            "address": "0x4e938548680d2c6a42ca9735675bbd9518b45172",
-            "stakedUsdm": 155,
-            "paidUsdm": 148.3015,
-            "netUsdm": -6.6985
           },
           {
             "address": "0xa2c0ed3b55ad69d52571c4f3dee7b697af9a32ab",
@@ -23878,12 +24038,6 @@
             "stakedUsdm": 345,
             "paidUsdm": 337.1975,
             "netUsdm": -7.8025
-          },
-          {
-            "address": "0x8e758b882a700854887f29929ac1c9a4ed027b5f",
-            "stakedUsdm": 65,
-            "paidUsdm": 57.1905,
-            "netUsdm": -7.8095
           },
           {
             "address": "0xca3262889b2f804f3e2fe880b4bd10fd41605d61",
@@ -24984,6 +25138,12 @@
             "netUsdm": -11.993
           },
           {
+            "address": "0x08d785c1665a4ea340d7e94c06cf42afb4e5e0a0",
+            "stakedUsdm": 21,
+            "paidUsdm": 8.97,
+            "netUsdm": -12.03
+          },
+          {
             "address": "0x7f990d97d8e5bfb319993dfa13bb937fd4e32fda",
             "stakedUsdm": 42,
             "paidUsdm": 29.796,
@@ -25350,12 +25510,6 @@
             "netUsdm": -14.6685
           },
           {
-            "address": "0xc3d2275862a4e7e1bf836de22564a3cd5bd6982f",
-            "stakedUsdm": 62,
-            "paidUsdm": 47.261,
-            "netUsdm": -14.739
-          },
-          {
             "address": "0x8d8b11d6cf0638f334d9b218aba8ad182fd304db",
             "stakedUsdm": 27,
             "paidUsdm": 12.211,
@@ -25380,10 +25534,10 @@
             "netUsdm": -14.8295
           },
           {
-            "address": "0x1cc28731702f5358d4d5651363fb3d595e5c3f94",
-            "stakedUsdm": 207,
-            "paidUsdm": 192.0985,
-            "netUsdm": -14.9015
+            "address": "0xc3d2275862a4e7e1bf836de22564a3cd5bd6982f",
+            "stakedUsdm": 63,
+            "paidUsdm": 48.121,
+            "netUsdm": -14.879
           },
           {
             "address": "0xd1c3531e3e1e3087c2a6d8cd4f4be50ad5aeed91",
@@ -25462,6 +25616,12 @@
             "stakedUsdm": 29,
             "paidUsdm": 13.5005,
             "netUsdm": -15.4995
+          },
+          {
+            "address": "0x4e938548680d2c6a42ca9735675bbd9518b45172",
+            "stakedUsdm": 171,
+            "paidUsdm": 155.4945,
+            "netUsdm": -15.5055
           },
           {
             "address": "0x5c040c2e61e4839537dd85819276c2c17344705a",
@@ -26052,12 +26212,6 @@
             "netUsdm": -21.0095
           },
           {
-            "address": "0x3684ec2ac2bcfd28580f1a6ae5e0851f3e6b0461",
-            "stakedUsdm": 145,
-            "paidUsdm": 123.855,
-            "netUsdm": -21.145
-          },
-          {
             "address": "0x77dd8c18710dcafd74954727bc9a1fee7b4bc2e0",
             "stakedUsdm": 69,
             "paidUsdm": 47.8265,
@@ -26202,16 +26356,16 @@
             "netUsdm": -23.546
           },
           {
+            "address": "0xaf58fdef2d8461049e1d4718667b32189391fb7f",
+            "stakedUsdm": 281,
+            "paidUsdm": 257.44955,
+            "netUsdm": -23.55045
+          },
+          {
             "address": "0xc9a9060a3993f8daf6b7b6a8bb37d49dcbcfbd07",
             "stakedUsdm": 469,
             "paidUsdm": 445.2585,
             "netUsdm": -23.7415
-          },
-          {
-            "address": "0xaf58fdef2d8461049e1d4718667b32189391fb7f",
-            "stakedUsdm": 281,
-            "paidUsdm": 257.21185,
-            "netUsdm": -23.78815
           },
           {
             "address": "0x01e9470502593f45a16d89b34c818fc3ce56410d",
@@ -26382,6 +26536,12 @@
             "netUsdm": -26.28
           },
           {
+            "address": "0x5d5088733f9bdce6325e740fdaf826f4df82b388",
+            "stakedUsdm": 11542,
+            "paidUsdm": 11515.4805,
+            "netUsdm": -26.5195
+          },
+          {
             "address": "0xdd1cdb6238bd68eb4d7dc33483c7857887b01cb8",
             "stakedUsdm": 117,
             "paidUsdm": 90.2733,
@@ -26544,6 +26704,12 @@
             "netUsdm": -30.52
           },
           {
+            "address": "0x1cc28731702f5358d4d5651363fb3d595e5c3f94",
+            "stakedUsdm": 247,
+            "paidUsdm": 216.383,
+            "netUsdm": -30.617
+          },
+          {
             "address": "0xc32dc92f3f291468579f22aae56fcdb75e1b3fff",
             "stakedUsdm": 231,
             "paidUsdm": 200.269,
@@ -26560,6 +26726,12 @@
             "stakedUsdm": 217,
             "paidUsdm": 186.0965,
             "netUsdm": -30.9035
+          },
+          {
+            "address": "0x3684ec2ac2bcfd28580f1a6ae5e0851f3e6b0461",
+            "stakedUsdm": 155,
+            "paidUsdm": 123.855,
+            "netUsdm": -31.145
           },
           {
             "address": "0x35835d5036223c09d5e96cc814f6958186252039",
@@ -26946,12 +27118,6 @@
             "netUsdm": -46.704
           },
           {
-            "address": "0x73385fddddf225cfad7a507d7e7322ea983e90b8",
-            "stakedUsdm": 50,
-            "paidUsdm": 3.29,
-            "netUsdm": -46.71
-          },
-          {
             "address": "0xcaeb092d89d00401dbfdff4336ae8400aaf2fbcb",
             "stakedUsdm": 235,
             "paidUsdm": 188.2495,
@@ -27108,6 +27274,12 @@
             "netUsdm": -50.065
           },
           {
+            "address": "0x73385fddddf225cfad7a507d7e7322ea983e90b8",
+            "stakedUsdm": 54,
+            "paidUsdm": 3.3,
+            "netUsdm": -50.7
+          },
+          {
             "address": "0xbcbac802a31c45b941a0ba33ccc3396d1bc74e4e",
             "stakedUsdm": 296,
             "paidUsdm": 245.1115,
@@ -27160,6 +27332,12 @@
             "stakedUsdm": 133,
             "paidUsdm": 79.3249,
             "netUsdm": -53.6751
+          },
+          {
+            "address": "0xf0a18d3f8a4d454df2e363cff167e6b21b4e2e8c",
+            "stakedUsdm": 959,
+            "paidUsdm": 905.2482,
+            "netUsdm": -53.7518
           },
           {
             "address": "0x255ddcc8adce69100b047e252de71cfc74ff08a9",
@@ -27444,12 +27622,6 @@
             "netUsdm": -72.76
           },
           {
-            "address": "0xf0a18d3f8a4d454df2e363cff167e6b21b4e2e8c",
-            "stakedUsdm": 948,
-            "paidUsdm": 874.6887,
-            "netUsdm": -73.3113
-          },
-          {
             "address": "0x2481c0712bc24f4d00d46b648e077070e8418c95",
             "stakedUsdm": 138,
             "paidUsdm": 64.482,
@@ -27580,6 +27752,12 @@
             "stakedUsdm": 539,
             "paidUsdm": 452.921,
             "netUsdm": -86.079
+          },
+          {
+            "address": "0x8e758b882a700854887f29929ac1c9a4ed027b5f",
+            "stakedUsdm": 287,
+            "paidUsdm": 199.7385,
+            "netUsdm": -87.2615
           },
           {
             "address": "0x3a70ffa392128b79195e6c192b60e9e3a68d7ff7",
@@ -27792,12 +27970,6 @@
             "netUsdm": -112.2365
           },
           {
-            "address": "0xc36e7376275346aa6f51bbc534d31407300a1764",
-            "stakedUsdm": 1298,
-            "paidUsdm": 1184.539,
-            "netUsdm": -113.461
-          },
-          {
             "address": "0xa57d1402c62d5f911b8f235fe6f4e6b3495c86a7",
             "stakedUsdm": 1752,
             "paidUsdm": 1636.2355,
@@ -27930,10 +28102,10 @@
             "netUsdm": -157.9135
           },
           {
-            "address": "0x60308eb7a253f13c7a362dc3eefa783c6cfd8fa5",
-            "stakedUsdm": 9686,
-            "paidUsdm": 9526.1695,
-            "netUsdm": -159.8305
+            "address": "0xc36e7376275346aa6f51bbc534d31407300a1764",
+            "stakedUsdm": 1350,
+            "paidUsdm": 1189.61,
+            "netUsdm": -160.39
           },
           {
             "address": "0xfe2469aa68049f4356a987b4441e70935755966c",
@@ -27954,12 +28126,6 @@
             "netUsdm": -178.4245
           },
           {
-            "address": "0x6926f442f2196915e0f5e4eda81cfff2bc15b400",
-            "stakedUsdm": 1162,
-            "paidUsdm": 982.0835,
-            "netUsdm": -179.9165
-          },
-          {
             "address": "0x3d47e7db8fd9532e286daf4e070e796a659f032c",
             "stakedUsdm": 544,
             "paidUsdm": 360.415,
@@ -27970,6 +28136,12 @@
             "stakedUsdm": 202,
             "paidUsdm": 18.15,
             "netUsdm": -183.85
+          },
+          {
+            "address": "0x6926f442f2196915e0f5e4eda81cfff2bc15b400",
+            "stakedUsdm": 1189,
+            "paidUsdm": 1004.127,
+            "netUsdm": -184.873
           },
           {
             "address": "0x515bca1f11c0c17635f9d80cbd84ffab62b69905",
@@ -28075,9 +28247,9 @@
           },
           {
             "address": "0x0fc8bcf8f056b08cd85925e5ad89e214a0a13514",
-            "stakedUsdm": 2706,
-            "paidUsdm": 2463.664,
-            "netUsdm": -242.336
+            "stakedUsdm": 2736,
+            "paidUsdm": 2494.1255,
+            "netUsdm": -241.8745
           },
           {
             "address": "0xd5c317580a5afcb0f094f5aa3b9b4b33a887f019",
@@ -28225,9 +28397,15 @@
           },
           {
             "address": "0x91896d39597a1d025ccec29933f0ac0a0ececa8b",
-            "stakedUsdm": 8206,
-            "paidUsdm": 7091.7076,
-            "netUsdm": -1114.2924
+            "stakedUsdm": 8606,
+            "paidUsdm": 7500.5886,
+            "netUsdm": -1105.4114
+          },
+          {
+            "address": "0x60308eb7a253f13c7a362dc3eefa783c6cfd8fa5",
+            "stakedUsdm": 12462,
+            "paidUsdm": 10660.6155,
+            "netUsdm": -1801.3845
           },
           {
             "address": "0xd3be0b8c526d11d7d48d480be14c058a88745f16",
@@ -28236,16 +28414,16 @@
             "netUsdm": -1810.4535
           },
           {
-            "address": "0x270ff19ed8e136d6a85f8a9385026b32e0a81eee",
-            "stakedUsdm": 9874,
-            "paidUsdm": 7920.0125,
-            "netUsdm": -1953.9875
-          },
-          {
             "address": "0x897ae0494899ced482f39b7ce0062c76dbbbc1bd",
             "stakedUsdm": 16725,
             "paidUsdm": 14292.9905,
             "netUsdm": -2432.0095
+          },
+          {
+            "address": "0x270ff19ed8e136d6a85f8a9385026b32e0a81eee",
+            "stakedUsdm": 10893,
+            "paidUsdm": 7985.8025,
+            "netUsdm": -2907.1975
           },
           {
             "address": "0x639be08c5d566d3e70d97fd0de54dcd0989bfcfa",
@@ -28261,8 +28439,8 @@
           }
         ],
         "sync": {
-          "lastSyncedDate": "2026-06-05",
-          "latestBlock": 17825463
+          "lastSyncedDate": "2026-06-06",
+          "latestBlock": 17911552
         },
         "fees": {
           "reportStartDate": "2026-05-01",
@@ -28622,23 +28800,33 @@
             },
             {
               "date": "2026-06-05",
-              "tradeFeeUsdm": 0.5,
-              "profitFeeUsdm": 0,
-              "totalFeeUsdm": 0.5,
-              "grossProfitUsdm": 0,
-              "netProfitPaidUsdm": 0,
-              "txCount": 16,
-              "transferCount": 16
+              "tradeFeeUsdm": 55.38,
+              "profitFeeUsdm": 1.193453,
+              "totalFeeUsdm": 56.573453,
+              "grossProfitUsdm": 23.869053,
+              "netProfitPaidUsdm": 22.6756,
+              "txCount": 1231,
+              "transferCount": 1232
+            },
+            {
+              "date": "2026-06-06",
+              "tradeFeeUsdm": 0.06,
+              "profitFeeUsdm": 0.000255,
+              "totalFeeUsdm": 0.060255,
+              "grossProfitUsdm": 0.005105,
+              "netProfitPaidUsdm": 0.00485,
+              "txCount": 23,
+              "transferCount": 23
             }
           ],
           "totals": {
-            "tradeFeeUsdm": 4355.8682,
-            "profitFeeUsdm": 1348.923824,
-            "totalFeeUsdm": 5704.792024,
-            "grossProfitUsdm": 26978.476474,
-            "netProfitPaidUsdm": 25629.55265
+            "tradeFeeUsdm": 4410.8082,
+            "profitFeeUsdm": 1350.117532,
+            "totalFeeUsdm": 5760.925732,
+            "grossProfitUsdm": 27002.350632,
+            "netProfitPaidUsdm": 25652.2331
           },
-          "syncLastProcessedDate": "2026-06-05"
+          "syncLastProcessedDate": "2026-06-06"
         },
         "feeLedger": [
           {
@@ -28647,7 +28835,7 @@
           },
           {
             "address": "0x1a3e985eb041f030cb9e1a2a7e4e226de20906d0",
-            "openPrincipalUsdm": 43463.732
+            "openPrincipalUsdm": 43281.187
           },
           {
             "address": "0x1b90d118700325615ad46da5e31053fc7a50612a",
@@ -28743,7 +28931,7 @@
           },
           {
             "address": "0x3684ec2ac2bcfd28580f1a6ae5e0851f3e6b0461",
-            "openPrincipalUsdm": 35.39325
+            "openPrincipalUsdm": 45.29325
           },
           {
             "address": "0x70b315e49d60a41704f367e00c3ebc17359e4dc8",
@@ -28759,7 +28947,7 @@
           },
           {
             "address": "0xf0a18d3f8a4d454df2e363cff167e6b21b4e2e8c",
-            "openPrincipalUsdm": 113.431525
+            "openPrincipalUsdm": 93.762025
           },
           {
             "address": "0xc644ac902cc3628da89a0b63555ed666bfb2575c",
@@ -28771,11 +28959,11 @@
           },
           {
             "address": "0x0fc8bcf8f056b08cd85925e5ad89e214a0a13514",
-            "openPrincipalUsdm": 242.0025
+            "openPrincipalUsdm": 241.241
           },
           {
             "address": "0xaf58fdef2d8461049e1d4718667b32189391fb7f",
-            "openPrincipalUsdm": 139.407
+            "openPrincipalUsdm": 139.1693
           },
           {
             "address": "0xd10ac4bdea798ac8ff8fd7e206f83bdb94bf18ec",
@@ -29048,10 +29236,6 @@
           {
             "address": "0x04028e9cc78f5245eaf8218c7430d9047fc633b4",
             "openPrincipalUsdm": 95.649
-          },
-          {
-            "address": "0x8e758b882a700854887f29929ac1c9a4ed027b5f",
-            "openPrincipalUsdm": 37.9595
           },
           {
             "address": "0x4bb4c94afb70db983796b52a3ff8b20d83cf08ec",
@@ -29427,7 +29611,7 @@
           },
           {
             "address": "0x91896d39597a1d025ccec29933f0ac0a0ececa8b",
-            "openPrincipalUsdm": 1591.3932
+            "openPrincipalUsdm": 1578.5122
           },
           {
             "address": "0xbaaff5854cc2d3d55563df84222a31a80c99c846",
@@ -29499,7 +29683,7 @@
           },
           {
             "address": "0x71a77df65b6700d71f0ff822d22dab1f2004d6ec",
-            "openPrincipalUsdm": 11.5625
+            "openPrincipalUsdm": 12.5425
           },
           {
             "address": "0x610bca4c7c8d20d258f33fea80b79b28e512b986",
@@ -29507,7 +29691,7 @@
           },
           {
             "address": "0xc3d2275862a4e7e1bf836de22564a3cd5bd6982f",
-            "openPrincipalUsdm": 25.224
+            "openPrincipalUsdm": 25.354
           },
           {
             "address": "0x2e360a4e2580b6c5050a79221d6c2ae4eef5c07b",
@@ -30367,7 +30551,7 @@
           },
           {
             "address": "0xd9a8dc7a26f50df1bc00335ee155f253d7cb640e",
-            "openPrincipalUsdm": 2.5745
+            "openPrincipalUsdm": 3.983
           },
           {
             "address": "0x01b7b7eaf230f7fbaa21561ec8ca886359f6901d",
@@ -30459,7 +30643,7 @@
           },
           {
             "address": "0x73385fddddf225cfad7a507d7e7322ea983e90b8",
-            "openPrincipalUsdm": 61.04
+            "openPrincipalUsdm": 64.99
           },
           {
             "address": "0x91ff7a2a044be77ab3c08163dd20a71554c00450",
@@ -31227,7 +31411,7 @@
           },
           {
             "address": "0x29719cf9ddf2d42e3860e562a3b3d8de9ec1f227",
-            "openPrincipalUsdm": 31.1345
+            "openPrincipalUsdm": 49.0255
           },
           {
             "address": "0x4df357923759fd4241bebd8a6cbf0927dc407745",
@@ -34491,7 +34675,7 @@
           },
           {
             "address": "0x08d785c1665a4ea340d7e94c06cf42afb4e5e0a0",
-            "openPrincipalUsdm": 7.67
+            "openPrincipalUsdm": 13.6
           },
           {
             "address": "0x6ddc099c66ceda93e170bc122ce35487656cda56",
@@ -36103,7 +36287,7 @@
           },
           {
             "address": "0x270ff19ed8e136d6a85f8a9385026b32e0a81eee",
-            "openPrincipalUsdm": 1857.6335
+            "openPrincipalUsdm": 2800.6535
           },
           {
             "address": "0xf6c9d31d4fc36e06f4bfe67f1906cc58cb8be24f",
@@ -36131,7 +36315,7 @@
           },
           {
             "address": "0x6926f442f2196915e0f5e4eda81cfff2bc15b400",
-            "openPrincipalUsdm": 180.2565
+            "openPrincipalUsdm": 184.943
           },
           {
             "address": "0x869efd380f549cc4616b7211aee4fd87acc4b919",
@@ -36139,7 +36323,7 @@
           },
           {
             "address": "0xc36e7376275346aa6f51bbc534d31407300a1764",
-            "openPrincipalUsdm": 124.7905
+            "openPrincipalUsdm": 171.1995
           },
           {
             "address": "0x5d10e31d8b06b3fa3cf5f69a50664e0ad2cd95b8",
@@ -39407,7 +39591,7 @@
           },
           {
             "address": "0x1cc28731702f5358d4d5651363fb3d595e5c3f94",
-            "openPrincipalUsdm": 29.958
+            "openPrincipalUsdm": 45.2735
           },
           {
             "address": "0x53a8fb284b0c99395c4e76df9a0328dafdef2a1b",
@@ -39867,7 +40051,7 @@
           },
           {
             "address": "0x60308eb7a253f13c7a362dc3eefa783c6cfd8fa5",
-            "openPrincipalUsdm": 281.1705
+            "openPrincipalUsdm": 1894.9645
           },
           {
             "address": "0x160cf297c6a0f802ea365c8edf759b6de1bff5a1",
@@ -39983,7 +40167,7 @@
           },
           {
             "address": "0x4e938548680d2c6a42ca9735675bbd9518b45172",
-            "openPrincipalUsdm": 8.741
+            "openPrincipalUsdm": 17.388
           },
           {
             "address": "0x8fe503cb0ddd768bddb826df12ec7c3443b0e5b9",
@@ -40455,7 +40639,7 @@
           },
           {
             "address": "0x5d5088733f9bdce6325e740fdaf826f4df82b388",
-            "openPrincipalUsdm": 698.805
+            "openPrincipalUsdm": 739.395
           },
           {
             "address": "0xd2103f2c2a923d0c30e6d37b48cf7f49f84e3e01",
@@ -40550,12 +40734,32 @@
             "openPrincipalUsdm": 210.5915
           },
           {
-            "address": "0x84003add97e316535d7ceac0c57419b5b47a9403",
-            "openPrincipalUsdm": 1224.25
+            "address": "0x817aff2661ac6c29596cdc31d0eb5f81a74d867b",
+            "openPrincipalUsdm": 2.32
           },
           {
-            "address": "0x817aff2661ac6c29596cdc31d0eb5f81a74d867b",
-            "openPrincipalUsdm": 1.33
+            "address": "0xb032cd1f51e36b90b7a99212cf48b9a88c4080e4",
+            "openPrincipalUsdm": 0.98
+          },
+          {
+            "address": "0x4b92e8a6904f4844abcaa600d67f2d5245ea6bb3",
+            "openPrincipalUsdm": 15.61
+          },
+          {
+            "address": "0x936d4a31b14f52c2f077872130bbab0f503803d7",
+            "openPrincipalUsdm": 5.792
+          },
+          {
+            "address": "0xb3cb566ed63ae20b9267d0fb6da6b3b724d52827",
+            "openPrincipalUsdm": 5.236
+          },
+          {
+            "address": "0x8e758b882a700854887f29929ac1c9a4ed027b5f",
+            "openPrincipalUsdm": 116.71
+          },
+          {
+            "address": "0x84003add97e316535d7ceac0c57419b5b47a9403",
+            "openPrincipalUsdm": 99.81
           }
         ]
       }
