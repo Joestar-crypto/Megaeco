@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-06-06T01:16:03.950Z",
+  "asOf": "2026-06-07T01:24:57.437Z",
   "source": "MegaETH Blockscout token snapshots, Aave address book, and World Markets lending snapshot.",
   "methodology": {
     "m0": "M0 = total tokenized USDM supply minus USDM held in tracked lending vaults and reserves. DEX and spot balances stay inside M0.",
@@ -8,12 +8,12 @@
   "usdm": {
     "symbol": "USDM",
     "address": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7",
-    "supply": 206954564.6746,
-    "priceUsd": 0.999597,
+    "supply": 205733074.6746,
+    "priceUsd": 0.99836,
     "source": "Blockscout /api/v2/tokens/0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
   },
   "m0": {
-    "value": 35313467.570809,
+    "value": 35160610.203288,
     "points": [
       {
         "timestamp": 1779715490000,
@@ -66,18 +66,22 @@
       {
         "timestamp": 1780790399999,
         "value": 35313467.570809
+      },
+      {
+        "timestamp": 1780876799999,
+        "value": 35160610.203288
       }
     ],
     "components": [
       {
         "label": "Tokenized USDM supply",
-        "value": 206954564.6746,
+        "value": 205733074.6746,
         "role": "supply",
         "color": "#FF8AA8"
       },
       {
         "label": "Aave USDM reserve",
-        "value": -171075497.103791,
+        "value": -170006864.471312,
         "role": "subtract",
         "color": "#C586FF",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -91,14 +95,14 @@
       },
       {
         "label": "M0",
-        "value": 35313467.570809,
+        "value": 35160610.203288,
         "role": "result",
         "color": "#90D79F"
       }
     ]
   },
   "m1": {
-    "value": 606801519.388082,
+    "value": 606625231.597956,
     "points": [
       {
         "timestamp": 1779715490000,
@@ -151,18 +155,22 @@
       {
         "timestamp": 1780790399999,
         "value": 606801519.388082
+      },
+      {
+        "timestamp": 1780876799999,
+        "value": 606625231.597956
       }
     ],
     "components": [
       {
         "label": "M0",
-        "value": 35313467.570809,
+        "value": 35160610.203288,
         "role": "base",
         "color": "#90D79F"
       },
       {
         "label": "Aave aMegUSDm deposits",
-        "value": 570922451.817273,
+        "value": 570899021.394668,
         "role": "deposit",
         "color": "#C586FF",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -176,7 +184,7 @@
       },
       {
         "label": "M1",
-        "value": 606801519.388082,
+        "value": 606625231.597956,
         "role": "result",
         "color": "#F5AF94"
       }
@@ -184,12 +192,12 @@
   },
   "lending": {
     "vaultUsdm": {
-      "total": 171641097.103791,
+      "total": 170572464.471312,
       "sources": [
         {
           "protocol": "Aave V3",
           "label": "USDM reserve in aMegUSDm contract",
-          "amount": 171075497.103791,
+          "amount": 170006864.471312,
           "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
           "underlying": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
         },
@@ -203,12 +211,12 @@
       ]
     },
     "demandDeposits": {
-      "total": 571488051.817273,
+      "total": 571464621.394668,
       "sources": [
         {
           "protocol": "Aave V3",
           "label": "aMegUSDm total supply",
-          "amount": 570922451.817273,
+          "amount": 570899021.394668,
           "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
         },
         {
@@ -227,13 +235,13 @@
       "usdmAToken": {
         "symbol": "aMegUSDm",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
-        "totalSupply": 570922451.817273,
-        "underlyingUsdmReserve": 171075497.103791
+        "totalSupply": 570899021.394668,
+        "underlyingUsdmReserve": 170006864.471312
       },
       "usdmVariableDebt": {
         "symbol": "variableDebtMegUSDm",
         "address": "0x6b408d6c479c304794abc60a4693a3ad2d3c2d0d",
-        "totalSupply": 399848196.130029
+        "totalSupply": 400892928.930875
       }
     },
     "excluded": [
