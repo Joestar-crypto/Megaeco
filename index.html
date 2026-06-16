@@ -3143,6 +3143,16 @@
     height: 100%;
     object-fit: cover;
   }
+  .app-icon-monster {
+    background: #120F10;
+    border-color: rgba(246,91,59,0.58);
+    box-shadow: inset 0 0 0 1px rgba(244,230,106,0.16), 0 0 22px rgba(246,91,59,0.24);
+  }
+  .app-icon-monster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   .app-name {
     display: block;
     min-width: 0;
@@ -3788,6 +3798,164 @@
   .hitone-dashboard-grid .brix-panel:nth-child(2) { --brix-accent: #22C55E; }
   .hitone-dashboard-grid .brix-panel:nth-child(3) { --brix-accent: #20B2AA; }
   .hitone-dashboard-grid .brix-panel:nth-child(4) { --brix-accent: #0B5EA8; }
+  .monster-dashboard-grid {
+    --brix-accent: #F65B3B;
+  }
+  .monster-dashboard-grid .brix-panel {
+    --brix-accent: #F65B3B;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
+      radial-gradient(92% 68% at 100% 0%, rgba(246,91,59,0.20), transparent 60%),
+      radial-gradient(76% 54% at 0% 100%, rgba(244,230,106,0.12), transparent 66%),
+      radial-gradient(72% 58% at 0% 0%, rgba(141,235,123,0.08), transparent 62%);
+  }
+  .monster-dashboard-grid .brix-panel:nth-child(2) { --brix-accent: #F4E66A; }
+  .monster-dashboard-grid .brix-panel:nth-child(3) { --brix-accent: #8DEB7B; }
+  .monster-summary-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .monster-kpi-stack {
+    display: grid;
+    gap: 10px;
+  }
+  .monster-hero-copy {
+    margin: 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    line-height: 1.65;
+    opacity: 0.8;
+  }
+  .monster-pillars {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .monster-pillar {
+    padding: 10px 11px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    line-height: 1.55;
+  }
+  .monster-pillar strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+  }
+  .monster-emphasis-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .monster-emphasis-card {
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+  }
+  .monster-emphasis-card span {
+    display: block;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    opacity: 0.74;
+  }
+  .monster-emphasis-card strong {
+    display: block;
+    margin-top: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 18px;
+    letter-spacing: 0.04em;
+  }
+  .monster-daily-shell {
+    display: grid;
+    gap: 14px;
+  }
+  .monster-chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .monster-chart-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+  .monster-chart-legend i {
+    width: 10px;
+    height: 10px;
+    background: currentColor;
+    box-shadow: 0 0 12px currentColor;
+  }
+  .monster-bar-chart {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .monster-bar-grid {
+    min-width: 720px;
+    display: grid;
+    grid-template-columns: repeat(var(--bars), minmax(18px, 1fr));
+    gap: 8px;
+    align-items: end;
+    padding: 20px 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .monster-bar {
+    display: grid;
+    grid-template-rows: auto 190px auto;
+    gap: 9px;
+    align-items: end;
+  }
+  .monster-bar-total {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-align: center;
+    opacity: 0.72;
+  }
+  .monster-bar-stack {
+    height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 2px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    padding: 3px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .monster-bar-segment {
+    min-height: 0;
+  }
+  .monster-bar-label {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    white-space: nowrap;
+  }
   .world-dual-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(250px, 0.44fr);
@@ -3924,6 +4092,9 @@
     .app-identity { grid-column: 1 / -1; }
     .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .brix-dashboard-grid { grid-template-columns: 1fr; }
+    .monster-summary-grid { grid-template-columns: 1fr; }
+    .monster-emphasis-grid { grid-template-columns: 1fr; }
+    .monster-pillars { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .world-dual-layout { grid-template-columns: 1fr; }
     .world-source-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
@@ -3966,6 +4137,7 @@
     .dashboard-card { min-height: 190px; }
     .brix-panel { padding: 16px 12px; }
     .brix-metric-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .monster-pillars { grid-template-columns: 1fr; }
     .brix-holder-layout { grid-template-columns: 1fr; }
     .world-row { grid-template-columns: minmax(0, 1fr) minmax(72px, 0.44fr); }
     .world-row .world-meter { grid-column: 1 / -1; grid-row: 2; }
@@ -4002,38 +4174,6 @@
     </div>
     <h1>The First <span class="accent">Real-Time</span><br/>Economics Dashboard.</h1>
     <p>>>  USDM Yield + Network Fees · Live On-Chain Data · Updated Daily</p>
-    <aside class="terminal-floating-checker" id="terminalFloatingChecker" aria-label="Terminal points checker">
-      <div class="terminal-floating-layout">
-        <div class="terminal-floating-main">
-          <div class="terminal-floating-head">
-            <div>
-              <span class="terminal-floating-kicker">MegaETH Terminal S1</span>
-              <div class="terminal-floating-title">Points Checker</div>
-            </div>
-            <div class="terminal-floating-badge" id="terminalFloatAllocationPct">0.5533%</div>
-          </div>
-          <div class="terminal-floating-copy">Theoretical allocation model · live MEGA price · proportional point share</div>
-          <div class="terminal-floating-meta" aria-label="Terminal model summary">
-            <span><strong id="terminalFloatTotalPoints">12,147,742</strong>Total points</span>
-            <span><strong id="terminalFloatWindow">6.32w</strong>Credited window</span>
-            <span><strong>USD live</strong>Price-backed output</span>
-          </div>
-          <div class="terminal-theory-warning">Nothing here is official. This is only a theory, not a MegaETH announcement.</div>
-        </div>
-        <div class="terminal-floating-panel">
-          <label class="terminal-floating-input" for="terminalFloatPointsInput">
-            Terminal points
-            <input id="terminalFloatPointsInput" type="number" min="0" step="1" inputmode="numeric" placeholder="Enter points" data-terminal-input-group="points" />
-          </label>
-          <div class="terminal-floating-results" aria-live="polite">
-            <div class="terminal-floating-result is-primary"><span>Estimated value</span><strong id="terminalFloatSupplyShare">$ —</strong></div>
-            <div class="terminal-floating-result"><span>Estimated MEGA</span><strong class="is-mega" id="terminalFloatEstimatedMega">—</strong></div>
-            <div class="terminal-floating-result"><span>Value / point</span><strong id="terminalFloatPointUsd">$ —</strong></div>
-          </div>
-          <button class="terminal-floating-jump" type="button" id="terminalFloatJump">Open full checker</button>
-        </div>
-      </div>
-    </aside>
   </section>
 
   <nav class="site-switcher" aria-label="MegaFees site sections">
@@ -4074,23 +4214,18 @@
     <div class="category-card" data-category="mega" role="button" tabindex="0">
       <div class="category-card-top">
         <div class="category-card-label"><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />Mega</div>
-        <div class="category-card-count">4 charts</div>
+        <div class="category-card-count">3 charts</div>
       </div>
       <div class="category-card-primary" id="kpi-mega-holders">—</div>
       <div class="category-card-details">
         <span class="category-card-detail" data-chart-key="holders" role="button" tabindex="0">MEGA Holders</span>
         <span class="category-card-detail" data-chart-key="float" role="button" tabindex="0">Committed vs Free Float</span>
         <span class="category-card-detail" data-chart-key="pe" role="button" tabindex="0">MEGA P/E</span>
-        <span class="category-card-detail" data-chart-key="points" role="button" tabindex="0">Points Checker</span>
       </div>
       <div class="category-card-stats">
         <div class="category-stat">
           <span class="category-stat-label">Committed share</span>
           <span class="category-stat-value" id="kpi-mega-split">—</span>
-        </div>
-        <div class="category-stat">
-          <span class="category-stat-label">Terminal S1 pool</span>
-          <span class="category-stat-value">0.5533%</span>
         </div>
       </div>
     </div>
@@ -4256,31 +4391,6 @@
           <div class="desc">MEGA token market cap divided by MegaETH annualized revenue, tracked day by day since the MEGA TGE.</div>
           <div class="chart-wrap"><canvas id="megaPeHistoryChart"></canvas></div>
           <div class="note mega-note" id="megaPeHistoryNote">Loading MEGA P/E history…</div>
-        </div>
-        <div class="mega-card" id="terminal-points-card">
-          <h3><img class="token-logo" src="https://assets.coingecko.com/coins/images/69995/small/ICON.png?1760337992" alt="MEGA" />Terminal Points Checker</h3>
-          <div class="desc">Proportional Season 1 model: 2.5% supply over 200 days, calibrated to the 6.32-week point pace.</div>
-          <div class="terminal-theory-warning">Nothing here is official. This is only a theory, not a MegaETH announcement.</div>
-          <div class="terminal-checker" id="terminalPointsChecker">
-            <div class="terminal-model-row" aria-label="Terminal allocation model">
-              <div class="terminal-model-chip"><span class="terminal-model-label">Allocation pool</span><span class="terminal-model-value" id="terminalAllocationPct">0.5533%</span></div>
-              <div class="terminal-model-chip"><span class="terminal-model-label">Leaderboard points</span><span class="terminal-model-value" id="terminalTotalPoints">12,147,742</span></div>
-              <div class="terminal-model-chip"><span class="terminal-model-label">Credited window</span><span class="terminal-model-value" id="terminalCreditedDays">6.32w</span></div>
-              <div class="terminal-model-chip"><span class="terminal-model-label">Points for 0.01%</span><span class="terminal-model-value" id="terminalPointsPerBip">219,535</span></div>
-            </div>
-            <div class="terminal-checker-inputs">
-              <label class="terminal-input-label" for="terminalPointsInput"><span>Terminal points</span><input id="terminalPointsInput" type="number" min="0" step="1" inputmode="numeric" placeholder="0" data-terminal-input-group="points" /></label>
-              <label class="terminal-input-label" for="terminalSupplyInput"><span>MEGA total supply</span><input id="terminalSupplyInput" type="number" min="0" step="1" inputmode="numeric" placeholder="Loading live supply" data-terminal-input-group="supply" /></label>
-            </div>
-            <div class="terminal-checker-results" aria-live="polite">
-              <div class="terminal-result"><span class="terminal-result-label">Point share</span><span class="terminal-result-value" id="terminalPointShare">0%</span></div>
-              <div class="terminal-result"><span class="terminal-result-label">Estimated value</span><span class="terminal-result-value is-supply" id="terminalSupplyShare">$ —</span></div>
-              <div class="terminal-result"><span class="terminal-result-label">Estimated MEGA</span><span class="terminal-result-value is-mega" id="terminalEstimatedMega">—</span></div>
-              <div class="terminal-result"><span class="terminal-result-label">One point</span><span class="terminal-result-value" id="terminalOnePoint">—</span></div>
-              <div class="terminal-result"><span class="terminal-result-label">Value / point</span><span class="terminal-result-value is-supply" id="terminalPointUsd">$ —</span></div>
-            </div>
-          </div>
-          <div class="note mega-note mega-note-green" id="terminalPointsNote">Allocation = 2.5% x 44.267097 / 200 = 0.5533387%. Window = 3 weeks + (12,147,742 - 5,500,000) / 2,000,000 = 6.323871 weeks.</div>
         </div>
       </div>
     </div>
@@ -9114,6 +9224,34 @@
 
   const APP_DASHBOARD_CATALOG = [
     {
+      id: 'monster',
+      name: 'Monster',
+      kind: 'Physical TCG',
+      initials: 'MN',
+      logo: 'https://cdn.mnstr.xyz/uploads/mnstr/new_monster_logo.jpg',
+      accent: '#F65B3B',
+      health: 'Dune + DefiLlama',
+      tvl: '$15.0M',
+      users: '1,269',
+      volume: '$783K',
+      links: [
+        ['Website', 'https://mnstr.xyz/'],
+        ['X', 'https://x.com/mnstr'],
+        ['Discord', 'https://discord.gg/V2htTavap6'],
+      ],
+      stats: [
+        ['Play Volume', '$15.0M'],
+        ['Unique Players', '1,269'],
+        ['Net Revenue', '$783K'],
+      ],
+      dashboards: [
+        ['Play Funnel', 'Total play, sold-back value, gross hold, and net retained.', 'Live', '$15.0M'],
+        ['Pack Mix', 'All-time volume concentration by pack.', 'On-chain', '36.1%'],
+        ['Top Players', 'Largest spenders and pack-opening intensity.', 'On-chain', '$882K'],
+        ['Unit Economics', 'Dune retention versus DefiLlama earnings.', 'Live', '$5.98M'],
+      ],
+    },
+    {
       id: 'euphoria',
       name: 'Euphoria',
       kind: 'Tap Trading',
@@ -9275,170 +9413,12 @@
   const brixDataState = { dashboard: null, tokens: null, promise: null, error: null };
   const WORLD_MARKETS_DASHBOARD_DATA_URL = 'data/world-markets-dashboard-data.json';
   const worldMarketsDataState = { dashboard: null, promise: null, error: null };
+  const MONSTER_DASHBOARD_DATA_URL = 'data/monster-dashboard-data.json';
+  const monsterDataState = { dashboard: null, promise: null, error: null };
   const EUPHORIA_DASHBOARD_DATA_URL = 'data/euphoria-dashboard-data.json';
   const euphoriaDataState = { dashboard: null, promise: null, error: null };
   const HITONE_DASHBOARD_DATA_URL = 'data/hitone-dashboard-data.json';
   const hitoneDataState = { dashboard: null, promise: null, error: null };
-  const TERMINAL_POINTS_CHECKER_MODEL = {
-    plannedSupplyPct: 2.5,
-    plannedDays: 200,
-    week3Points: 5500000,
-    weeklyPointsAfterWeek3: 2000000,
-    totalLeaderboardPoints: 12147742,
-  };
-  const TERMINAL_POINT_INPUT_IDS = ['terminalPointsInput', 'terminalFloatPointsInput'];
-  const TERMINAL_SUPPLY_INPUT_IDS = ['terminalSupplyInput'];
-  let terminalPointsSupply = null;
-  let terminalMegaPrice = null;
-
-  function terminalAllocationPct() {
-    return (TERMINAL_POINTS_CHECKER_MODEL.plannedSupplyPct * terminalCreditedDays()) / TERMINAL_POINTS_CHECKER_MODEL.plannedDays;
-  }
-
-  function terminalCreditedWeeks() {
-    const model = TERMINAL_POINTS_CHECKER_MODEL;
-    const extraPoints = Math.max(0, model.totalLeaderboardPoints - model.week3Points);
-    return 3 + (extraPoints / model.weeklyPointsAfterWeek3);
-  }
-
-  function terminalCreditedDays() {
-    return terminalCreditedWeeks() * 7;
-  }
-
-  function terminalWindowLabel() {
-    return terminalCreditedWeeks().toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    }) + 'w';
-  }
-
-  function terminalPct(value, maxDigits = 6) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return '—';
-    if (n === 0) return '0%';
-    const abs = Math.abs(n);
-    const digits = abs >= 10 ? 2 : abs >= 1 ? 3 : maxDigits;
-    return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: digits }) + '%';
-  }
-
-  function terminalNumberInputValue(id) {
-    const input = document.getElementById(id);
-    const value = Number(input?.value);
-    return Number.isFinite(value) && value > 0 ? value : 0;
-  }
-
-  function terminalInputValue(ids) {
-    const activeId = document.activeElement?.id;
-    if (ids.includes(activeId)) return terminalNumberInputValue(activeId);
-    for (const id of ids) {
-      const value = terminalNumberInputValue(id);
-      if (value > 0) return value;
-    }
-    return 0;
-  }
-
-  function syncTerminalInputGroup(input) {
-    const group = input?.dataset?.terminalInputGroup;
-    if (!group) return;
-    const ids = group === 'supply' ? TERMINAL_SUPPLY_INPUT_IDS : TERMINAL_POINT_INPUT_IDS;
-    ids.forEach((id) => {
-      if (id === input.id) return;
-      const other = document.getElementById(id);
-      if (other && other.value !== input.value) other.value = input.value;
-    });
-  }
-
-  function terminalMegaAmount(value) {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return '—';
-    const abs = Math.abs(n);
-    if (abs >= 1000) return fmtTokenCompact(n);
-    const digits = abs >= 100 ? 1 : abs >= 10 ? 2 : 4;
-    return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: digits });
-  }
-
-  function setText(id, text) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  }
-
-  function setTexts(ids, text) {
-    ids.forEach((id) => setText(id, text));
-  }
-
-  function updateTerminalPointsChecker() {
-    const model = TERMINAL_POINTS_CHECKER_MODEL;
-    const allocationPct = terminalAllocationPct();
-    const points = terminalInputValue(TERMINAL_POINT_INPUT_IDS);
-    const supplyInput = terminalInputValue(TERMINAL_SUPPLY_INPUT_IDS);
-    const supply = supplyInput > 0 ? supplyInput : terminalPointsSupply;
-    const pointShare = model.totalLeaderboardPoints > 0 ? points / model.totalLeaderboardPoints : 0;
-    const supplyClaimPct = pointShare * allocationPct;
-    const estimatedMega = Number.isFinite(supply) && supply > 0 ? supply * supplyClaimPct / 100 : null;
-    const estimatedUsd = estimatedMega != null && Number.isFinite(terminalMegaPrice) && terminalMegaPrice > 0
-      ? estimatedMega * terminalMegaPrice
-      : null;
-    const onePointMega = Number.isFinite(supply) && supply > 0 ? supply * (allocationPct / 100) / model.totalLeaderboardPoints : null;
-    const onePointUsd = onePointMega != null && Number.isFinite(terminalMegaPrice) && terminalMegaPrice > 0
-      ? onePointMega * terminalMegaPrice
-      : null;
-    const pointsForOneBp = allocationPct > 0 ? model.totalLeaderboardPoints * (0.01 / allocationPct) : 0;
-
-    setTexts(['terminalAllocationPct', 'terminalFloatAllocationPct'], terminalPct(allocationPct, 4));
-    setTexts(['terminalTotalPoints', 'terminalFloatTotalPoints'], fmtNum(model.totalLeaderboardPoints));
-    setTexts(['terminalCreditedDays', 'terminalFloatWindow'], terminalWindowLabel());
-    setText('terminalPointsPerBip', fmtNum(Math.round(pointsForOneBp)));
-    setText('terminalPointShare', terminalPct(pointShare * 100, 6));
-    setTexts(['terminalSupplyShare', 'terminalFloatSupplyShare'], estimatedUsd != null ? fmtUSDCompact(estimatedUsd) : '$ —');
-    setTexts(['terminalEstimatedMega', 'terminalFloatEstimatedMega'], estimatedMega != null ? terminalMegaAmount(estimatedMega) + ' MEGA' : '—');
-    setText('terminalOnePoint', onePointMega != null ? terminalMegaAmount(onePointMega) + ' MEGA' : terminalPct(allocationPct / model.totalLeaderboardPoints, 10) + ' supply');
-    setTexts(['terminalPointUsd', 'terminalFloatPointUsd'], onePointUsd != null ? fmtUsdPerPoint(onePointUsd) : '$ —');
-  }
-
-  function initTerminalPointsChecker() {
-    const root = document.getElementById('terminalPointsChecker');
-    const floatingRoot = document.getElementById('terminalFloatingChecker');
-    if (!root && !floatingRoot) return;
-    if (root) root.dataset.bound = '1';
-    if (floatingRoot) floatingRoot.dataset.bound = '1';
-    const supplyInput = document.getElementById('terminalSupplyInput');
-    document.querySelectorAll('[data-terminal-input-group]').forEach((input) => {
-      if (input.__terminalCheckerBound) return;
-      input.__terminalCheckerBound = true;
-      input.addEventListener('input', () => {
-        syncTerminalInputGroup(input);
-        updateTerminalPointsChecker();
-      });
-    });
-    const jumpButton = document.getElementById('terminalFloatJump');
-    if (jumpButton && !jumpButton.__terminalCheckerBound) {
-      jumpButton.__terminalCheckerBound = true;
-      jumpButton.addEventListener('click', () => {
-        selectSiteTab('network');
-        jumpToCategoryChart('mega', 'points');
-      });
-    }
-    updateTerminalPointsChecker();
-    fetchTokenSnapshotOnMegaETH(MEGA_TOKEN_ADDRESS)
-      .then((snapshot) => {
-        const totalSupply = Number(snapshot?.totalSupply);
-        const price = Number(snapshot?.price);
-        if (price > 0) terminalMegaPrice = price;
-        if (!(totalSupply > 0)) return;
-        terminalPointsSupply = totalSupply;
-        if (supplyInput && !supplyInput.value) {
-          supplyInput.value = String(Math.round(totalSupply));
-          supplyInput.placeholder = 'Live total supply';
-        }
-        updateTerminalPointsChecker();
-      })
-      .catch((error) => {
-        console.warn('Terminal points checker supply fetch failed', error);
-        if (supplyInput && !supplyInput.value) supplyInput.placeholder = 'Enter total supply';
-        updateTerminalPointsChecker();
-      });
-  }
-
   function loadEuphoriaData() {
     if (euphoriaDataState.promise) return euphoriaDataState.promise;
     euphoriaDataState.promise = fetch(EUPHORIA_DASHBOARD_DATA_URL, { cache: 'no-store' })
@@ -9517,6 +9497,26 @@
     return worldMarketsDataState.promise;
   }
 
+  function loadMonsterData() {
+    if (monsterDataState.promise) return monsterDataState.promise;
+    monsterDataState.promise = fetch(MONSTER_DASHBOARD_DATA_URL, { cache: 'no-store' })
+      .then((res) => res.ok ? res.json() : null)
+      .then((dashboard) => {
+        monsterDataState.dashboard = dashboard;
+        monsterDataState.error = null;
+        if (activeSiteTab === 'apps') renderAppsNav();
+        if (activeAppId === 'monster') renderActiveApp();
+      }).catch((error) => {
+        console.warn('Monster data load failed', error);
+        monsterDataState.error = error;
+        if (activeSiteTab === 'apps') renderAppsNav();
+        if (activeAppId === 'monster') renderActiveApp();
+      }).finally(() => {
+        monsterDataState.promise = null;
+      });
+    return monsterDataState.promise;
+  }
+
   function appDataTimestamp(value) {
     const parsed = Date.parse(String(value || ''));
     if (!Number.isFinite(parsed)) return null;
@@ -9543,6 +9543,39 @@
 
   function resolveAppView(app) {
     if (!app) return app;
+
+    if (app.id === 'monster') {
+      const data = monsterDataState.dashboard;
+      const totalPlay = Number(data?.summary?.totalPlayVolumeUsd);
+      const uniquePlayers = Number(data?.summary?.uniquePlayers);
+      const netRevenue = Number(data?.summary?.netRevenueUsd);
+      const annualizedFees = Number(data?.summary?.annualizedFeesUsd);
+      const topPack = (data?.packMix?.packs || []).slice().sort((a, b) => Number(b.sharePct || 0) - Number(a.sharePct || 0))[0];
+      const contractRefs = [
+        ...(data?.contracts?.packs || []).slice(0, 4),
+        { label: 'Treasury', address: data?.contracts?.treasury },
+        { label: 'USDM', address: data?.contracts?.usdm },
+      ];
+      return {
+        ...app,
+        health: monsterDataState.error ? 'Source error' : (data ? 'Dune + DefiLlama' : 'Loading source data'),
+        sourceNote: data
+          ? 'Monster site / Dune / DefiLlama / ' + (appDataTimestamp(data.fetchedAt) || 'timestamp unavailable')
+          : 'Monster site / Dune / DefiLlama',
+        contractRefs,
+        stats: [
+          ['Play Volume', Number.isFinite(totalPlay) && totalPlay > 0 ? fmtUSDCompact(totalPlay) : app.stats[0][1]],
+          ['Unique Players', Number.isFinite(uniquePlayers) && uniquePlayers > 0 ? fmtNum(uniquePlayers) : app.stats[1][1]],
+          ['Net Revenue', Number.isFinite(netRevenue) && netRevenue > 0 ? fmtUSDCompact(netRevenue) : app.stats[2][1]],
+        ],
+        dashboards: [
+          ['Play Funnel', 'Total play, sold-back value, gross hold, and net retained.', 'Live', Number.isFinite(totalPlay) && totalPlay > 0 ? fmtUSDCompact(totalPlay) : app.dashboards[0][3]],
+          ['Pack Mix', 'All-time volume concentration by pack.', 'On-chain', Number.isFinite(topPack?.sharePct) ? topPack.sharePct.toFixed(1) + '%' : app.dashboards[1][3]],
+          ['Top Players', 'Largest spenders and pack-opening intensity.', 'On-chain', (data?.topPlayers?.[0]?.volumeUsd || 0) > 0 ? fmtUSDCompact(data.topPlayers[0].volumeUsd) : app.dashboards[2][3]],
+          ['Unit Economics', 'Dune retention versus DefiLlama earnings.', 'Live', Number.isFinite(annualizedFees) && annualizedFees > 0 ? fmtUSDCompact(annualizedFees) : app.dashboards[3][3]],
+        ],
+      };
+    }
 
     if (app.id === 'brix') {
       const dashboard = brixDataState.dashboard;
@@ -10305,6 +10338,232 @@
     bindBrixChartTooltips(grid);
   }
 
+  function monsterShare(value, total, digits = 1) {
+    if (!(Number.isFinite(value) && Number.isFinite(total) && total > 0)) return '—';
+    return ((value / total) * 100).toFixed(digits) + '%';
+  }
+
+  function monsterDailyVolumePoints(points) {
+    return (Array.isArray(points) ? points : [])
+      .map((point) => ({
+        date: String(point.date || ''),
+        timestamp: Date.parse(String(point.date || '') + 'T00:00:00Z'),
+        starterUsd: Number(point.starterUsd || 0),
+        premiumUsd: Number(point.premiumUsd || 0),
+        ultraUsd: Number(point.ultraUsd || 0),
+        totalUsd: Number(point.totalUsd || 0),
+      }))
+      .filter((point) => Number.isFinite(point.timestamp) && point.totalUsd > 0)
+      .sort((a, b) => a.timestamp - b.timestamp);
+  }
+
+  function monsterDailyVolumeChart(points, visual) {
+    if (!points.length) return '<div class="brix-loading">Daily volume unavailable</div>';
+    const maxTotal = Math.max(...points.map((point) => point.totalUsd), 1);
+    return `
+      <div class="monster-daily-shell">
+        <div class="monster-chart-legend">
+          <span style="color:${visual.accent || '#F65B3B'}"><i></i>Starter</span>
+          <span style="color:${visual.secondary || '#F4E66A'}"><i></i>Premium</span>
+          <span style="color:${visual.tertiary || '#8DEB7B'}"><i></i>Ultra</span>
+        </div>
+        <div class="monster-bar-chart">
+          <div class="monster-bar-grid" style="--bars:${points.length}">
+            ${points.map((point, index) => {
+              const totalHeight = Math.max(10, (point.totalUsd / maxTotal) * 184);
+              const starterHeight = point.totalUsd > 0 ? (point.starterUsd / point.totalUsd) * totalHeight : 0;
+              const premiumHeight = point.totalUsd > 0 ? (point.premiumUsd / point.totalUsd) * totalHeight : 0;
+              const ultraHeight = point.totalUsd > 0 ? (point.ultraUsd / point.totalUsd) * totalHeight : 0;
+              const showLabel = index === 0 || index === points.length - 1 || index % 4 === 0;
+              const title = `${brixDateLabel(point.timestamp)} · Total ${fmtUSD(point.totalUsd, 0)} · Starter ${fmtUSD(point.starterUsd, 0)} · Premium ${fmtUSD(point.premiumUsd, 0)} · Ultra ${fmtUSD(point.ultraUsd, 0)}`;
+              return `
+                <div class="monster-bar" title="${escapeHTML(title)}">
+                  <div class="monster-bar-total">${fmtUSDCompact(point.totalUsd)}</div>
+                  <div class="monster-bar-stack">
+                    <span class="monster-bar-segment" style="height:${starterHeight.toFixed(2)}px;background:${visual.accent || '#F65B3B'}"></span>
+                    <span class="monster-bar-segment" style="height:${premiumHeight.toFixed(2)}px;background:${visual.secondary || '#F4E66A'}"></span>
+                    <span class="monster-bar-segment" style="height:${ultraHeight.toFixed(2)}px;background:${visual.tertiary || '#8DEB7B'}"></span>
+                  </div>
+                  <div class="monster-bar-label">${showLabel ? escapeHTML(brixDateLabel(point.timestamp)) : '&nbsp;'}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderMonsterDashboards(grid) {
+    grid.className = 'brix-dashboard-grid monster-dashboard-grid';
+    const data = monsterDataState.dashboard;
+    if (!data) {
+      loadMonsterData();
+      grid.innerHTML = '<div class="brix-loading">Loading Monster dashboards</div>';
+      return;
+    }
+
+    const project = data.project || {};
+    const visual = project.visual || {};
+    const summary = data.summary || {};
+    const economics = data.economics || {};
+    const totalPlay = Number(summary.totalPlayVolumeUsd || 0);
+    const grossRevenue = Number(summary.grossRevenueUsd || 0);
+    const netRevenue = Number(summary.netRevenueUsd || 0);
+    const totalSoldBack = Number(summary.totalSoldBackUsd || 0);
+    const annualizedFees = Number(summary.annualizedFeesUsd || 0);
+    const volume30d = Number(summary.volume30dUsd || 0);
+    const uniquePlayers = Number(summary.uniquePlayers || 0);
+    const totalPlays = Number(summary.totalPlays || 0);
+    const totalSells = Number(summary.totalSells || 0);
+    const dailyVolumePoints = monsterDailyVolumePoints(data.dailyVolume?.points);
+    const packRows = (data.packMix?.packs || []).map((row) => ({
+      ...row,
+      usd: Number(row.volumeUsd || 0),
+      sharePct: Number(row.sharePct || 0),
+    })).filter((row) => row.usd > 0);
+    const topPlayers = (data.topPlayers || []).map((row) => ({
+      ...row,
+      volumeUsd: Number(row.volumeUsd || 0),
+      plays: Number(row.plays || 0),
+    })).filter((row) => row.volumeUsd > 0);
+    const topPlayersShare = totalPlay > 0
+      ? topPlayers.reduce((sum, row) => sum + row.volumeUsd, 0) / totalPlay
+      : 0;
+    const volumePerPlayer = uniquePlayers > 0 ? totalPlay / uniquePlayers : 0;
+    const playsPerPlayer = uniquePlayers > 0 ? totalPlays / uniquePlayers : 0;
+    const peakDay = dailyVolumePoints.reduce((best, point) => !best || point.totalUsd > best.totalUsd ? point : best, null);
+    const visibleWindowVolume = dailyVolumePoints.reduce((sum, point) => sum + point.totalUsd, 0);
+    const visibleDays = dailyVolumePoints.length;
+
+    grid.innerHTML = `
+      <article class="brix-panel wide" style="--brix-accent:${visual.accent || '#F65B3B'}">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Revenue Focus</div><h4>${fmtUSDCompact(netRevenue)}</h4></div>
+          <p class="brix-panel-copy">Net retained after sellbacks, with gross hold and player spend separated so the Monster economics read cleanly.</p>
+        </div>
+        <div class="brix-metric-row">
+          ${worldMetricBlocks([
+            ['Net retained', fmtUSDCompact(netRevenue), true],
+            ['Gross held', fmtUSDCompact(grossRevenue), false],
+            ['Sold back', fmtUSDCompact(totalSoldBack), false],
+            ['Annualized fees', fmtUSDCompact(annualizedFees), false],
+          ])}
+        </div>
+        <div class="monster-summary-grid">
+          <div class="monster-kpi-stack">
+            <p class="monster-hero-copy">${escapeHTML(project.description || '')} ${escapeHTML(data.product?.collectorCopy || '')}</p>
+            <div class="world-row-list">
+            ${worldRowList([
+              { label: 'Total play volume', usd: totalPlay, color: visual.accent || '#F65B3B', sub: 'All pack spend routed through Monster' },
+              { label: 'Sold back', usd: totalSoldBack, color: visual.secondary || '#F4E66A', sub: monsterShare(totalSoldBack, totalPlay) + ' of total play volume' },
+              { label: 'Gross kept', usd: grossRevenue, color: visual.tertiary || '#8DEB7B', sub: monsterShare(grossRevenue, totalPlay) + ' after buybacks' },
+              { label: 'Net revenue', usd: netRevenue, color: '#7EAAD4', sub: monsterShare(netRevenue, totalPlay) + ' retained after full Dune netting' },
+            ], {
+              value: (row) => row.usd,
+              label: (row) => row.label,
+              sub: (row) => row.sub,
+              metric: (row) => fmtUSDCompact(row.usd),
+            })}
+          </div>
+          </div>
+          <div class="monster-pillars">
+            <div class="monster-pillar">Unique players<strong>${fmtNum(uniquePlayers)}</strong></div>
+            <div class="monster-pillar">Total plays<strong>${fmtNum(totalPlays)}</strong></div>
+            <div class="monster-pillar">Avg spend / player<strong>${fmtUSDCompact(volumePerPlayer)}</strong></div>
+            <div class="monster-pillar">Avg plays / player<strong>${playsPerPlayer.toFixed(1)}x</strong></div>
+            <div class="monster-pillar">Total sells<strong>${fmtNum(totalSells)}</strong></div>
+            <div class="monster-pillar">Buyback promise<strong>${fmtNum(project.buybackPct || 85)}% FMV</strong></div>
+          </div>
+        </div>
+        <div class="brix-note">Dune gross retained equals total play volume minus sold-back value. This section is now revenue-first instead of mixing product and whale activity in the same visual stack.</div>
+      </article>
+
+      <article class="brix-panel wide" style="--brix-accent:${visual.secondary || '#F4E66A'}">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Daily Volume by Pack</div><h4>${peakDay ? fmtUSDCompact(peakDay.totalUsd) : '—'}</h4></div>
+          <p class="brix-panel-copy">Stacked daily bars inspired by the Dune chart, using the public Starter, Premium, and Ultra breakdown visible on the raw result page.</p>
+        </div>
+        <div class="monster-emphasis-grid">
+          <div class="monster-emphasis-card"><span>Visible window</span><strong>${visibleDays} days</strong></div>
+          <div class="monster-emphasis-card"><span>Peak day</span><strong>${peakDay ? brixDateLabel(peakDay.timestamp) : '—'}</strong></div>
+          <div class="monster-emphasis-card"><span>Window volume</span><strong>${fmtUSDCompact(visibleWindowVolume)}</strong></div>
+        </div>
+        <div class="brix-chart">${monsterDailyVolumeChart(dailyVolumePoints, visual)}</div>
+        <div class="brix-note">${escapeHTML(data.dailyVolume?.methodology || '')}</div>
+      </article>
+
+      <article class="brix-panel" style="--brix-accent:${visual.secondary || '#F4E66A'}">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Revenue By Pack</div><h4>${packRows[0] ? packRows[0].sharePct.toFixed(1) + '%' : '—'}</h4></div>
+          <p class="brix-panel-copy">All-time gross revenue concentration by pack, kept separate from the daily bar view so the chart stays readable.</p>
+        </div>
+        <div class="brix-metric-row">
+          ${worldMetricBlocks([
+            ['Top pack', packRows[0]?.label || '—', true],
+            ['Top 2 share', monsterShare((packRows[0]?.usd || 0) + (packRows[1]?.usd || 0), grossRevenue), false],
+            ['Top 4 share', monsterShare(packRows.slice(0, 4).reduce((sum, row) => sum + row.usd, 0), grossRevenue), false],
+            ['Tail share', monsterShare(packRows.slice(4).reduce((sum, row) => sum + row.usd, 0), grossRevenue), false],
+          ])}
+        </div>
+        <div class="world-row-list">
+          ${worldRowList(packRows, {
+            value: (row) => row.usd,
+            label: (row) => row.label,
+            sub: (row) => fmtUSDCompact(row.usd),
+            metric: (row) => row.sharePct.toFixed(1) + '%',
+          })}
+        </div>
+        <div class="brix-note">${escapeHTML(data.packMix?.methodology || '')}</div>
+      </article>
+
+      <article class="brix-panel wide" style="--brix-accent:${visual.tertiary || '#8DEB7B'}">
+        <div class="brix-panel-head">
+          <div><div class="brix-eyebrow">Unit Economics</div><h4>${fmtUSDCompact(annualizedFees)}</h4></div>
+          <p class="brix-panel-copy">Cross-check Dune’s realized retention against DefiLlama’s physical TCG revenue methodology.</p>
+        </div>
+        <div class="brix-metric-row">
+          ${worldMetricBlocks([
+            ['Annualized fees', fmtUSDCompact(annualizedFees), true],
+            ['30d volume', fmtUSDCompact(volume30d), false],
+            ['LL earnings', fmtUSDCompact(economics.earningsUsd || 0), false],
+            ['Dune net revenue', fmtUSDCompact(netRevenue), false],
+          ])}
+        </div>
+        <div class="world-dual-layout">
+          <div class="world-row-list">
+            ${worldRowList([
+              { label: 'On-chain play spends', usd: Number(economics.onChainPlaySpendsUsd || 0), color: visual.accent || '#F65B3B', sub: 'USDm paid into GachaPlayed contracts' },
+              { label: 'Credit card spends', usd: Number(economics.creditCardPlaySpendsUsd || 0), color: '#D8D1C5', sub: 'Off-chain checkout routed into the same flow' },
+              { label: 'Buyback spends', usd: Number(economics.buybackSpendsUsd || 0), color: visual.secondary || '#F4E66A', sub: 'Cards sold back to Monster at FMV haircut' },
+              { label: 'Gross profit', usd: Number(economics.grossProfitUsd || 0), color: visual.tertiary || '#8DEB7B', sub: 'DefiLlama retained value after buybacks' },
+            ], {
+              value: (row) => row.usd,
+              label: (row) => row.label,
+              sub: (row) => row.sub,
+              metric: (row) => fmtUSDCompact(row.usd),
+            })}
+          </div>
+          <div>
+            <div class="world-chip-row">
+              ${(data.product?.productNotes || []).map((note) => `<span class="world-chip">${escapeHTML(note)}</span>`).join('')}
+            </div>
+            <div class="world-row-list">
+              ${worldRowList(topPlayers.slice(0, 4), {
+                value: (row) => row.volumeUsd,
+                label: (row) => shortAddress(row.address),
+                sub: (row) => fmtNum(row.plays) + ' paid plays',
+                metric: (row) => fmtUSDCompact(row.volumeUsd),
+              })}
+            </div>
+            <div class="world-source-list">${worldSourceLinks(data.sources)}</div>
+          </div>
+        </div>
+        <div class="brix-note">${escapeHTML(economics.methodology || '')}</div>
+      </article>
+    `;
+  }
+
   function euphoriaPct(value, digits = 1) {
     const n = Number(value);
     if (!Number.isFinite(n)) return '—';
@@ -10696,10 +10955,14 @@
             ${app.contractRefs?.length ? `<div class="app-chip-row">${renderAppContractRefs(app.contractRefs)}</div>` : ''}
           </div>
         </div>
-        ${stats.map(([label, value]) => `<div class="app-stat${['euphoria', 'hitone', 'brix', 'world-markets'].includes(app.id) ? ' app-stat-tight' : ''}"><div class="app-stat-label">${label}</div><div class="app-stat-value">${value}</div></div>`).join('')}
+        ${stats.map(([label, value]) => `<div class="app-stat${['monster', 'euphoria', 'hitone', 'brix', 'world-markets'].includes(app.id) ? ' app-stat-tight' : ''}"><div class="app-stat-label">${label}</div><div class="app-stat-value">${value}</div></div>`).join('')}
       `;
     }
     if (grid) {
+      if (app.id === 'monster') {
+        renderMonsterDashboards(grid);
+        return;
+      }
       if (app.id === 'euphoria') {
         renderEuphoriaDashboards(grid);
         return;
@@ -10757,6 +11020,7 @@
     if (tab === 'network') {
       requestAnimationFrame(() => renderCategory(activeCategory));
     } else {
+      loadMonsterData();
       loadBrixData();
       loadWorldMarketsData();
       renderAppsNav();
@@ -10770,7 +11034,6 @@
 
   renderAppsNav();
   renderActiveApp();
-  initTerminalPointsChecker();
 
   // Category cards drive the stacked chart browser.
   const CATEGORY_META = {
@@ -10781,8 +11044,8 @@
     },
     mega: {
       title: 'MEGA',
-      desc: 'MEGA holder growth, committed vs free float history, MEGA P/E, and Terminal points allocation stacked in one view.',
-      panels: ['mega-holders', 'mega-float', 'mega-pe', 'terminal-points'],
+      desc: 'MEGA holder growth, committed vs free float history, and MEGA P/E stacked in one view.',
+      panels: ['mega-holders', 'mega-float', 'mega-pe'],
     },
     revenue: {
       title: 'REVENUE',
@@ -10811,7 +11074,6 @@
       holders: '#mega-holders-card',
       float: '#mega-float-card',
       pe: '#mega-pe-history-card',
-      points: '#terminal-points-card',
     },
     revenue: {
       daily: '[data-panel="revenue"]',
@@ -10858,10 +11120,6 @@
       }
       if (panelKey === 'mega-pe') {
         renderMegaPeHistoryPanel();
-        return;
-      }
-      if (panelKey === 'terminal-points') {
-        updateTerminalPointsChecker();
         return;
       }
       if (panelKey === 'economics') {
