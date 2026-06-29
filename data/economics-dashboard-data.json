@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-06-28T01:22:00.344Z",
+  "asOf": "2026-06-29T01:22:57.009Z",
   "source": "MegaETH Blockscout token snapshots, Aave address book, and World Markets lending snapshot.",
   "methodology": {
     "m0": "M0 = total tokenized USDM supply minus USDM held in tracked lending vaults and reserves. DEX and spot balances stay inside M0.",
@@ -9,11 +9,11 @@
     "symbol": "USDM",
     "address": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7",
     "supply": 228415546.499396,
-    "priceUsd": 0.999197,
+    "priceUsd": 1.001,
     "source": "Blockscout /api/v2/tokens/0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
   },
   "m0": {
-    "value": 29228804.691236,
+    "value": 29200822.433661,
     "points": [
       {
         "timestamp": 1779715490000,
@@ -154,6 +154,10 @@
       {
         "timestamp": 1782691199999,
         "value": 29228804.691236
+      },
+      {
+        "timestamp": 1782777599999,
+        "value": 29200822.433661
       }
     ],
     "components": [
@@ -165,7 +169,7 @@
       },
       {
         "label": "Aave USDM reserve",
-        "value": -198621141.80816,
+        "value": -198649124.065735,
         "role": "subtract",
         "color": "#C586FF",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -179,14 +183,14 @@
       },
       {
         "label": "M0",
-        "value": 29228804.691236,
+        "value": 29200822.433661,
         "role": "result",
         "color": "#90D79F"
       }
     ]
   },
   "m1": {
-    "value": 598885423.542592,
+    "value": 598886117.832534,
     "points": [
       {
         "timestamp": 1779715490000,
@@ -327,18 +331,22 @@
       {
         "timestamp": 1782691199999,
         "value": 598885423.542592
+      },
+      {
+        "timestamp": 1782777599999,
+        "value": 598886117.832534
       }
     ],
     "components": [
       {
         "label": "M0",
-        "value": 29228804.691236,
+        "value": 29200822.433661,
         "role": "base",
         "color": "#90D79F"
       },
       {
         "label": "Aave aMegUSDm deposits",
-        "value": 569091018.851356,
+        "value": 569119695.398873,
         "role": "deposit",
         "color": "#C586FF",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -352,7 +360,7 @@
       },
       {
         "label": "M1",
-        "value": 598885423.542592,
+        "value": 598886117.832534,
         "role": "result",
         "color": "#F5AF94"
       }
@@ -360,12 +368,12 @@
   },
   "lending": {
     "vaultUsdm": {
-      "total": 199186741.80816,
+      "total": 199214724.065735,
       "sources": [
         {
           "protocol": "Aave V3",
           "label": "USDM reserve in aMegUSDm contract",
-          "amount": 198621141.80816,
+          "amount": 198649124.065735,
           "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
           "underlying": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
         },
@@ -379,12 +387,12 @@
       ]
     },
     "demandDeposits": {
-      "total": 569656618.851356,
+      "total": 569685295.398873,
       "sources": [
         {
           "protocol": "Aave V3",
           "label": "aMegUSDm total supply",
-          "amount": 569091018.851356,
+          "amount": 569119695.398873,
           "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
         },
         {
@@ -403,13 +411,13 @@
       "usdmAToken": {
         "symbol": "aMegUSDm",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
-        "totalSupply": 569091018.851356,
-        "underlyingUsdmReserve": 198621141.80816
+        "totalSupply": 569119695.398873,
+        "underlyingUsdmReserve": 198649124.065735
       },
       "usdmVariableDebt": {
         "symbol": "variableDebtMegUSDm",
         "address": "0x6b408d6c479c304794abc60a4693a3ad2d3c2d0d",
-        "totalSupply": 370478841.578645
+        "totalSupply": 370480236.794858
       }
     },
     "excluded": [
