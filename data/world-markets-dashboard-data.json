@@ -46,16 +46,12 @@
     }
   ],
   "spotTvl": {
-    "asOf": "2026-07-02T01:17:10.619Z",
-    "defillamaCurrentUsd": 8995156.2579,
-    "blockscoutLiveUsd": 8973305.454963,
+    "asOf": "2026-07-03T00:59:59.164Z",
+    "defillamaCurrentUsd": 8653191.46345,
+    "blockscoutLiveUsd": 8676371.027623,
     "methodology": "DefiLlama counts WETH, USDM, USDT0, BTC.B, and WITRY held by the WorldInc exchange contract. Blockscout live view also shows MEGA and dust balances.",
     "exchangeAddress": "0x5e3Ae52EbA0F9740364Bd5dd39738e1336086A8b",
     "history": [
-      {
-        "timestamp": 1780531199999,
-        "value": 9771199.03182
-      },
       {
         "timestamp": 1780617599999,
         "value": 9728893.29012
@@ -171,54 +167,58 @@
       {
         "timestamp": 1783036799999,
         "value": 8995156.2579
+      },
+      {
+        "timestamp": 1783123199999,
+        "value": 8653191.46345
       }
     ],
     "tokens": [
       {
         "symbol": "USDM",
-        "amount": 6937997.288610843,
-        "priceUsd": 1.001,
-        "usd": 6944935.285899453,
+        "amount": 6591101.421818938,
+        "priceUsd": 0.998819,
+        "usd": 6583317.33103977,
         "address": "0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7",
         "color": "#6DD0A9"
       },
       {
         "symbol": "WETH",
-        "amount": 664.078179478237,
-        "priceUsd": 1601.16,
-        "usd": 1063295.4178533733,
+        "amount": 664.058146392307,
+        "priceUsd": 1692.91,
+        "usd": 1124190.6766089997,
         "address": "0x4200000000000000000000000000000000000006",
         "color": "#7EAAD4"
       },
       {
         "symbol": "WITRY",
-        "amount": 35170492.79130721,
-        "priceUsd": 0.02332003,
-        "usd": 820176.9470080679,
+        "amount": 35149254.089307204,
+        "priceUsd": 0.02331952,
+        "usd": 819663.7337206812,
         "address": "0x15B271D9012b5820FC42b1c495B4C1e206547De5",
         "color": "#F97357"
       },
       {
         "symbol": "BTC.B",
-        "amount": 2.07067045,
-        "priceUsd": 59644,
-        "usd": 123503.0683198,
+        "amount": 2.07016877,
+        "priceUsd": 61229,
+        "usd": 126754.36361833,
         "address": "0xB0F70C0bD6FD87dbEb7C10dC692a2a6106817072",
         "color": "#F4D35E"
       },
       {
         "symbol": "MEGA",
         "amount": 242523.85583919322,
-        "priceUsd": 0.04475061,
-        "usd": 10853.09048835596,
+        "priceUsd": 0.0490775,
+        "usd": 11902.464534948005,
         "address": "0x28B7E77f82B25B95953825F1E3eA0E36c1c29861",
         "color": "#FF8AA8"
       },
       {
         "symbol": "USDT0",
         "amount": 10554.627586,
-        "priceUsd": 0.99877,
-        "usd": 10541.64539406922,
+        "priceUsd": 0.998847,
+        "usd": 10542.458100393344,
         "address": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
         "color": "#9AA7C2"
       }
@@ -226,11 +226,11 @@
   },
   "spotVolume": {
     "source": "DefiLlama DEXs summary, slug world-markets-spot, dataType dailyVolume.",
-    "total24hUsd": 3457,
-    "total48hto24hUsd": 6187,
-    "total7dUsd": 27368,
-    "total30dUsd": 2506861,
-    "totalAllTimeUsd": 22400582,
+    "total24hUsd": 23,
+    "total48hto24hUsd": 3457,
+    "total7dUsd": 26933,
+    "total30dUsd": 2287392,
+    "totalAllTimeUsd": 22400605,
     "daily": [
       {
         "timestamp": 1770681600000,
@@ -799,14 +799,18 @@
       {
         "timestamp": 1782864000000,
         "value": 3457
+      },
+      {
+        "timestamp": 1782950400000,
+        "value": 23
       }
     ]
   },
   "perps": {
     "volume": {
       "source": "Daily 24h notional is refreshed from DefiLlama perps fees using the last observed on-chain fee-rate; hourly and market distributions keep the last full on-chain shape.",
-      "latestBlock": 19899166,
-      "fromBlock": 19812766,
+      "latestBlock": 20243389,
+      "fromBlock": 20156989,
       "tradeLogs": 6714,
       "notional24hUsd": 1664.223283,
       "feesUsdFromLogs": 1,
@@ -954,11 +958,11 @@
     },
     "fees": {
       "source": "DefiLlama fees summary, slug world-markets-perps, dataType dailyFees.",
-      "total24hUsd": 0,
+      "total24hUsd": 1,
       "total48hto24hUsd": 0,
-      "total7dUsd": 1,
-      "total30dUsd": 16048,
-      "totalAllTimeUsd": 752046,
+      "total7dUsd": 2,
+      "total30dUsd": 14326,
+      "totalAllTimeUsd": 752047,
       "methodology": "Perps trading fees plus lending interest plus liquidation fees.",
       "daily": [
         {
@@ -1480,17 +1484,21 @@
         {
           "timestamp": 1782864000000,
           "value": 0
+        },
+        {
+          "timestamp": 1782950400000,
+          "value": 1
         }
       ]
     }
   },
   "spotFees": {
     "source": "DefiLlama fees summary, slug world-markets-spot, dataType dailyFees.",
-    "total24hUsd": 13,
-    "total48hto24hUsd": 9,
-    "total7dUsd": 50,
-    "total30dUsd": 2731,
-    "totalAllTimeUsd": 11397,
+    "total24hUsd": 0,
+    "total48hto24hUsd": 5,
+    "total7dUsd": 40,
+    "total30dUsd": 2485,
+    "totalAllTimeUsd": 11389,
     "daily": [
       {
         "timestamp": 1771718400000,
@@ -2010,7 +2018,11 @@
       },
       {
         "timestamp": 1782864000000,
-        "value": 13
+        "value": 5
+      },
+      {
+        "timestamp": 1782950400000,
+        "value": 0
       }
     ]
   },
@@ -2064,14 +2076,14 @@
     ]
   },
   "tokenPrices": {
-    "USDM": 1.001,
-    "WETH": 1601.16,
-    "USDT0": 0.99877,
-    "BTC.B": 59644,
-    "WITRY": 0.02332003,
-    "MEGA": 0.04475061,
+    "USDM": 0.998819,
+    "WETH": 1692.91,
+    "USDT0": 0.998847,
+    "BTC.B": 61229,
+    "WITRY": 0.02331952,
+    "MEGA": 0.0490775,
     "SOL": 95.27699835598168,
     "HYPE": 40.85562300679958
   },
-  "asOf": "2026-07-02T01:17:10.619Z"
+  "asOf": "2026-07-03T00:59:59.164Z"
 }
