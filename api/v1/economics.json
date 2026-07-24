@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-07-23T00:54:02.098Z",
+  "asOf": "2026-07-24T00:50:50.262Z",
   "source": "MegaETH Blockscout token snapshots, Aave address book, and World Markets lending snapshot.",
   "methodology": {
     "m0": "M0 = total tokenized USDM supply minus USDM held in tracked lending vaults and reserves. DEX and spot balances stay inside M0.",
@@ -8,12 +8,12 @@
   "usdm": {
     "symbol": "USDM",
     "address": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7",
-    "supply": 26561866.760904,
-    "priceUsd": 0.997242,
+    "supply": 26761865.876904,
+    "priceUsd": 0.998815,
     "source": "Blockscout /api/v2/tokens/0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
   },
   "m0": {
-    "value": 25446984.47232,
+    "value": 25495188.861611,
     "points": [
       {
         "timestamp": 1779715490000,
@@ -254,18 +254,22 @@
       {
         "timestamp": 1784851199999,
         "value": 25446984.47232
+      },
+      {
+        "timestamp": 1784937599999,
+        "value": 25495188.861611
       }
     ],
     "components": [
       {
         "label": "Tokenized USDM supply",
-        "value": 26561866.760904,
+        "value": 26761865.876904,
         "role": "supply",
         "color": "#FF8AA8"
       },
       {
         "label": "Aave USDM reserve",
-        "value": -549282.288584,
+        "value": -701077.015293,
         "role": "subtract",
         "color": "#C586FF",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -279,14 +283,14 @@
       },
       {
         "label": "M0",
-        "value": 25446984.47232,
+        "value": 25495188.861611,
         "role": "result",
         "color": "#90D79F"
       }
     ]
   },
   "m1": {
-    "value": 33127533.000116,
+    "value": 33131630.151126,
     "points": [
       {
         "timestamp": 1779715490000,
@@ -527,18 +531,22 @@
       {
         "timestamp": 1784851199999,
         "value": 33127533.000116
+      },
+      {
+        "timestamp": 1784937599999,
+        "value": 33131630.151126
       }
     ],
     "components": [
       {
         "label": "M0",
-        "value": 25446984.47232,
+        "value": 25495188.861611,
         "role": "base",
         "color": "#90D79F"
       },
       {
         "label": "Aave aMegUSDm deposits",
-        "value": 7114948.527796,
+        "value": 7070841.289515,
         "role": "deposit",
         "color": "#C586FF",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -552,7 +560,7 @@
       },
       {
         "label": "M1",
-        "value": 33127533.000116,
+        "value": 33131630.151126,
         "role": "result",
         "color": "#F5AF94"
       }
@@ -560,12 +568,12 @@
   },
   "lending": {
     "vaultUsdm": {
-      "total": 1114882.288584,
+      "total": 1266677.015293,
       "sources": [
         {
           "protocol": "Aave V3",
           "label": "USDM reserve in aMegUSDm contract",
-          "amount": 549282.288584,
+          "amount": 701077.015293,
           "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
           "underlying": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
         },
@@ -579,12 +587,12 @@
       ]
     },
     "demandDeposits": {
-      "total": 7680548.527796,
+      "total": 7636441.289515,
       "sources": [
         {
           "protocol": "Aave V3",
           "label": "aMegUSDm total supply",
-          "amount": 7114948.527796,
+          "amount": 7070841.289515,
           "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
         },
         {
@@ -603,13 +611,13 @@
       "usdmAToken": {
         "symbol": "aMegUSDm",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
-        "totalSupply": 7114948.527796,
-        "underlyingUsdmReserve": 549282.288584
+        "totalSupply": 7070841.289515,
+        "underlyingUsdmReserve": 701077.015293
       },
       "usdmVariableDebt": {
         "symbol": "variableDebtMegUSDm",
         "address": "0x6b408d6c479c304794abc60a4693a3ad2d3c2d0d",
-        "totalSupply": 6565789.440316
+        "totalSupply": 6369840.200312
       }
     },
     "excluded": [
