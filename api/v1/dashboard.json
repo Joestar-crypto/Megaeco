@@ -1,13 +1,13 @@
 {
   "apiVersion": "1.0",
   "name": "MegaFees Dashboard API",
-  "generatedAt": "2026-10-20T23:59:59.999Z",
+  "generatedAt": "2026-10-21T23:59:59.999Z",
   "documentation": "/api/",
   "manifest": "/api/v1/index.json",
   "datasets": {
     "network": {
       "economics": {
-        "asOf": "2026-10-20T00:54:51.650Z",
+        "asOf": "2026-10-21T00:54:47.242Z",
         "source": "MegaETH Blockscout token snapshots, Aave address book, and World Markets lending snapshot.",
         "methodology": {
           "m0": "M0 = total tokenized USDM supply minus USDM held in tracked lending vaults and reserves. DEX and spot balances stay inside M0.",
@@ -17,16 +17,12 @@
           "symbol": "USDM",
           "address": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7",
           "supply": 16075583.943892,
-          "priceUsd": 1.004,
+          "priceUsd": 1,
           "source": "Blockscout /api/v2/tokens/0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
         },
         "m0": {
-          "value": 15026249.943829,
+          "value": 15026250.407133,
           "points": [
-            {
-              "timestamp": 1784764799999,
-              "value": 25390333.6905
-            },
             {
               "timestamp": 1784851199999,
               "value": 25446984.47232
@@ -382,6 +378,10 @@
             {
               "timestamp": 1792540799999,
               "value": 15026249.943829
+            },
+            {
+              "timestamp": 1792627199999,
+              "value": 15026250.407133
             }
           ],
           "components": [
@@ -393,7 +393,7 @@
             },
             {
               "label": "Aave USDM reserve",
-              "value": -483734.000063,
+              "value": -483733.536759,
               "role": "subtract",
               "color": "#C586FF",
               "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -407,19 +407,15 @@
             },
             {
               "label": "M0",
-              "value": 15026249.943829,
+              "value": 15026250.407133,
               "role": "result",
               "color": "#90D79F"
             }
           ]
         },
         "m1": {
-          "value": 22064553.332374,
+          "value": 22065197.327991,
           "points": [
-            {
-              "timestamp": 1784764799999,
-              "value": 34269616.485602
-            },
             {
               "timestamp": 1784851199999,
               "value": 33127533.000116
@@ -775,18 +771,22 @@
             {
               "timestamp": 1792540799999,
               "value": 22064553.332374
+            },
+            {
+              "timestamp": 1792627199999,
+              "value": 22065197.327991
             }
           ],
           "components": [
             {
               "label": "M0",
-              "value": 15026249.943829,
+              "value": 15026250.407133,
               "role": "base",
               "color": "#90D79F"
             },
             {
               "label": "Aave aMegUSDm deposits",
-              "value": 6472703.388545,
+              "value": 6473346.920858,
               "role": "deposit",
               "color": "#C586FF",
               "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -800,7 +800,7 @@
             },
             {
               "label": "M1",
-              "value": 22064553.332374,
+              "value": 22065197.327991,
               "role": "result",
               "color": "#F5AF94"
             }
@@ -808,12 +808,12 @@
         },
         "lending": {
           "vaultUsdm": {
-            "total": 1049334.000063,
+            "total": 1049333.536759,
             "sources": [
               {
                 "protocol": "Aave V3",
                 "label": "USDM reserve in aMegUSDm contract",
-                "amount": 483734.000063,
+                "amount": 483733.536759,
                 "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
                 "underlying": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
               },
@@ -827,12 +827,12 @@
             ]
           },
           "demandDeposits": {
-            "total": 7038303.388545,
+            "total": 7038946.920858,
             "sources": [
               {
                 "protocol": "Aave V3",
                 "label": "aMegUSDm total supply",
-                "amount": 6472703.388545,
+                "amount": 6473346.920858,
                 "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
               },
               {
@@ -851,13 +851,13 @@
             "usdmAToken": {
               "symbol": "aMegUSDm",
               "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
-              "totalSupply": 6472703.388545,
-              "underlyingUsdmReserve": 483734.000063
+              "totalSupply": 6473346.920858,
+              "underlyingUsdmReserve": 483733.536759
             },
             "usdmVariableDebt": {
               "symbol": "variableDebtMegUSDm",
               "address": "0x6b408d6c479c304794abc60a4693a3ad2d3c2d0d",
-              "totalSupply": 5989167.493838
+              "totalSupply": 5989380.586198
             }
           },
           "excluded": [
@@ -2266,23 +2266,19 @@
     "apps": {
       "brix": {
         "itryMarketCap": {
-          "usd": 6566290.659138,
-          "supply": 347964407.01,
-          "tryUsd": 0.018870581378,
-          "asOf": "2026-10-20T00:54:51.582Z"
+          "usd": 6565562.329217,
+          "supply": 348073217.47,
+          "tryUsd": 0.018862589822,
+          "asOf": "2026-10-21T00:54:47.174Z"
         },
         "price": {
-          "usd": 0.0242427,
-          "ratio": 1.2846822,
-          "tryUsd": 0.018870581378,
-          "asOf": "2026-10-20T00:54:51.582Z"
+          "usd": 0.02423775,
+          "ratio": 1.28496406,
+          "tryUsd": 0.018862589822,
+          "asOf": "2026-10-21T00:54:47.174Z"
         },
         "tryUsdSeries": {
           "points": [
-            {
-              "timestamp": 1787356799999,
-              "value": 0.019570120606
-            },
             {
               "timestamp": 1787443199999,
               "value": 0.019515300299
@@ -2518,60 +2514,60 @@
             {
               "timestamp": 1792540799999,
               "value": 0.018870581378
+            },
+            {
+              "timestamp": 1792627199999,
+              "value": 0.018862589822
             }
           ],
-          "asOf": "2026-10-20T23:59:59.999Z",
+          "asOf": "2026-10-21T23:59:59.999Z",
           "windowDays": 60
         },
         "stakingYield": {
           "points": [
             {
-              "distributionId": "fundamental-2026-10-20",
-              "distributionDate": "2026-10-20",
-              "periodStartDate": "2026-10-19",
-              "periodEndDate": "2026-10-20",
+              "distributionId": "fundamental-2026-10-21",
+              "distributionDate": "2026-10-21",
+              "periodStartDate": "2026-10-20",
+              "periodEndDate": "2026-10-21",
               "periodDays": 1,
               "stakingYieldItry": 0,
               "netYieldItry": 0,
               "additionalYieldItry": 0,
               "averageStakedItry": null,
-              "periodReturn": 0.000093284688,
-              "apy": 0.034633567664
+              "periodReturn": 0.000219400565,
+              "apy": 0.083365524797
             }
           ],
-          "totalItry": 54413760.440635,
-          "windowStart": "2026-10-20",
-          "windowEnd": "2026-10-20",
+          "totalItry": 54505012.733316,
+          "windowStart": "2026-10-21",
+          "windowEnd": "2026-10-21",
           "windowDays": 1
         },
         "apySnapshot": {
-          "stakingApy": 0.034633567635,
-          "stakingApr": 0.03404891112,
-          "totalStakedItry": 324239207.920388,
-          "totalStakingYieldItry": 54413760.440635,
+          "stakingApy": 0.083365524959,
+          "stakingApr": 0.080081206225,
+          "totalStakedItry": 324330460.213069,
+          "totalStakingYieldItry": 54505012.733316,
           "distributionsUsed": 1,
           "coveredDays": 1,
-          "periodStartDate": "2026-10-19",
-          "periodEndDate": "2026-10-20",
-          "lastDistributionDate": "2026-10-20"
+          "periodStartDate": "2026-10-20",
+          "periodEndDate": "2026-10-21",
+          "lastDistributionDate": "2026-10-21"
         },
         "sofrRate": {
-          "rate": 0.0388518,
-          "asOf": "2026-10-19",
+          "rate": 0.0388586,
+          "asOf": "2026-10-20",
           "seriesId": "SOFR30DAYAVG"
         },
         "stakeRatio": {
-          "ratio": 0.931817166895,
-          "locked": 324239207.920388,
-          "supply": 347964407.01,
-          "asOf": "2026-10-20T00:54:51.582Z"
+          "ratio": 0.931788037501,
+          "locked": 324330460.213069,
+          "supply": 348073217.47,
+          "asOf": "2026-10-21T00:54:47.174Z"
         },
         "witryRateSeries": {
           "points": [
-            {
-              "timestamp": 1787356799999,
-              "value": 1.21493937
-            },
             {
               "timestamp": 1787443199999,
               "value": 1.2199925
@@ -2807,6 +2803,10 @@
             {
               "timestamp": 1792540799999,
               "value": 1.2846822
+            },
+            {
+              "timestamp": 1792627199999,
+              "value": 1.28496406
             }
           ],
           "windowDays": 60
@@ -2886,7 +2886,7 @@
             }
           ]
         },
-        "asOf": "2026-10-20T00:54:51.582Z"
+        "asOf": "2026-10-21T00:54:47.174Z"
       },
       "brixTokens": {
         "source": "MegaETH Blockscout",
@@ -3770,16 +3770,12 @@
           }
         ],
         "spotTvl": {
-          "asOf": "2026-10-20T00:54:51.644Z",
-          "defillamaCurrentUsd": 662740.86527,
-          "blockscoutLiveUsd": 670856.807884,
+          "asOf": "2026-10-21T00:54:47.236Z",
+          "defillamaCurrentUsd": 662213.59761,
+          "blockscoutLiveUsd": 670085.748604,
           "methodology": "DefiLlama counts WETH, USDM, USDT0, BTC.B, and WITRY held by the WorldInc exchange contract. Blockscout live view also shows MEGA and dust balances.",
           "exchangeAddress": "0x5e3Ae52EbA0F9740364Bd5dd39738e1336086A8b",
           "history": [
-            {
-              "timestamp": 1790035199999,
-              "value": 1739361.24034
-            },
             {
               "timestamp": 1790121599999,
               "value": 1699556.40187
@@ -3895,54 +3891,58 @@
             {
               "timestamp": 1792540799999,
               "value": 662740.86527
+            },
+            {
+              "timestamp": 1792627199999,
+              "value": 662213.59761
             }
           ],
           "tokens": [
             {
               "symbol": "USDM",
               "amount": 358596.82849872304,
-              "priceUsd": 1.004,
-              "usd": 360031.215812718,
+              "priceUsd": 1,
+              "usd": 358596.82849872304,
               "address": "0xFAfDdbb3FC7688494971a79cc65DCa3EF82079E7",
               "color": "#6DD0A9"
             },
             {
               "symbol": "WITRY",
               "amount": 10237029.116307208,
-              "priceUsd": 0.0242427,
-              "usd": 248173.22575790074,
+              "priceUsd": 0.02423775,
+              "usd": 248122.55246377503,
               "address": "0x15B271D9012b5820FC42b1c495B4C1e206547De5",
               "color": "#F97357"
             },
             {
               "symbol": "WETH",
               "amount": 13.046128702112,
-              "priceUsd": 2406.64,
-              "usd": 31397.335179651946,
+              "priceUsd": 2447.46,
+              "usd": 31929.87815327218,
               "address": "0x4200000000000000000000000000000000000006",
               "color": "#7EAAD4"
             },
             {
               "symbol": "BTC.B",
               "amount": 0.28477168,
-              "priceUsd": 81900,
-              "usd": 23322.800592000003,
+              "priceUsd": 82983,
+              "usd": 23631.20832144,
               "address": "0xB0F70C0bD6FD87dbEb7C10dC692a2a6106817072",
               "color": "#F4D35E"
             },
             {
               "symbol": "MEGA",
               "amount": 170090.27558697033,
-              "priceUsd": 0.04409488,
-              "usd": 7500.110291174386,
+              "priceUsd": 0.04334805,
+              "usd": 7373.081770657769,
               "address": "0x28B7E77f82B25B95953825F1E3eA0E36c1c29861",
               "color": "#FF8AA8"
             },
             {
               "symbol": "USDT0",
               "amount": 432.488298,
-              "priceUsd": 0.999149,
-              "usd": 432.120250458402,
+              "priceUsd": 0.999332,
+              "usd": 432.199395816936,
               "address": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
               "color": "#9AA7C2"
             }
@@ -3952,8 +3952,8 @@
           "source": "DefiLlama DEXs summary, slug world-markets-spot, dataType dailyVolume.",
           "total24hUsd": 0,
           "total48hto24hUsd": 0,
-          "total7dUsd": 19877,
-          "total30dUsd": 739378,
+          "total7dUsd": 18623,
+          "total30dUsd": 682203,
           "totalAllTimeUsd": 24383587,
           "daily": [
             {
@@ -4967,6 +4967,10 @@
             {
               "timestamp": 1792368000000,
               "value": 0
+            },
+            {
+              "timestamp": 1792454400000,
+              "value": 0
             }
           ]
         },
@@ -5124,7 +5128,7 @@
             "source": "DefiLlama fees summary, slug world-markets-perps, dataType dailyFees.",
             "total24hUsd": 0,
             "total48hto24hUsd": 0,
-            "total7dUsd": 0.13,
+            "total7dUsd": 0.06,
             "total30dUsd": 1.42,
             "totalAllTimeUsd": 752112.06,
             "methodology": "Perps trading fees plus lending interest plus liquidation fees.",
@@ -6092,6 +6096,10 @@
               {
                 "timestamp": 1792368000000,
                 "value": 0
+              },
+              {
+                "timestamp": 1792454400000,
+                "value": 0
               }
             ]
           }
@@ -6100,8 +6108,8 @@
           "source": "DefiLlama fees summary, slug world-markets-spot, dataType dailyFees.",
           "total24hUsd": 0,
           "total48hto24hUsd": 0,
-          "total7dUsd": 30.23,
-          "total30dUsd": 419.86,
+          "total7dUsd": 28.34,
+          "total30dUsd": 391.77,
           "totalAllTimeUsd": 12501.06,
           "daily": [
             {
@@ -7067,6 +7075,10 @@
             {
               "timestamp": 1792368000000,
               "value": 0
+            },
+            {
+              "timestamp": 1792454400000,
+              "value": 0
             }
           ]
         },
@@ -7120,16 +7132,16 @@
           ]
         },
         "tokenPrices": {
-          "USDM": 1.004,
-          "WETH": 2406.64,
-          "USDT0": 0.999149,
-          "BTC.B": 81900,
-          "WITRY": 0.0242427,
-          "MEGA": 0.04409488,
+          "USDM": 1,
+          "WETH": 2447.46,
+          "USDT0": 0.999332,
+          "BTC.B": 82983,
+          "WITRY": 0.02423775,
+          "MEGA": 0.04334805,
           "SOL": 95.27699835598168,
           "HYPE": 40.85562300679958
         },
-        "asOf": "2026-10-20T00:54:51.644Z"
+        "asOf": "2026-10-21T00:54:47.236Z"
       },
       "euphoria": {
         "fetchedAt": "2026-09-25T00:59:05.177Z",
@@ -27476,10 +27488,10 @@
         }
       },
       "hitone": {
-        "fetchedAt": "2026-10-20T00:54:58.059Z",
+        "fetchedAt": "2026-10-21T00:54:52.019Z",
         "dataWindowUtc": {
-          "from": "2026-10-20T00:00:00Z",
-          "to": "2026-10-20T00:54:58.059Z"
+          "from": "2026-10-21T00:00:00Z",
+          "to": "2026-10-21T00:54:52.019Z"
         },
         "contract": "0xdf248bafe6fe9a73f201a125641e5c8bb20472f7",
         "contractUrl": "https://megaeth.blockscout.com/address/0xdf248bafe6fe9a73f201a125641e5c8bb20472f7",
@@ -28532,6 +28544,12 @@
               "volumeUsdm": 0,
               "txCount": 0,
               "transferCount": 0
+            },
+            {
+              "date": "2026-10-21",
+              "volumeUsdm": 0,
+              "txCount": 0,
+              "transferCount": 0
             }
           ]
         },
@@ -28543,7 +28561,7 @@
             "source": "MegaETH Blockscout USDM token transfers",
             "sourceUrl": "https://megaeth.blockscout.com/address/0xdf248bafe6fe9a73f201a125641e5c8bb20472f7",
             "label": "Unique USDM transfer counterparties over the last 24h from Blockscout.",
-            "fetchedAt": "2026-10-20T00:54:57.668Z"
+            "fetchedAt": "2026-10-21T00:54:51.658Z"
           },
           "points": [
             {
@@ -29232,6 +29250,10 @@
             },
             {
               "date": "2026-10-20",
+              "users": 0
+            },
+            {
+              "date": "2026-10-21",
               "users": 0
             }
           ]
@@ -41341,8 +41363,8 @@
           }
         ],
         "sync": {
-          "lastSyncedDate": "2026-10-20",
-          "latestBlock": 29660679
+          "lastSyncedDate": "2026-10-21",
+          "latestBlock": 29747075
         },
         "fees": {
           "reportStartDate": "2026-05-01",
@@ -43079,6 +43101,16 @@
               "netProfitPaidUsdm": 0,
               "txCount": 0,
               "transferCount": 0
+            },
+            {
+              "date": "2026-10-21",
+              "tradeFeeUsdm": 0,
+              "profitFeeUsdm": 0,
+              "totalFeeUsdm": 0,
+              "grossProfitUsdm": 0,
+              "netProfitPaidUsdm": 0,
+              "txCount": 0,
+              "transferCount": 0
             }
           ],
           "totals": {
@@ -43088,7 +43120,7 @@
             "grossProfitUsdm": 27707.675317,
             "netProfitPaidUsdm": 26322.29155
           },
-          "syncLastProcessedDate": "2026-10-20"
+          "syncLastProcessedDate": "2026-10-21"
         },
         "feeLedger": [
           {
