@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-11-02T00:38:46.598Z",
+  "asOf": "2026-11-03T00:36:05.468Z",
   "source": "MegaETH Blockscout token snapshots, Aave address book, and World Markets lending snapshot.",
   "methodology": {
     "m0": "M0 = total tokenized USDM supply minus USDM held in tracked lending vaults and reserves. DEX and spot balances stay inside M0.",
@@ -8,17 +8,13 @@
   "usdm": {
     "symbol": "USDM",
     "address": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7",
-    "supply": 14436653.464887,
-    "priceUsd": 1.003,
+    "supply": 17436403.222643,
+    "priceUsd": 0.998246,
     "source": "Blockscout /api/v2/tokens/0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
   },
   "m0": {
-    "value": 13427132.224782,
+    "value": 13430928.85679,
     "points": [
-      {
-        "timestamp": 1785887999999,
-        "value": 17116274.35396
-      },
       {
         "timestamp": 1785974399999,
         "value": 17265328.025994
@@ -374,18 +370,22 @@
       {
         "timestamp": 1793663999999,
         "value": 13427132.224782
+      },
+      {
+        "timestamp": 1793750399999,
+        "value": 13430928.85679
       }
     ],
     "components": [
       {
         "label": "Tokenized USDM supply",
-        "value": 14436653.464887,
+        "value": 17436403.222643,
         "role": "supply",
         "color": "#FF8AA8"
       },
       {
         "label": "Aave USDM reserve",
-        "value": -443921.240105,
+        "value": -3439874.365853,
         "role": "subtract",
         "color": "#C586FF",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -399,19 +399,15 @@
       },
       {
         "label": "M0",
-        "value": 13427132.224782,
+        "value": 13430928.85679,
         "role": "result",
         "color": "#90D79F"
       }
     ]
   },
   "m1": {
-    "value": 20435864.015931,
+    "value": 20437277.730722,
     "points": [
-      {
-        "timestamp": 1785887999999,
-        "value": 24662730.329031
-      },
       {
         "timestamp": 1785974399999,
         "value": 24663544.431059
@@ -767,18 +763,22 @@
       {
         "timestamp": 1793663999999,
         "value": 20435864.015931
+      },
+      {
+        "timestamp": 1793750399999,
+        "value": 20437277.730722
       }
     ],
     "components": [
       {
         "label": "M0",
-        "value": 13427132.224782,
+        "value": 13430928.85679,
         "role": "base",
         "color": "#90D79F"
       },
       {
         "label": "Aave aMegUSDm deposits",
-        "value": 6443131.791149,
+        "value": 6440748.873932,
         "role": "deposit",
         "color": "#C586FF",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
@@ -792,7 +792,7 @@
       },
       {
         "label": "M1",
-        "value": 20435864.015931,
+        "value": 20437277.730722,
         "role": "result",
         "color": "#F5AF94"
       }
@@ -800,12 +800,12 @@
   },
   "lending": {
     "vaultUsdm": {
-      "total": 1009521.240105,
+      "total": 4005474.365853,
       "sources": [
         {
           "protocol": "Aave V3",
           "label": "USDM reserve in aMegUSDm contract",
-          "amount": 443921.240105,
+          "amount": 3439874.365853,
           "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
           "underlying": "0xfafddbb3fc7688494971a79cc65dca3ef82079e7"
         },
@@ -819,12 +819,12 @@
       ]
     },
     "demandDeposits": {
-      "total": 7008731.791149,
+      "total": 7006348.873932,
       "sources": [
         {
           "protocol": "Aave V3",
           "label": "aMegUSDm total supply",
-          "amount": 6443131.791149,
+          "amount": 6440748.873932,
           "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500"
         },
         {
@@ -843,13 +843,13 @@
       "usdmAToken": {
         "symbol": "aMegUSDm",
         "address": "0x5df82810cb4b8f3e0da3c031ccc9208ee9cf9500",
-        "totalSupply": 6443131.791149,
-        "underlyingUsdmReserve": 443921.240105
+        "totalSupply": 6440748.873932,
+        "underlyingUsdmReserve": 3439874.365853
       },
       "usdmVariableDebt": {
         "symbol": "variableDebtMegUSDm",
         "address": "0x6b408d6c479c304794abc60a4693a3ad2d3c2d0d",
-        "totalSupply": 5999197.978284
+        "totalSupply": 3000934.641058
       }
     },
     "excluded": [
